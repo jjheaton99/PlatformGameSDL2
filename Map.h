@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Game.h"
-#include "TextureManager.h"
+#include "TextureW.h"
 #include "GameObject.h"
 #include <array>
 
@@ -13,9 +13,9 @@ public:
 
 private:
     SDL_Rect m_srcRect, m_destRect;
-    SDL_Texture* m_dirt;
-    SDL_Texture* m_grass;
-    SDL_Texture* m_water;
+    TextureW m_dirt;
+    TextureW m_grass;
+    TextureW m_water;
 
     map_type m_map;
 

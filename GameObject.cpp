@@ -1,17 +1,21 @@
 #include "GameObject.h"
 
-GameObject::GameObject(const char* textureSheet, double x, double y)
-    : m_position{ x, y }
+GameObject::GameObject(const char* fileName, double xPos, double yPos)
+    : m_position{ xPos, yPos }
 {
-    m_objectTexture = TextureManager::loadTexture(textureSheet);
+    m_texture.load(fileName);
 }
 
 GameObject::~GameObject()
 {
 }
 
-void GameObject::render()
+void GameObject::draw()
 {
-    SDL_RenderCopy(TextureManager::m_renderer, m_objectTexture, &m_srcRect, &m_destRect);
+    m_texture.draw(m_srcRect, m_dstRect);
 }
 
+void GameObject::destroy()
+{
+    m_texture.free();
+}

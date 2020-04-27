@@ -2,7 +2,7 @@
 
 Player* player = nullptr;
 
-SDL_Renderer* TextureManager::m_renderer = nullptr;
+SDL_Renderer* TextureW::m_renderer = nullptr;
 
 Game::Game()
 {}
@@ -34,15 +34,15 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
         else
         {
-            TextureManager::m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
-            if (!TextureManager::m_renderer)
+            TextureW::m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+            if (!TextureW::m_renderer)
             {
                 std::cout << "Renderer not created! SDL_Error: " << SDL_GetError() << '\n';
             }
 
             else
             {
-                SDL_SetRenderDrawColor(TextureManager::m_renderer, 255, 255, 255, 255);
+                SDL_SetRenderDrawColor(TextureW::m_renderer, 255, 255, 255, 255);
             }
         }
 
@@ -72,9 +72,9 @@ void Game::update()
 
 void Game::render()
 {
-    SDL_RenderClear(TextureManager::m_renderer);
-    player->render();
-    SDL_RenderPresent(TextureManager::m_renderer);
+    SDL_RenderClear(TextureW::m_renderer);
+    player->draw();
+    SDL_RenderPresent(TextureW::m_renderer);
 }
 
 void Game::close()
@@ -82,9 +82,10 @@ void Game::close()
     SDL_DestroyWindow(m_window);
     m_window = nullptr;
 
-    SDL_DestroyRenderer(TextureManager::m_renderer);
-    TextureManager::m_renderer = nullptr;
-
+    SDL_DestroyRenderer(TextureW::m_renderer);
+    TextureW::m_renderer = nullptr;
+    
+    player->destroy();
     delete player;
     player = nullptr;
 

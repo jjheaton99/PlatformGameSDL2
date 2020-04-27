@@ -2,7 +2,7 @@
 
 #include "SDL.h"
 #include "SDL_Image.h"
-#include "TextureManager.h"
+#include "TextureW.h"
 #include "Player.h"
 #include <iostream>
 
@@ -11,6 +11,7 @@ class Game
 private:
     bool m_isRunning;
     SDL_Window* m_window;
+
 
 public:
     Game();

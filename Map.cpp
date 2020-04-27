@@ -25,9 +25,9 @@ Map::map_type lvl1{ {
 
 Map::Map()
 {
-    m_dirt = TextureManager::loadTexture("Assets/dirt.png");
-    m_grass = TextureManager::loadTexture("Assets/grass.png");
-    m_water = TextureManager::loadTexture("Assets/water.png");
+    m_dirt.load("Assets/dirt.png");
+    m_grass.load("Assets/grass.png");
+    m_water.load("Assets/water.png");
 }
 
 Map::~Map()
