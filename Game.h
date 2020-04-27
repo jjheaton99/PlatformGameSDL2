@@ -4,6 +4,8 @@
 #include "SDL_Image.h"
 #include "TextureW.h"
 #include "Player.h"
+#include "InputHandler.h"
+#include <vector>
 #include <iostream>
 
 class Game
@@ -11,7 +13,6 @@ class Game
 private:
     bool m_isRunning;
     SDL_Window* m_window;
-
 
 public:
     Game();

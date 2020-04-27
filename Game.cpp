@@ -4,6 +4,8 @@ Player* player = nullptr;
 
 SDL_Renderer* TextureW::m_renderer = nullptr;
 
+static std::vector<SDL_Event> events;
+
 Game::Game()
 {}
 
@@ -49,20 +51,30 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         m_isRunning = true;
     }
 
-    player = new Player("Assets/devil.png", 300, 700, 6, -25);
+    player = new Player("Assets/devil.png", 200, 200, 0, 0);
 }
 
 void Game::handleEvents()
 {
     SDL_Event event;
-    SDL_PollEvent(&event);
-    switch (event.type)
+    while (SDL_PollEvent(&event) != 0)
     {
-    case SDL_QUIT:
-        m_isRunning = false;
-    default:
-        break;
+        events.push_back(event);
     }
+
+    InputHandler::playerControlsKeyHold(player);
+ 
+    for (auto& element : events)
+    {
+        if (!(InputHandler::windowEvent(element)))
+        {
+            m_isRunning = false;
+        }
+
+        InputHandler::playerControlsKeyPress(player, element);
+    }
+
+    events.clear();
 }
 
 void Game::update()

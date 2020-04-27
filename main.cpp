@@ -1,8 +1,7 @@
 #include "Game.h"
 #include "Vector2D.h"
 
-const int screenWidth{1280};
-const int screenHeight{720};
+
 
 Game* game = nullptr;
 int main(int argc, char* args[])
@@ -15,7 +14,7 @@ int main(int argc, char* args[])
 
     game = new Game();
 
-    game->init("2D Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, false);
+    game->init("2D Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Constants::screenWidth, Constants::screenHeight, false);
 
     while (game->running())
     {
