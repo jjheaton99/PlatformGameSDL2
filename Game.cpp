@@ -49,7 +49,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         m_isRunning = true;
     }
 
-    player = new Player("Assets/devil.png", 0, 0);
+    player = new Player("Assets/devil.png", 300, 700, 6, -25);
 }
 
 void Game::handleEvents()

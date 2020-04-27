@@ -1,7 +1,8 @@
 #include "Game.h"
+#include "Vector2D.h"
 
-const int screenWidth{800};
-const int screenHeight{640};
+const int screenWidth{1280};
+const int screenHeight{720};
 
 Game* game = nullptr;
 int main(int argc, char* args[])

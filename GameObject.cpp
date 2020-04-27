@@ -1,11 +1,9 @@
 #include "GameObject.h"
 
-GameObject::GameObject(const char* textureSheet, int x, int y)
+GameObject::GameObject(const char* textureSheet, double x, double y)
+    : m_position{ x, y }
 {
     m_objectTexture = TextureManager::loadTexture(textureSheet);
-
-    m_xpos = x;
-    m_ypos = y;
 }
 
 GameObject::~GameObject()
