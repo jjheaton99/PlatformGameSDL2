@@ -35,7 +35,7 @@ void Character::stop()
     m_right = false;
 }
 
-void Character::motion()
+void Character::motion(double acceleration, double deceleration)
 {
     if (m_airborne)
     {
@@ -43,7 +43,7 @@ void Character::motion()
     }
     else if (m_left)
     {
-        m_velocity.add(Vector2D<double>{-30, 0});
+        m_velocity.add(Vector2D<double>{-acceleration, 0});
         if (m_velocity.getx() < -m_xMaxSpeed)
         {
             setVel(-m_xMaxSpeed, 0);
@@ -51,7 +51,7 @@ void Character::motion()
     }
     else if (m_right)
     {
-        m_velocity.add(Vector2D<double>{30, 0});
+        m_velocity.add(Vector2D<double>{acceleration, 0});
         if (m_velocity.getx() > m_xMaxSpeed)
         {
             setVel(m_xMaxSpeed, 0);
@@ -59,8 +59,8 @@ void Character::motion()
     }
     else
     {
-        m_velocity.xScale(0.9);
-        if (std::abs(m_velocity.getx()) < 0.5)
+        m_velocity.xScale(deceleration);
+        if (std::abs(m_velocity.getx()) < 0.1)
         {
             m_velocity.xScale(0);
         }

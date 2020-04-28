@@ -33,7 +33,7 @@ public:
     void moveRight();
     void stop();
 
-    virtual void motion();
+    virtual void motion(double acceleration, double deceleration);
     virtual void edgeCheck();
 };
 

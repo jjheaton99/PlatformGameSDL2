@@ -12,7 +12,7 @@ GameObject::~GameObject()
 
 void GameObject::draw()
 {
-    m_texture.draw(m_srcRect, m_dstRect);
+    m_texture.draw(m_srcRect, m_dstRect, 0, nullptr, SDL_FLIP_NONE);
 }
 
 void GameObject::destroy()

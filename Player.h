@@ -2,6 +2,7 @@
 
 #include "Character.h"
 #include "Constants.h"
+#include <array>
 #include <cmath>
 #include <cstdint>
 
@@ -14,4 +15,12 @@ public:
     ~Player();
 
     virtual void update(double timeStep) override;
+    virtual void draw() override;
+
+    static const int spriteSheetCount{ 22 };
+
+private:
+    std::array<SDL_Rect, spriteSheetCount> m_spriteRects;
+    bool m_isFlipped{ true };
+
 };

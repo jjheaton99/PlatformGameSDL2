@@ -46,14 +46,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
             else
             {
-                SDL_SetRenderDrawColor(TextureW::m_renderer, 255, 255, 255, 255);
+                SDL_SetRenderDrawColor(TextureW::m_renderer, 0, 255, 239, 255);
             }
         }
 
         m_isRunning = true;
     }
 
-    player = new Player("Assets/devil.png", 200, 200, 0, 0);
+    player = new Player("Assets/MrPix.png", 200, 200, 0, 0);
 }
 
 void Game::handleEvents()
@@ -91,7 +91,7 @@ void Game::update()
 
 void Game::render()
 {
-    SDL_SetRenderDrawColor(TextureW::m_renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(TextureW::m_renderer, 0, 255, 239, 255);
     SDL_RenderClear(TextureW::m_renderer);
 
     player->draw();
