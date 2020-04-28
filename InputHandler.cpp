@@ -6,7 +6,7 @@ InputHandler::InputHandler()
 InputHandler::~InputHandler()
 {}
 
-bool InputHandler::windowEvent(SDL_Event event)
+bool InputHandler::windowEvent(SDL_Event& event)
 {
     if (event.type == SDL_QUIT)
         return false;
@@ -35,15 +35,15 @@ void InputHandler::playerControlsKeyHold(Player* player)
         double vel{ 7.5 };
 
         if (currentKeyState[SDL_SCANCODE_A])
-            player->setVel(-vel, player->getVel().gety());
+            player->moveLeft();
         else if (currentKeyState[SDL_SCANCODE_D])
-            player->setVel(vel, player->getVel().gety());
+            player->moveRight();
         else
-            player->setVel(0, player->getVel().gety());
+            player->stop();
     }
 }
 
-void InputHandler::playerControlsKeyPress(Player* player, SDL_Event event)
+void InputHandler::playerControlsKeyPress(Player* player, SDL_Event& event)
 {
     if (!player->isAirborne())
     {
@@ -99,3 +99,10 @@ void InputHandler::playerControlsTopDown(Player* player)
     else
         player->setVel(0, 0);
 }*/
+
+/*        if (currentKeyState[SDL_SCANCODE_A])
+            player->setVel(-vel, player->getVel().gety());
+        else if (currentKeyState[SDL_SCANCODE_D])
+            player->setVel(vel, player->getVel().gety());
+        else
+            player->setVel(0, player->getVel().gety());*/
