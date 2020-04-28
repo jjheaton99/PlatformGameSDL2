@@ -32,8 +32,6 @@ void InputHandler::playerControlsKeyHold(Player* player)
     {
         const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
 
-        double vel{ 7.5 };
-
         if (currentKeyState[SDL_SCANCODE_A])
             player->moveLeft();
         else if (currentKeyState[SDL_SCANCODE_D])
@@ -47,7 +45,7 @@ void InputHandler::playerControlsKeyPress(Player* player, SDL_Event& event)
 {
     if (!player->isAirborne())
     {
-        double jumpVel{ 15 };
+        double jumpVel{ 1000 };
 
         switch (event.key.keysym.sym)
         {

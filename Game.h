@@ -5,6 +5,7 @@
 #include "TextureW.h"
 #include "Player.h"
 #include "InputHandler.h"
+#include "TimerW.h"
 #include <vector>
 #include <iostream>
 

@@ -15,7 +15,7 @@ public:
     GameObject(const char* fileName, double xPos = 0, double yPos = 0);
     ~GameObject();
 
-    virtual void update() = 0;
+    virtual void update(double timeStep) = 0;
     virtual void draw();
     virtual void destroy();
 };

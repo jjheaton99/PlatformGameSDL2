@@ -6,6 +6,8 @@ SDL_Renderer* TextureW::m_renderer = nullptr;
 
 static std::vector<SDL_Event> events;
 
+TimerW stepTimer;
+
 Game::Game()
 {}
 
@@ -79,13 +81,21 @@ void Game::handleEvents()
 
 void Game::update()
 {
-    player->update();
+    double timeStep = stepTimer.getTicks() / 1000.0;
+    //std::cout << timeStep << '\n';
+
+    player->update(timeStep);
+
+    stepTimer.start();
 }
 
 void Game::render()
 {
+    SDL_SetRenderDrawColor(TextureW::m_renderer, 255, 255, 255, 255);
     SDL_RenderClear(TextureW::m_renderer);
+
     player->draw();
+
     SDL_RenderPresent(TextureW::m_renderer);
 }
 
