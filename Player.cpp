@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel)
-    : Character(fileName, xStartPos, yStartPos, xVel, yVel)
+    : Character(fileName, xStartPos, yStartPos, xVel, yVel, 56, 100)
 {
     for (int i{ 0 }; i < spriteSheetCount; ++i)
     {
@@ -17,14 +17,19 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
 
     m_dstRect.w = 100;
     m_dstRect.h = 100;
+
+    m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 }
 
 Player::~Player()
-{}
+{
+    destroy();
+}
 
 void Player::update(double timeStep)
 {
     m_position.add(Vector2D<double>{m_velocity.getx() * timeStep, m_velocity.gety() * timeStep});
+    m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 
     motion(30, 0.9);
     edgeCheck();

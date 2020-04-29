@@ -107,7 +107,6 @@ void Game::close()
     SDL_DestroyRenderer(TextureW::m_renderer);
     TextureW::m_renderer = nullptr;
     
-    player->destroy();
     delete player;
     player = nullptr;
 

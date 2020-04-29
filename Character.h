@@ -22,7 +22,7 @@ protected:
     double m_xMaxSpeed{ 0 };
 
 public:
-    Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0);
+    Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
     ~Character();
 
     virtual void update(double timeStep) = 0;

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26812;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -31,11 +32,13 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TextureW.cpp" />
+    <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TimerW.cpp" />
     <ClCompile Include="Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Constants.h" />
@@ -44,6 +47,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TextureW.h" />
+    <ClInclude Include="Tile.h" />
     <ClInclude Include="TimerW.h" />
     <ClInclude Include="Vector2D.h" />
   </ItemGroup>

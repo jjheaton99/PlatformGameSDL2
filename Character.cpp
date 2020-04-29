@@ -1,7 +1,7 @@
 #include "Character.h"
 
-Character::Character(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel)
-    : GameObject(fileName, xStartPos, yStartPos), m_velocity{ xVel, yVel }
+Character::Character(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight)
+    : GameObject(fileName, xStartPos, yStartPos, colliderWidth, colliderHeight), m_velocity{ xVel, yVel }
 {}
 
 Character::~Character()
@@ -55,7 +55,7 @@ void Character::edgeCheck()
     {
         m_position.subtract(Vector2D<double>{0, m_position.gety()});
     }
-    else if (m_position.gety() > static_cast<std::int64_t>(Constants::screenHeight) - m_dstRect.h)
+    else if (m_collider.getBox().y > static_cast<std::int64_t>(Constants::screenHeight) - m_dstRect.h)
     {
         if (m_movement == AIRBORNE)
         {

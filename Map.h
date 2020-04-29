@@ -3,12 +3,13 @@
 #include "Game.h"
 #include "TextureW.h"
 #include "GameObject.h"
-#include <array>
+#include "Tile.h"
+#include <vector>
 
 class Map
 {
 public:
-    using map_type = std::array<std::array < int, 25>, 20>;
+    using map_type = std::vector<std::vector < int>>;
     using index_type = map_type::size_type;
 
 private:
