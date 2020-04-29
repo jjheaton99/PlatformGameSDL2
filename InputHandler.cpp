@@ -28,7 +28,7 @@ bool InputHandler::windowEvent(SDL_Event& event)
 
 void InputHandler::playerControlsKeyHold(Player* player)
 {
-    if (!player->isAirborne())
+    if (!(player->getMovement() == Player::AIRBORNE))
     {
         const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
 
@@ -43,9 +43,9 @@ void InputHandler::playerControlsKeyHold(Player* player)
 
 void InputHandler::playerControlsKeyPress(Player* player, SDL_Event& event)
 {
-    if (!player->isAirborne())
+    if (!(player->getMovement() == Player::AIRBORNE))
     {
-        double jumpVel{ 1000 };
+        double jumpVel{ 1200.0 };
 
         switch (event.key.keysym.sym)
         {

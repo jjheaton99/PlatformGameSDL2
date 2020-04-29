@@ -7,41 +7,13 @@ Character::Character(const char* fileName, double xStartPos, double yStartPos, d
 Character::~Character()
 {}
 
-void Character::setVel(double xVel, double yVel)
-{
-    m_velocity = Vector2D{ xVel, yVel };
-}
-
-void Character::setDirection(double angle)
-{
-    m_velocity.rotate(angle);
-}
-
-void Character::moveLeft()
-{
-    m_left = true;
-    m_right = false;
-}
-
-void Character::moveRight()
-{
-    m_right = true;
-    m_left = false;
-}
-
-void Character::stop()
-{
-    m_left = false;
-    m_right = false;
-}
-
 void Character::motion(double acceleration, double deceleration)
 {
-    if (m_airborne)
+    if (m_movement == AIRBORNE)
     {
         m_velocity.add(Vector2D<double>{0, Constants::g});
     }
-    else if (m_left)
+    else if (m_movement == LEFT)
     {
         m_velocity.add(Vector2D<double>{-acceleration, 0});
         if (m_velocity.getx() < -m_xMaxSpeed)
@@ -49,7 +21,7 @@ void Character::motion(double acceleration, double deceleration)
             setVel(-m_xMaxSpeed, 0);
         }
     }
-    else if (m_right)
+    else if (m_movement == RIGHT)
     {
         m_velocity.add(Vector2D<double>{acceleration, 0});
         if (m_velocity.getx() > m_xMaxSpeed)
@@ -85,7 +57,10 @@ void Character::edgeCheck()
     }
     else if (m_position.gety() > static_cast<std::int64_t>(Constants::screenHeight) - m_dstRect.h)
     {
-        m_airborne = false;
+        if (m_movement == AIRBORNE)
+        {
+            m_movement = STOP;
+        }
         m_position.subtract(Vector2D<double>{0, m_position.gety() - static_cast<std::int64_t>(Constants::screenHeight) + m_dstRect.h});
         setVel(m_velocity.getx(), 0);
     }
