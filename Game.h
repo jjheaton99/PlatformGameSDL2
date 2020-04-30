@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "InputHandler.h"
 #include "TimerW.h"
+#include "Map.h"
 #include <vector>
 #include <iostream>
 

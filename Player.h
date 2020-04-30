@@ -6,8 +6,6 @@
 #include <cmath>
 #include <cstdint>
 
-class GameObject;
-
 class Player : public Character
 {
 public:
@@ -18,7 +16,7 @@ public:
     void cycleIdleAnimation(double timeStep);
     void spriteAnimate(double timeStep);
 
-    virtual void update(double timeStep) override;
+    virtual void update(double timeStep, std::vector<std::vector<Tile>>& map) override;
     virtual void draw() override;
 
     static const int spriteSheetCount{ 28 };

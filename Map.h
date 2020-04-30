@@ -1,29 +1,27 @@
 #pragma once
 
-#include "Game.h"
-#include "TextureW.h"
-#include "GameObject.h"
 #include "Tile.h"
+#include <array>
 #include <vector>
 
 class Map
 {
 public:
-    using map_type = std::vector<std::vector < int>>;
+    using map_type = std::vector<std::vector <Tile>>;
+    using layout_type = std::array<std::array<int, 32>, 18>;
     using index_type = map_type::size_type;
 
 private:
-    SDL_Rect m_srcRect, m_destRect;
-    TextureW m_dirt;
-    TextureW m_grass;
-    TextureW m_water;
-
     map_type m_map;
+    Tile m_background{"Assets/background.png", 0, 0, Tile::BACKGROUND};
+    Tile m_block{ "Assets/block.png", 0, 0, Tile::SOLID };
 
 public:
-    Map();
+    Map(layout_type map);
     ~Map();
 
-    void loadMap(map_type map);
+    void loadMap(layout_type map);
     void drawMap();
+
+    std::vector<std::vector <Tile>>& getMap() { return m_map; }
 };

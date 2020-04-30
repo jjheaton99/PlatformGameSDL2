@@ -65,3 +65,45 @@ void Character::edgeCheck()
         setVel(m_velocity.getx(), 0);
     }
 }
+
+SDL_Rect Character::getCollideTile(std::vector<std::vector<Tile>>& map)
+{
+    for (Uint8 row{ 0 }; row < map.size(); ++row)
+    {
+        for (Uint8 column{ 0 }; column < map[0].size(); ++column)
+        {
+            if (map[row][column].getType() == Tile::SOLID)
+            {
+                if (m_collider.collideCheck(map[row][column].getCollider()))
+                {
+                    return map[row][column].getCollider().getBox();
+                }
+            }
+        }
+    }
+
+    return {-1, -1, -1, -1};
+}
+
+void Character::mapCollideCheck(std::vector<std::vector<Tile>>& map)
+{
+    SDL_Rect collideRect{ getCollideTile(map) };
+
+    if (collideRect.x != -1)
+    {
+        if ((m_movement == AIRBORNE) && (m_velocity.gety() > 0))
+        {
+            m_position.subtract(Vector2D<double>{0, static_cast<double>(m_dstRect.h) - static_cast<double>(collideRect.y) + m_position.gety() + 1});
+            m_movement = STOP;
+            setVel(m_velocity.getx(), 0);
+        }
+
+        else if ((m_movement == AIRBORNE) && (m_velocity.gety() < 0))
+        {
+            m_position.add(Vector2D<double>{0, static_cast<double>(collideRect.h) -  m_position.gety() + static_cast<double>(collideRect.y) + 1});
+            setVel(m_velocity.getx(), -m_velocity.gety());
+        }
+        
+        std::cout << "Collided" << '\n';
+    }
+}

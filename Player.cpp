@@ -26,13 +26,16 @@ Player::~Player()
     destroy();
 }
 
-void Player::update(double timeStep)
+void Player::update(double timeStep, std::vector<std::vector<Tile>>& map)
 {
-    m_position.add(Vector2D<double>{m_velocity.getx() * timeStep, m_velocity.gety() * timeStep});
+    Vector2D<double> timeScaledVel{ Vector2D<double>{m_velocity.getx()* timeStep, m_velocity.gety()* timeStep} };
+    m_position.add(timeScaledVel);
     m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
+    
+    mapCollideCheck(map);
+    edgeCheck();
 
     motion(30, 0.9);
-    edgeCheck();
 
     std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
     //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';

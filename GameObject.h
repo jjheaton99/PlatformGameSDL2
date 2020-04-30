@@ -3,6 +3,7 @@
 #include "Vector2D.h"
 #include "TextureW.h"
 #include "Collider.h"
+#include <vector>
 
 class GameObject
 {
@@ -19,7 +20,7 @@ public:
     GameObject(const char* fileName, double xPos = 0, double yPos = 0, int colliderWidth = 0, int colliderHeight = 0);
     ~GameObject();
 
-    virtual void update(double timeStep) = 0;
     virtual void draw();
     virtual void destroy();
+    Collider& getCollider() { return m_collider; }
 };

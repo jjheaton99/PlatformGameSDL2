@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include "Constants.h"
+#include "Tile.h"
 #include <cmath>
 #include <cstdint>
 
@@ -25,7 +26,7 @@ public:
     Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
     ~Character();
 
-    virtual void update(double timeStep) = 0;
+    virtual void update(double timeStep, std::vector<std::vector<Tile>>& map) = 0;
 
     const Vector2D<double>& getVel() { return m_velocity; }
     void setVel(double xVel, double yVel) { m_velocity = Vector2D{ xVel, yVel }; }
@@ -39,5 +40,7 @@ public:
 
     virtual void motion(double acceleration, double deceleration);
     virtual void edgeCheck();
+    virtual SDL_Rect getCollideTile(std::vector<std::vector<Tile>>& map);
+    virtual void mapCollideCheck(std::vector<std::vector<Tile>>& map);
 };
 

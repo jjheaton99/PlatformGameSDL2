@@ -2,6 +2,29 @@
 
 Player* player = nullptr;
 
+Map* map = nullptr;
+
+Map::layout_type lvl1{ {
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+} };
+
 SDL_Renderer* TextureW::m_renderer = nullptr;
 
 static std::vector<SDL_Event> events;
@@ -46,7 +69,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
             else
             {
-                SDL_SetRenderDrawColor(TextureW::m_renderer, 0, 0, 0, 255);
+                SDL_SetRenderDrawColor(TextureW::m_renderer, 0, 0, 0, 0);
             }
         }
 
@@ -54,6 +77,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     }
 
     player = new Player("Assets/MrPix.png", 200, 200, 0, 0);
+
+    map = new Map(lvl1);
 }
 
 void Game::handleEvents()
@@ -84,16 +109,17 @@ void Game::update()
     double timeStep = stepTimer.getTicks() / 1000.0;
     //std::cout << timeStep << '\n';
 
-    player->update(timeStep);
+    player->update(timeStep, map->getMap());
 
     stepTimer.start();
 }
 
 void Game::render()
 {
-    SDL_SetRenderDrawColor(TextureW::m_renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(TextureW::m_renderer, 0, 0, 0, 0);
     SDL_RenderClear(TextureW::m_renderer);
 
+    map->drawMap();
     player->draw();
 
     SDL_RenderPresent(TextureW::m_renderer);
@@ -109,6 +135,9 @@ void Game::close()
     
     delete player;
     player = nullptr;
+
+    delete map;
+    map = nullptr;
 
     IMG_Quit();
     SDL_Quit();

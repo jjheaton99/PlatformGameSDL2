@@ -12,16 +12,15 @@ public:
     };
 
 private:
-    Uint8 m_ID;
     Type m_type;
+    int m_size;
     
 public:
     Tile(const char* fileName, double xPos, double yPos, Type type);
     ~Tile();
 
-    virtual void update(double timeStep) override;
-    void setDrawPos(double xPos, double yPos);
-
-    Uint8 getID() { return m_ID; }
+    void setPos(int xPos, int yPos);
+    int getSize() { return m_size; }
+    Type getType() { return m_type; }
 };
 

@@ -1,74 +1,52 @@
 #include "Map.h"
 
-Map::map_type lvl1{ {
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-} };
-
-Map::Map()
+Map::Map(layout_type map)
 {
-    m_dirt.load("Assets/dirt.png");
-    m_grass.load("Assets/grass.png");
-    m_water.load("Assets/water.png");
+    loadMap(map);
 }
 
 Map::~Map()
 {
+    for (index_type row{ 0 }; row < m_map.size(); ++row)
+    {
+        for (index_type column{ 0 }; column < m_map[0].size(); ++column)
+        {
+            m_map[row][column].destroy();
+        }
+    }
 }
 
-void Map::loadMap(map_type map)
+void Map::loadMap(layout_type map)
 {
     for (index_type row{ 0 }; row < map.size(); ++row)
     {
+        m_map.push_back(std::vector<Tile>());
         for (index_type column{ 0 }; column < map[0].size(); ++column)
         {
-            m_map[row][column] = map[row][column];
+            switch (map[row][column])
+            {
+            case 0:
+                m_map[row].push_back(m_background);
+                break;
+            case 1:
+                m_map[row].push_back(m_block);
+                break;
+            default:
+                break;
+            }
         }
     }
 }
 
 void Map::drawMap()
 {
-    int type{ 0 };
-
     for (index_type row{ 0 }; row < m_map.size(); ++row)
     {
         for (index_type column{ 0 }; column < m_map[0].size(); ++column)
         {
-            type = m_map[row][column];
-
-            switch (type)
-            {
-            case 0:
-                //TextureManager::drawTexture(m_dirt, );
-                break;
-            case 1:
-                //TextureManager::drawTexture(m_dirt, );
-                break;
-            case 2:
-                //TextureManager::drawTexture(m_dirt, );
-                break;
-            default:
-                break;
-            }
+            m_map[row][column].setPos(column * static_cast<index_type>(m_map[row][column].getSize()), 
+                row * static_cast<index_type>(m_map[row][column].getSize()));
+            m_map[row][column].draw();
         }
     }
 }

@@ -3,8 +3,12 @@
 Tile::Tile(const char* fileName, double xPos, double yPos, Type type)
     : GameObject(fileName, xPos, yPos), m_type{type}
 {
-    m_dstRect.w = 50;
-    m_dstRect.h = 50;
+    m_srcRect.w = 32;
+    m_srcRect.h = 32;
+
+    m_size = 50;
+    m_dstRect.w = m_size;
+    m_dstRect.h = m_size;
 
     switch (m_type)
     {
@@ -20,15 +24,12 @@ Tile::Tile(const char* fileName, double xPos, double yPos, Type type)
 }
 
 Tile::~Tile()
-{
-    destroy();
-}
-
-void Tile::update(double timeStep)
 {}
 
-void Tile::setDrawPos(double xPos, double yPos)
+void Tile::setPos(int xPos, int yPos)
 {
     m_dstRect.x = xPos;
     m_dstRect.y = yPos;
+
+    m_collider.setPosition(xPos, yPos);
 }
