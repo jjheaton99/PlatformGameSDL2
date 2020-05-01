@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(const char* fileName, double xPos, double yPos, Type type)
+Tile::Tile(const char* fileName, float xPos, float yPos, Type type)
     : GameObject(fileName, xPos, yPos), m_type{type}
 {
     m_srcRect.w = 32;

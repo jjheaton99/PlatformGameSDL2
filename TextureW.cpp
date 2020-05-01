@@ -13,7 +13,7 @@ void TextureW::load(const char* fileName)
     SDL_FreeSurface(tmpSurface);
 }
 
-void TextureW::draw(SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip)
+void TextureW::draw(SDL_Rect srcRect, SDL_Rect dstRect, float angle, SDL_Point* centre, SDL_RendererFlip flip)
 {
     SDL_RenderCopyEx(m_renderer, m_texture, &srcRect, &dstRect, angle, centre, flip);
 }

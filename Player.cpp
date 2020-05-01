@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel)
+Player::Player(const char* fileName, float xStartPos, float yStartPos, float xVel, float yVel)
     : Character(fileName, xStartPos, yStartPos, xVel, yVel, 56, 100)
 {
     for (int i{ 0 }; i < spriteSheetCount; ++i)
@@ -26,18 +26,18 @@ Player::~Player()
     destroy();
 }
 
-void Player::update(double timeStep, std::vector<std::vector<Tile>>& map)
+void Player::update(float timeStep, std::vector<std::vector<Tile>>& map)
 {
-    Vector2D<double> timeScaledVel{ Vector2D<double>{m_velocity.getx()* timeStep, m_velocity.gety()* timeStep} };
+    Vector2D<float> timeScaledVel{ Vector2D<float>{m_velocity.getx()* timeStep, m_velocity.gety()* timeStep} };
     m_position.add(timeScaledVel);
-    m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
     
     mapCollideCheck(map);
     edgeCheck();
+    m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 
     motion(30, 0.9);
 
-    std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
+    //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
     //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
 
     m_dstRect.x = static_cast<int>(m_position.getx());
@@ -46,7 +46,7 @@ void Player::update(double timeStep, std::vector<std::vector<Tile>>& map)
     spriteAnimate(timeStep);
 }
 
-void Player::cycleWalkAnimation(double timeStep)
+void Player::cycleWalkAnimation(float timeStep)
 {
     m_animationTime += timeStep;
     if (m_animationTime > timeBetweenSpriteFrames)
@@ -61,7 +61,7 @@ void Player::cycleWalkAnimation(double timeStep)
     }
 }
 
-void Player::cycleIdleAnimation(double timeStep)
+void Player::cycleIdleAnimation(float timeStep)
 {
     m_animationTime += timeStep;
     if (m_animationTime > (timeBetweenSpriteFrames * 3.0))
@@ -76,7 +76,7 @@ void Player::cycleIdleAnimation(double timeStep)
     }
 }
 
-void Player::spriteAnimate(double timeStep)
+void Player::spriteAnimate(float timeStep)
 {
     if (m_movement == AIRBORNE)
     {

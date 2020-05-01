@@ -45,7 +45,7 @@ void InputHandler::playerControlsKeyPress(Player* player, SDL_Event& event)
 {
     if (!(player->getMovement() == Player::AIRBORNE))
     {
-        double jumpVel{ 1200.0 };
+        float jumpVel{ 1200.0 };
 
         switch (event.key.keysym.sym)
         {
