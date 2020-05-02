@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-GameObject::GameObject(const char* fileName, float xPos, float yPos, int colliderWidth, int colliderHeight)
+GameObject::GameObject(const char* fileName, double xPos, double yPos, int colliderWidth, int colliderHeight)
     : m_position{ xPos, yPos }, m_collider{colliderWidth, colliderHeight}
 {
     m_texture.load(fileName);

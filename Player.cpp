@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(const char* fileName, float xStartPos, float yStartPos, float xVel, float yVel)
+Player::Player(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel)
     : Character(fileName, xStartPos, yStartPos, xVel, yVel, 56, 100)
 {
     for (int i{ 0 }; i < spriteSheetCount; ++i)
@@ -26,9 +26,9 @@ Player::~Player()
     destroy();
 }
 
-void Player::update(float timeStep, std::vector<std::vector<Tile>>& map)
+void Player::update(double timeStep, std::vector<std::vector<Tile>>& map)
 {
-    Vector2D<float> timeScaledVel{ Vector2D<float>{m_velocity.getx()* timeStep, m_velocity.gety()* timeStep} };
+    Vector2D<double> timeScaledVel{ Vector2D<double>{m_velocity.getx()* timeStep, m_velocity.gety()* timeStep} };
     m_position.add(timeScaledVel);
     
     mapCollideCheck(map);
@@ -46,7 +46,7 @@ void Player::update(float timeStep, std::vector<std::vector<Tile>>& map)
     spriteAnimate(timeStep);
 }
 
-void Player::cycleWalkAnimation(float timeStep)
+void Player::cycleWalkAnimation(double timeStep)
 {
     m_animationTime += timeStep;
     if (m_animationTime > timeBetweenSpriteFrames)
@@ -61,7 +61,7 @@ void Player::cycleWalkAnimation(float timeStep)
     }
 }
 
-void Player::cycleIdleAnimation(float timeStep)
+void Player::cycleIdleAnimation(double timeStep)
 {
     m_animationTime += timeStep;
     if (m_animationTime > (timeBetweenSpriteFrames * 3.0))
@@ -76,7 +76,7 @@ void Player::cycleIdleAnimation(float timeStep)
     }
 }
 
-void Player::spriteAnimate(float timeStep)
+void Player::spriteAnimate(double timeStep)
 {
     if (m_movement == AIRBORNE)
     {

@@ -1,21 +1,21 @@
 #include "Character.h"
 
-Character::Character(const char* fileName, float xStartPos, float yStartPos, float xVel, float yVel, int colliderWidth, int colliderHeight)
+Character::Character(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight)
     : GameObject(fileName, xStartPos, yStartPos, colliderWidth, colliderHeight), m_velocity{ xVel, yVel }
 {}
 
 Character::~Character()
 {}
 
-void Character::motion(float acceleration, float deceleration)
+void Character::motion(double acceleration, double deceleration)
 {
     if (m_movement == AIRBORNE)
     {
-        m_velocity.add(Vector2D<float>{0, Constants::g});
+        m_velocity.add(Vector2D<double>{0, Constants::g});
     }
     else if (m_movement == LEFT)
     {
-        m_velocity.add(Vector2D<float>{-acceleration, 0});
+        m_velocity.add(Vector2D<double>{-acceleration, 0});
         if (m_velocity.getx() < -m_xMaxSpeed)
         {
             setVel(-m_xMaxSpeed, 0);
@@ -23,7 +23,7 @@ void Character::motion(float acceleration, float deceleration)
     }
     else if (m_movement == RIGHT)
     {
-        m_velocity.add(Vector2D<float>{acceleration, 0});
+        m_velocity.add(Vector2D<double>{acceleration, 0});
         if (m_velocity.getx() > m_xMaxSpeed)
         {
             setVel(m_xMaxSpeed, 0);
@@ -43,35 +43,38 @@ void Character::edgeCheck()
 {
     if (m_position.getx() < 0)
     {
-        m_position.subtract(Vector2D<float>{m_position.getx(), 0});
+        m_position.subtract(Vector2D<double>{m_position.getx(), 0});
         setVel(0, m_velocity.gety());
     }
     else if (m_position.getx() > static_cast<std::int64_t>(Constants::screenWidth) - m_dstRect.w)
     {
-        m_position.subtract(Vector2D<float>{m_position.getx() - static_cast<std::int64_t>(Constants::screenWidth) + m_dstRect.w, 0});
+        m_position.subtract(Vector2D<double>{m_position.getx() - static_cast<std::int64_t>(Constants::screenWidth) + m_dstRect.w, 0});
         setVel(0, m_velocity.gety());
     }
-    else if (m_position.gety() < 0)
-    {
-        m_position.subtract(Vector2D<float>{0, m_position.gety()});
-    }
+    //else if (m_position.gety() < 0)
+    //{
+    //   m_position.subtract(Vector2D<double>{0, m_position.gety()});
+    //}
     else if (m_collider.getBox().y > static_cast<std::int64_t>(Constants::screenHeight) - m_dstRect.h)
     {
         if (m_movement == AIRBORNE)
         {
             m_movement = STOP;
         }
-        m_position.subtract(Vector2D<float>{0, m_position.gety() - static_cast<std::int64_t>(Constants::screenHeight) + m_dstRect.h});
+        m_position.subtract(Vector2D<double>{0, m_position.gety() - static_cast<std::int64_t>(Constants::screenHeight) + m_dstRect.h});
         setVel(m_velocity.getx(), 0);
     }
 }
 
-std::vector<SDL_Rect> Character::getCollideTileBoxes(std::vector<std::vector<Tile>>& map)
+//Checks tiles in the vicinity of the character to find collisions
+std::vector<SDL_Rect> Character::getCollideTileBoxes(std::vector<std::vector<Tile>>& map, int characterRow, 
+    int characterColumn, int tileSize, SDL_Rect& characterCollider)
 {
     std::vector<SDL_Rect> collisionRects;
-    for (Uint8 row{ 0 }; row < map.size(); ++row)
+
+    for (int row{ characterRow }; row * tileSize <= characterCollider.y + characterCollider.h; ++row)
     {
-        for (Uint8 column{ 0 }; column < map[0].size(); ++column)
+        for (int column{ characterColumn }; column * tileSize <= characterCollider.x + characterCollider.w; ++column)
         {
             if (map[row][column].getType() == Tile::SOLID)
             {
@@ -86,17 +89,19 @@ std::vector<SDL_Rect> Character::getCollideTileBoxes(std::vector<std::vector<Til
     return collisionRects;
 }
 
-bool Character::checkForPlatforms(std::vector<std::vector<Tile>>& map)
+bool Character::checkForPlatforms(std::vector<std::vector<Tile>>& map, int characterRow,
+    int characterColumn, int tileSize, SDL_Rect& characterCollider)
 {
-    for (Uint8 row{ 0 }; row < map.size(); ++row)
+    for (int row{ characterRow }; row * tileSize <= characterCollider.y + characterCollider.h; ++row)
     {
-        for (Uint8 column{ 0 }; column < map[0].size(); ++column)
+        for (int column{ characterColumn }; column * tileSize <= characterCollider.x + characterCollider.w; ++column)
         {
             if (map[row][column].getType() == Tile::SOLID)
             {
-                if ((m_position.gety() == map[row][column].getCollider().getBox().y - m_collider.getBox().h)
-                    && (map[row][column].getCollider().getBox().x > (m_collider.getBox().x - map[row][column].getCollider().getBox().w))
-                    && (map[row][column].getCollider().getBox().x < (m_collider.getBox().x + m_collider.getBox().w)))
+                //Checks for blocks directly below player whilst not colliding
+                if ((m_position.gety() == 1.0*map[row][column].getCollider().getBox().y - characterCollider.h)
+                    && (map[row][column].getCollider().getBox().x > (characterCollider.x - map[row][column].getCollider().getBox().w))
+                    && (map[row][column].getCollider().getBox().x < (characterCollider.x + characterCollider.w)))
                 {
                     return true;
                 }
@@ -109,75 +114,72 @@ bool Character::checkForPlatforms(std::vector<std::vector<Tile>>& map)
 
 void Character::mapCollideCheck(std::vector<std::vector<Tile>>& map)
 {
-    std::vector<SDL_Rect> collisionRects{ getCollideTileBoxes(map) };
+    int tileSize{ map[0][0].getSize() };
+    SDL_Rect characterCollider{ m_collider.getBox() };
+    int characterColumn{ (characterCollider.x - (characterCollider.x % tileSize)) / tileSize };
+    int characterRow{ (characterCollider.y - (characterCollider.y % tileSize)) / tileSize };
+    //std::cout << characterRow << ' ' << characterColumn << '\n';
+
+    std::vector<SDL_Rect> collisionRects{ getCollideTileBoxes(map, characterRow, characterColumn, tileSize, characterCollider) };
+    std::cout << collisionRects.size() << '\n';
 
     for (const auto& rect : collisionRects)
     {
-        float xOverlap{};
-        if (m_collider.getBox().x < rect.x)
+        double xOverlap{};
+        if (characterCollider.x < rect.x)
         {
-            xOverlap = static_cast<float>(m_collider.getBox().x + m_collider.getBox().w - rect.x);
+            xOverlap = 1.0*characterCollider.x + characterCollider.w - rect.x;
         }
-        else if (m_collider.getBox().x > rect.x)
+        else if (characterCollider.x > rect.x)
         {
-            xOverlap = static_cast<float>(rect.x + rect.w - m_collider.getBox().x);
-        }
-
-        float yOverlap{};
-        if (m_collider.getBox().y < rect.y)
-        {
-            yOverlap = static_cast<float>(m_collider.getBox().y + m_collider.getBox().h - rect.y);
-        }
-        else if (m_collider.getBox().y > rect.y)
-        {
-            yOverlap = static_cast<float>(rect.y + rect.h - m_collider.getBox().y);
+            xOverlap = 1.0*rect.x + rect.w - characterCollider.x;
         }
 
-        if ((xOverlap < yOverlap) && (m_collider.getBox().x < rect.x))
+        double yOverlap{};
+        if (characterCollider.y < rect.y)
         {
-            m_position.subtract(Vector2D<float>{xOverlap, 0});
-            m_velocity.xScale(0);
+            yOverlap = 1.0*characterCollider.y + characterCollider.h - rect.y;
         }
-        else if ((xOverlap < yOverlap) && (m_collider.getBox().x > rect.x))
+        else if (characterCollider.y > rect.y)
         {
-            m_position.add(Vector2D<float>{xOverlap, 0});
-            m_velocity.xScale(0);
+            yOverlap = 1.0*rect.y + rect.h - characterCollider.y;
         }
-        else if ((yOverlap < xOverlap) && (m_collider.getBox().y < rect.y))
+
+        if ((xOverlap < yOverlap) && (characterCollider.x < rect.x))
         {
-            m_position = Vector2D<float>{m_position.getx(), static_cast<float>(rect.y - m_collider.getBox().h)};
+            m_position.subtract(Vector2D<double>{xOverlap, 0});
+            //m_position = Vector2D<double>{ 1.0 * rect.x - characterCollider.w - 0.01, m_position.gety() };
+            //Needs optimising!!!
+            if (!checkForPlatforms(map, characterRow, characterColumn, tileSize, characterCollider))
+            {
+                m_velocity.xScale(0);
+            }
+        }
+        else if ((xOverlap < yOverlap) && (characterCollider.x > rect.x))
+        {
+            m_position.add(Vector2D<double>{xOverlap, 0});
+            //m_position = Vector2D<double>{ 1.0*rect.x + rect.w + 0.01, m_position.gety() };
+            //Needs optimising!!!
+            if (!checkForPlatforms(map, characterRow, characterColumn, tileSize, characterCollider))
+            {
+                m_velocity.xScale(0);
+            }
+        }
+        else if ((yOverlap < xOverlap) && (characterCollider.y < rect.y))
+        {
+            m_position = Vector2D<double>{m_position.getx(), 1.0*rect.y - characterCollider.h};
             m_velocity.yScale(0);
             m_movement = STOP;
         }
-        else if ((yOverlap < xOverlap) && (m_collider.getBox().y > rect.y))
+        else if ((yOverlap < xOverlap) && (characterCollider.y > rect.y))
         {
-            m_position = Vector2D<float>{m_position.getx(), static_cast<float>(rect.y + rect.h)};
+            m_position = Vector2D<double>{m_position.getx(), 1.0*rect.y + rect.h};
             m_velocity.yScale(0);
         }
     }
 
-    if (!checkForPlatforms(map))
+    if (!checkForPlatforms(map, characterRow, characterColumn, tileSize, characterCollider))
     {
         m_movement = AIRBORNE;
     }
-
-    /*
-    if (collideRect.x != -1)
-    {
-        if ((m_movement == AIRBORNE) && (m_velocity.gety() > 0))
-        {
-            m_position.subtract(Vector2D<float>{0, static_cast<float>(m_dstRect.h) - static_cast<float>(collideRect.y) + m_position.gety() + 1});
-            m_movement = STOP;
-            setVel(m_velocity.getx(), 0);
-        }
-
-        else if ((m_movement == AIRBORNE) && (m_velocity.gety() < 0))
-        {
-            m_position.add(Vector2D<float>{0, static_cast<float>(collideRect.h) -  m_position.gety() + static_cast<float>(collideRect.y) + 1});
-            setVel(m_velocity.getx(), -m_velocity.gety());
-        }
-        
-        std::cout << "Collided" << '\n';
-    }
-    */
 }

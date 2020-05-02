@@ -19,30 +19,32 @@ public:
     };
 
 protected:
-    Vector2D<float> m_velocity;
+    Vector2D<double> m_velocity;
     Movement m_movement{ AIRBORNE };
-    float m_xMaxSpeed{ 0 };
+    double m_xMaxSpeed{ 0 };
+
+    virtual void mapCollideCheck(std::vector<std::vector<Tile>>& map);
+    virtual std::vector<SDL_Rect> getCollideTileBoxes(std::vector<std::vector<Tile>>& map, int characterRow, 
+        int characterColumn, int tileSize, SDL_Rect& characterCollider);
+    virtual bool checkForPlatforms(std::vector<std::vector<Tile>>& map, int characterRow,
+        int characterColumn, int tileSize, SDL_Rect& characterCollider);
+    virtual void edgeCheck();
 
 public:
-    Character(const char* fileName, float xStartPos = 0, float yStartPos = 0, float xVel = 0, float yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
+    Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
     ~Character();
 
-    virtual void update(float timeStep, std::vector<std::vector<Tile>>& map) = 0;
+    virtual void update(double timeStep, std::vector<std::vector<Tile>>& map) = 0;
 
-    const Vector2D<float>& getVel() { return m_velocity; }
-    void setVel(float xVel, float yVel) { m_velocity = Vector2D<float>{ xVel, yVel }; }
-    void setDirection(float angle) { m_velocity.rotate(angle); }
+    const Vector2D<double>& getVel() { return m_velocity; }
+    void setVel(double xVel, double yVel) { m_velocity = Vector2D<double>{ xVel, yVel }; }
+    void setDirection(double angle) { m_velocity.rotate(angle); }
 
     Movement getMovement() { return m_movement; }
     void makeAirborne() { m_movement = AIRBORNE; }
     void moveLeft() { m_movement = LEFT; }
     void moveRight() { m_movement = RIGHT; }
     void stop() { m_movement = STOP; }
-
-    virtual void motion(float acceleration, float deceleration);
-    virtual void edgeCheck();
-    virtual std::vector<SDL_Rect> getCollideTileBoxes(std::vector<std::vector<Tile>>& map);
-    virtual void mapCollideCheck(std::vector<std::vector<Tile>>& map);
-    virtual bool checkForPlatforms(std::vector<std::vector<Tile>>& map);
+    virtual void motion(double acceleration, double deceleration);
 };
 

@@ -16,7 +16,7 @@ private:
     int m_size;
     
 public:
-    Tile(const char* fileName, float xPos, float yPos, Type type);
+    Tile(const char* fileName, double xPos, double yPos, Type type);
     ~Tile();
 
     void setPos(int xPos, int yPos);

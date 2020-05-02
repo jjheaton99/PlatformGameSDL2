@@ -9,7 +9,7 @@
 class GameObject
 {
 protected:
-    Vector2D<float> m_position;
+    Vector2D<double> m_position;
 
     TextureW m_texture;
     SDL_Rect m_srcRect;
@@ -18,7 +18,7 @@ protected:
     Collider m_collider;
 
 public:
-    GameObject(const char* fileName, float xPos = 0, float yPos = 0, int colliderWidth = 0, int colliderHeight = 0);
+    GameObject(const char* fileName, double xPos = 0, double yPos = 0, int colliderWidth = 0, int colliderHeight = 0);
     ~GameObject();
 
     virtual void draw();

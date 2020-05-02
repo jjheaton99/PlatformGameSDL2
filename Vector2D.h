@@ -101,10 +101,10 @@ void Vector2D<T>::print() const
 
 /*  For int non-template rotate function
 
-    m_x = static_cast<int>(static_cast<float>(m_x) * std::cos(Constants::pi * (static_cast<float>(angle) / 180.0))
-        - static_cast<float>(m_y) * std::sin(Constants::pi * (static_cast<float>(angle) / 180.0)));
-    m_y = static_cast<int>(static_cast<float>(m_x) * std::sin(Constants::pi * (static_cast<float>(angle) / 180.0))
-        + static_cast<float>(m_y) * std::cos(Constants::pi * (static_cast<float>(angle) / 180.0)));
+    m_x = static_cast<int>(static_cast<double>(m_x) * std::cos(Constants::pi * (static_cast<double>(angle) / 180.0))
+        - static_cast<double>(m_y) * std::sin(Constants::pi * (static_cast<double>(angle) / 180.0)));
+    m_y = static_cast<int>(static_cast<double>(m_x) * std::sin(Constants::pi * (static_cast<double>(angle) / 180.0))
+        + static_cast<double>(m_y) * std::cos(Constants::pi * (static_cast<double>(angle) / 180.0)));
 */
 
 /*
