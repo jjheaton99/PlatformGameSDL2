@@ -124,6 +124,8 @@ void Character::mapCollideCheck(std::vector<std::vector<Tile>>& map)
     std::vector<SDL_Rect> collisionRects{ getCollideTileBoxes(map, characterRow, characterColumn, tileSize, characterCollider) };
     //std::cout << collisionRects.size() << '\n';
 
+    int xCollideCount{ 0 };
+    int yCollideCount{ 0 };
     for (const auto& rect : collisionRects)
     {
         double xOverlap{};
@@ -146,37 +148,37 @@ void Character::mapCollideCheck(std::vector<std::vector<Tile>>& map)
             yOverlap = 1.0*rect.y + rect.h - characterCollider.y;
         }
 
-        if ((xOverlap < yOverlap) && (characterCollider.x < rect.x))
-        {
-            m_position.subtract(Vector2D<double>{xOverlap, 0});
-            //m_position = Vector2D<double>{ 1.0 * rect.x - characterCollider.w - 0.01, m_position.gety() };
-            //Needs optimising!!!
-            if (!checkForPlatforms(map, characterRow, characterColumn, tileSize, characterCollider))
-            {
-                m_velocity.xScale(0);
-            }
-        }
-        else if ((xOverlap < yOverlap) && (characterCollider.x > rect.x))
-        {
-            m_position.add(Vector2D<double>{xOverlap, 0});
-            //m_position = Vector2D<double>{ 1.0*rect.x + rect.w, m_position.gety() };
-            //Needs optimising!!!
-            if (!checkForPlatforms(map, characterRow, characterColumn, tileSize, characterCollider))
-            {
-                m_velocity.xScale(0);
-            }
-        }
-        else if ((yOverlap < xOverlap) && (characterCollider.y < rect.y))
+        if ((yOverlap < xOverlap) && (characterCollider.y < rect.y))
         {
             m_position = Vector2D<double>{m_position.getx(), 1.0*rect.y - characterCollider.h};
             m_velocity.yScale(0);
             m_movement = STOP;
+            ++yCollideCount;
         }
         else if ((yOverlap < xOverlap) && (characterCollider.y > rect.y))
         {
             m_position = Vector2D<double>{m_position.getx(), 1.0*rect.y + rect.h};
             m_velocity.yScale(0);
+            ++yCollideCount;
         }
+        else if ((xOverlap < yOverlap) && (characterCollider.x < rect.x))
+        {
+            m_position.subtract(Vector2D<double>{xOverlap, 0});
+            //m_position = Vector2D<double>{ 1.0 * rect.x - characterCollider.w - 0.01, m_position.gety() };
+            ++xCollideCount;
+        }
+        else if ((xOverlap < yOverlap) && (characterCollider.x > rect.x))
+        {
+            m_position.add(Vector2D<double>{xOverlap, 0});
+            //m_position = Vector2D<double>{ 1.0*rect.x + rect.w, m_position.gety() };
+            ++xCollideCount;
+        }
+    }
+
+    //Stops motion when colliding with wall
+    if (xCollideCount != 0 && yCollideCount == 0)
+    {
+        m_velocity.xScale(0);
     }
 
     if (!checkForPlatforms(map, characterRow, characterColumn, tileSize, characterCollider))
