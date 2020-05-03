@@ -103,6 +103,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_ttf-2.0.15\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_mixer-2.0.4\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_image-2.0.5\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_ttf-2.0.15\lib\x86;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_mixer-2.0.4\lib\x86;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_image-2.0.5\lib\x86;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2-2.0.12\lib\x86;$(LibraryPath)</LibraryPath>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -111,6 +112,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_ttf-2.0.15\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_mixer-2.0.4\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_image-2.0.5\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_ttf-2.0.15\lib\x86;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_mixer-2.0.4\lib\x86;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_image-2.0.5\lib\x86;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2-2.0.12\lib\x86;$(LibraryPath)</LibraryPath>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

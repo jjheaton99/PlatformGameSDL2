@@ -16,6 +16,8 @@ int main(int argc, char* args[])
     }
 
     game->close();
+    delete game;
+    game = nullptr;
 
     return 0;
 }

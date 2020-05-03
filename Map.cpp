@@ -1,85 +1,136 @@
 #include "Map.h"
 
-Map::Map(layout_type map)
+Map::Map()
+    : m_background{ "Assets/background2.png", Tile::BACKGROUND },
+    m_block1{ "Assets/WhiteFadeBlocks/1.png", Tile::SOLID },
+    m_block2{ "Assets/WhiteFadeBlocks/2.png", Tile::SOLID },
+    m_block3{ "Assets/WhiteFadeBlocks/3.png", Tile::SOLID },
+    m_block4{ "Assets/WhiteFadeBlocks/4.png", Tile::SOLID },
+    m_block5{ "Assets/WhiteFadeBlocks/5.png", Tile::SOLID },
+    m_block6{ "Assets/WhiteFadeBlocks/6.png", Tile::SOLID },
+    m_block7{ "Assets/WhiteFadeBlocks/7.png", Tile::SOLID },
+    m_block8{ "Assets/WhiteFadeBlocks/8.png", Tile::SOLID },
+    m_block9{ "Assets/WhiteFadeBlocks/9.png", Tile::SOLID },
+    m_block10{ "Assets/WhiteFadeBlocks/10.png", Tile::SOLID },
+    m_block11{ "Assets/WhiteFadeBlocks/11.png", Tile::SOLID },
+    m_block12{ "Assets/WhiteFadeBlocks/12.png", Tile::SOLID },
+    m_block13{ "Assets/WhiteFadeBlocks/13.png", Tile::SOLID },
+    m_block14{ "Assets/WhiteFadeBlocks/14.png", Tile::SOLID },
+    m_block15{ "Assets/WhiteFadeBlocks/15.png", Tile::SOLID },
+    m_block16{ "Assets/WhiteFadeBlocks/16.png", Tile::SOLID }
 {
-    loadMap(map);
 }
 
 Map::~Map()
 {
-    for (index_type row{ 0 }; row < m_map.size(); ++row)
+}
+
+void Map::pushTile(int tileNumber, std::vector<Tile>& tileRow)
+{
+    switch (tileNumber)
     {
-        for (index_type column{ 0 }; column < m_map[0].size(); ++column)
-        {
-            m_map[row][column].destroy();
-        }
+    case 0:
+        tileRow.push_back(m_background);
+        break;
+    case 1:
+        tileRow.push_back(m_block1);
+        break;
+    case 2:
+        tileRow.push_back(m_block2);
+        break;
+    case 3:
+        tileRow.push_back(m_block3);
+        break;
+    case 4:
+        tileRow.push_back(m_block4);
+        break;
+    case 5:
+        tileRow.push_back(m_block5);
+        break;
+    case 6:
+        tileRow.push_back(m_block6);
+        break;
+    case 7:
+        tileRow.push_back(m_block7);
+        break;
+    case 8:
+        tileRow.push_back(m_block8);
+        break;
+    case 9:
+        tileRow.push_back(m_block9);
+        break;
+    case 10:
+        tileRow.push_back(m_block10);
+        break;
+    case 11:
+        tileRow.push_back(m_block11);
+        break;
+    case 12:
+        tileRow.push_back(m_block12);
+        break;
+    case 13:
+        tileRow.push_back(m_block13);
+        break;
+    case 14:
+        tileRow.push_back(m_block14);
+        break;
+    case 15:
+        tileRow.push_back(m_block15);
+        break;
+    case 16:
+        tileRow.push_back(m_block16);
+        break;
+    default:
+        break;
     }
 }
 
-void Map::loadMap(layout_type map)
+//Returns false if map wasn't loaded
+bool Map::loadMap(const char* fileName)
 {
-    for (index_type row{ 0 }; row < map.size(); ++row)
+    //Erase any previous map
+    m_map.resize(0);
+
+    std::ifstream mapFile(fileName);
+    if (!mapFile.is_open())
     {
-        m_map.push_back(std::vector<Tile>());
-        for (index_type column{ 0 }; column < map[0].size(); ++column)
+        std::cout << "Unable to open file " << fileName << "!\n";
+        return false;
+    }
+
+    else
+    {
+        std::string line;
+        std::vector<Tile> tileRow;
+
+        while (!mapFile.eof())
         {
-            switch (map[row][column])
+            std::getline(mapFile, line);
+            tileRow.resize(0);
+            
+            std::string tileNumberString{};
+            int tileNumber{ 0 };
+            index_type index{ 0 };
+            index_type spacePos{ line.find(' ', index) };
+
+            while (spacePos != std::string::npos)
             {
-            case 0:
-                m_map[row].push_back(m_background);
-                break;
-            case 1:
-                m_map[row].push_back(m_block1);
-                break;
-            case 2:
-                m_map[row].push_back(m_block2);
-                break;
-            case 3:
-                m_map[row].push_back(m_block3);
-                break;
-            case 4:
-                m_map[row].push_back(m_block4);
-                break;
-            case 5:
-                m_map[row].push_back(m_block5);
-                break;
-            case 6:
-                m_map[row].push_back(m_block6);
-                break;
-            case 7:
-                m_map[row].push_back(m_block7);
-                break;
-            case 8:
-                m_map[row].push_back(m_block8);
-                break;
-            case 9:
-                m_map[row].push_back(m_block9);
-                break;
-            case 10:
-                m_map[row].push_back(m_block10);
-                break;
-            case 11:
-                m_map[row].push_back(m_block11);
-                break;
-            case 12:
-                m_map[row].push_back(m_block12);
-                break;
-            case 13:
-                m_map[row].push_back(m_block13);
-                break;
-            case 14:
-                m_map[row].push_back(m_block14);
-                break;
-            case 15:
-                m_map[row].push_back(m_block15);
-                break;
-            case 16:
-                m_map[row].push_back(m_block16);
-                break;
-            default:
-                break;
+                tileNumberString = line.substr(index, spacePos - index);
+                index = spacePos + 1;
+                spacePos = line.find(' ', index);
+
+                tileNumber = std::stoi(tileNumberString);
+                pushTile(tileNumber, tileRow);
             }
+
+            tileNumberString = line.substr(index, line.length() - index);
+            pushTile(tileNumber, tileRow);
+
+            m_map.push_back(tileRow);
         }
+
+        mapFile.close();
+        return true;
     }
 }
 

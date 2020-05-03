@@ -1,12 +1,11 @@
 #include "Tile.h"
 
-Tile::Tile(const char* fileName, double xPos, double yPos, Type type)
-    : GameObject(fileName, xPos, yPos), m_type{type}
+Tile::Tile(const char* fileName, Type type, double xPos, double yPos, int size)
+    : GameObject(fileName, xPos, yPos), m_type{type}, m_size{size}
 {
     m_srcRect.w = 32;
     m_srcRect.h = 32;
 
-    m_size = 50;
     m_dstRect.w = m_size;
     m_dstRect.h = m_size;
 
@@ -24,7 +23,9 @@ Tile::Tile(const char* fileName, double xPos, double yPos, Type type)
 }
 
 Tile::~Tile()
-{}
+{
+    destroy();
+}
 
 void Tile::setPos(int xPos, int yPos)
 {

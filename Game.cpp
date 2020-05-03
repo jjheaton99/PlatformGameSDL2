@@ -1,9 +1,6 @@
 #include "Game.h"
 
-Player* player = nullptr;
-
-Map* map = nullptr;
-
+/*
 Map::layout_type lvl1{ {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -24,6 +21,7 @@ Map::layout_type lvl1{ {
     {14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,16,16},
     {16,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,16,16,16}
 } };
+*/
 
 SDL_Renderer* TextureW::m_renderer = nullptr;
 
@@ -76,9 +74,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         m_isRunning = true;
     }
 
-    player = new Player("Assets/MrPix.png", 200, 200, 0, 0);
+    m_player = new Player("Assets/MrPix.png", 200, 200);
 
-    map = new Map(lvl1);
+    m_map = new Map();
+    if (!m_map->loadMap("Assets/Maps/lvl1.txt"))
+    {
+        std::cout << "Map not loaded!" << '\n';
+    }
 }
 
 void Game::handleEvents()
@@ -89,7 +91,7 @@ void Game::handleEvents()
         events.push_back(event);
     }
 
-    InputHandler::playerControlsKeyHold(player);
+    InputHandler::playerControlsKeyHold(m_player);
  
     for (auto& element : events)
     {
@@ -98,7 +100,7 @@ void Game::handleEvents()
             m_isRunning = false;
         }
 
-        InputHandler::playerControlsKeyPress(player, element);
+        InputHandler::playerControlsKeyPress(m_player, element);
     }
 
     events.clear();
@@ -109,7 +111,7 @@ void Game::update()
     double timeStep = stepTimer.getTicks() / 1000.0;
     //std::cout << timeStep << '\n';
 
-    player->update(timeStep, map->getMap());
+    m_player->update(timeStep, m_map->getMap());
 
     stepTimer.start();
 }
@@ -119,8 +121,8 @@ void Game::render()
     SDL_SetRenderDrawColor(TextureW::m_renderer, 0, 0, 0, 0);
     SDL_RenderClear(TextureW::m_renderer);
 
-    map->drawMap();
-    player->draw();
+    m_map->drawMap();
+    m_player->draw();
 
     SDL_RenderPresent(TextureW::m_renderer);
 }
@@ -133,11 +135,11 @@ void Game::close()
     SDL_DestroyRenderer(TextureW::m_renderer);
     TextureW::m_renderer = nullptr;
     
-    delete player;
-    player = nullptr;
+    delete m_player;
+    m_player = nullptr;
 
-    delete map;
-    map = nullptr;
+    delete m_map;
+    m_map = nullptr;
 
     IMG_Quit();
     SDL_Quit();

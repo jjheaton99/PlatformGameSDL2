@@ -16,7 +16,7 @@ private:
     int m_size;
     
 public:
-    Tile(const char* fileName, double xPos, double yPos, Type type);
+    Tile(const char* fileName = "Assets/background2.png", Type type = BACKGROUND, double xPos = 0, double yPos = 0, int size = 50);
     ~Tile();
 
     void setPos(int xPos, int yPos);

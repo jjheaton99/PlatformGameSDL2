@@ -15,6 +15,8 @@ class Game
 private:
     bool m_isRunning;
     SDL_Window* m_window;
+    Player* m_player;
+    Map* m_map;
 
 public:
     Game();

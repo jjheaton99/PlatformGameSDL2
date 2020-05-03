@@ -121,7 +121,7 @@ void Character::mapCollideCheck(std::vector<std::vector<Tile>>& map)
     //std::cout << characterRow << ' ' << characterColumn << '\n';
 
     std::vector<SDL_Rect> collisionRects{ getCollideTileBoxes(map, characterRow, characterColumn, tileSize, characterCollider) };
-    std::cout << collisionRects.size() << '\n';
+    //std::cout << collisionRects.size() << '\n';
 
     for (const auto& rect : collisionRects)
     {
@@ -158,7 +158,7 @@ void Character::mapCollideCheck(std::vector<std::vector<Tile>>& map)
         else if ((xOverlap < yOverlap) && (characterCollider.x > rect.x))
         {
             m_position.add(Vector2D<double>{xOverlap, 0});
-            //m_position = Vector2D<double>{ 1.0*rect.x + rect.w + 0.01, m_position.gety() };
+            //m_position = Vector2D<double>{ 1.0*rect.x + rect.w, m_position.gety() };
             //Needs optimising!!!
             if (!checkForPlatforms(map, characterRow, characterColumn, tileSize, characterCollider))
             {
