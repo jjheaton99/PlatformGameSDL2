@@ -9,22 +9,11 @@ Tile::Tile(const char* fileName, Type type, double xPos, double yPos, int size)
     m_dstRect.w = m_size;
     m_dstRect.h = m_size;
 
-    switch (m_type)
-    {
-    case Tile::BACKGROUND:
-        m_collider.setDimensions(0, 0);
-        break;
-    case Tile::SOLID:
-        m_collider.setDimensions(50, 50);
-        break;
-    default:
-        break;
-    }
+    m_collider.setDimensions(m_size, m_size);
 }
 
 Tile::~Tile()
 {
-    destroy();
 }
 
 void Tile::setPos(int xPos, int yPos)

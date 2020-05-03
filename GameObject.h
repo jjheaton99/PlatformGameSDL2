@@ -3,6 +3,7 @@
 #include "Vector2D.h"
 #include "TextureW.h"
 #include "Collider.h"
+#include "GameCamera.h"
 #include <vector>
 #include <cmath>
 

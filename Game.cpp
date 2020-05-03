@@ -75,9 +75,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     }
 
     m_player = new Player("Assets/MrPix.png", 200, 200);
+    camera.setPos(0, 0);
 
     m_map = new Map();
-    if (!m_map->loadMap("Assets/Maps/lvl1.txt"))
+    if (!m_map->loadMap("Assets/Maps/sideScroller.txt"))
     {
         std::cout << "Map not loaded!" << '\n';
     }

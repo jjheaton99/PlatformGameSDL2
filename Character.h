@@ -45,6 +45,6 @@ public:
     void moveLeft() { m_movement = LEFT; }
     void moveRight() { m_movement = RIGHT; }
     void stop() { m_movement = STOP; }
-    virtual void motion(double acceleration, double deceleration);
+    virtual void motion(double acceleration, double deceleration, double maxVel);
 };
 

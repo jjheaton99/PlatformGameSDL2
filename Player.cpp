@@ -15,8 +15,8 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
     
     m_spriteIndex = 0;
 
-    m_dstRect.w = 100;
-    m_dstRect.h = 100;
+    m_dstRect.w = m_collider.getBox().h;
+    m_dstRect.h = m_collider.getBox().h;
 
     m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 }
@@ -35,7 +35,7 @@ void Player::update(double timeStep, std::vector<std::vector<Tile>>& map)
     edgeCheck();
     m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 
-    motion(30, 0.9);
+    motion(30, 0.9, m_maxVel);
 
     //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
     //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
@@ -44,6 +44,7 @@ void Player::update(double timeStep, std::vector<std::vector<Tile>>& map)
     m_dstRect.y = static_cast<int>(m_position.gety());
 
     spriteAnimate(timeStep);
+    moveCamera();
 }
 
 void Player::cycleWalkAnimation(double timeStep)
@@ -122,5 +123,61 @@ void Player::draw()
         flip = SDL_FLIP_HORIZONTAL;
     }
     m_texture.draw(m_srcRect, m_dstRect, 0, nullptr, flip);
+}
 
+void Player::moveCamera()
+{
+
+    camera.setPos(static_cast<int>(m_position.getx()) - (Constants::screenWidth / 2),
+        static_cast<int>(m_position.gety()) - (Constants::screenHeight / 2));
+
+    //Now to boundary check the camera
+    if (!camera.xInBoundary() && !camera.yInBoundary())
+    {
+        if (camera.getx() < 0 && camera.gety() < 0)
+        {
+            camera.setPos(0, 0);
+        }
+
+        else if (camera.getx() > camera.getxMax() && camera.gety() < 0)
+        {
+            camera.setPos(camera.getxMax(), 0);
+        }
+
+        else if (camera.getx() < 0 && camera.gety() > camera.getyMax())
+        {
+            camera.setPos(0, camera.getyMax());
+        }
+
+        else if (camera.getx() > camera.getxMax() && camera.gety() > camera.getyMax())
+        {
+            camera.setPos(camera.getxMax(), camera.getyMax());
+        }
+    }
+
+    else if (!camera.xInBoundary() && camera.yInBoundary())
+    {
+        if (camera.getx() < 0)
+        {
+            camera.setPos(0, camera.gety());
+        }
+
+        else if (camera.getx() > camera.getxMax())
+        {
+            camera.setPos(camera.getxMax(), camera.gety());
+        }
+    }
+
+    else if (camera.xInBoundary() && !camera.yInBoundary())
+    {
+        if (camera.gety() < 0)
+        {
+            camera.setPos(camera.getx(), 0);
+        }
+
+        else if (camera.gety() > camera.getyMax())
+        {
+            camera.setPos(camera.getx(), camera.getyMax());
+        }
+    }
 }

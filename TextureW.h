@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 #include "SDL_Image.h"
+#include "GameCamera.h"
 
 //Texture wrapper class
 class TextureW
@@ -11,7 +12,7 @@ public:
     ~TextureW();
 
     void load(const char* fileName);
-    void draw(SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip);
+    void draw(SDL_Rect& srcRect, SDL_Rect& dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip);
     void free();
     void setColour(Uint8 R, Uint8 G, Uint8 B);
     void setBlendingMode(SDL_BlendMode mode);
