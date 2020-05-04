@@ -1,5 +1,6 @@
 #include "Player.h"
 
+//Player collision box width = 0.56 * collision box height
 Player::Player(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel)
     : Character(fileName, xStartPos, yStartPos, xVel, yVel, 56, 100)
 {

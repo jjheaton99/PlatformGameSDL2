@@ -118,7 +118,17 @@ void Character::mapCollideCheck(std::vector<std::vector<Tile>>& map)
     int tileSize{ map[0][0].getSize() };
     SDL_Rect characterCollider{ m_collider.getBox() };
     int characterColumn{ (characterCollider.x - (characterCollider.x % tileSize)) / tileSize };
+    if (characterColumn > static_cast<int>(map[0].size() - 1))
+    {
+        m_position.subtract(m_velocity);
+        return;
+    }
     int characterRow{ (characterCollider.y - (characterCollider.y % tileSize)) / tileSize };
+    if (characterRow > static_cast<int>(map.size() - 1))
+    {
+        m_position.subtract(m_velocity);
+        return;
+    }
     //std::cout << characterRow << ' ' << characterColumn << '\n';
 
     std::vector<SDL_Rect> collisionRects{ getCollideTileBoxes(map, characterRow, characterColumn, tileSize, characterCollider) };
@@ -131,33 +141,75 @@ void Character::mapCollideCheck(std::vector<std::vector<Tile>>& map)
         double xOverlap{};
         if (characterCollider.x < rect.x)
         {
-            xOverlap = 1.0*characterCollider.x + characterCollider.w - rect.x;
+            xOverlap = 1.0 * characterCollider.x + characterCollider.w - rect.x;
         }
         else if (characterCollider.x > rect.x)
         {
-            xOverlap = 1.0*rect.x + rect.w - characterCollider.x;
+            xOverlap = 1.0 * rect.x + rect.w - characterCollider.x;
+        }
+        else if (characterCollider.x = rect.x)
+        {
+            if (characterCollider.w > rect.w)
+            {
+                xOverlap = rect.w;
+            }
+            else
+            {
+                xOverlap = characterCollider.w;
+            }
+        }
+
+        if (characterCollider.w > rect.w && xOverlap > rect.w)
+        {
+            xOverlap = rect.w;
+        }
+        else if (characterCollider.w < rect.w && xOverlap > characterCollider.w)
+        {
+            xOverlap = characterCollider.w;
         }
 
         double yOverlap{};
         if (characterCollider.y < rect.y)
         {
-            yOverlap = 1.0*characterCollider.y + characterCollider.h - rect.y;
+            yOverlap = 1.0 * characterCollider.y + characterCollider.h - rect.y;
         }
         else if (characterCollider.y > rect.y)
         {
-            yOverlap = 1.0*rect.y + rect.h - characterCollider.y;
+            yOverlap = 1.0 * rect.y + rect.h - characterCollider.y;
         }
+        else if (characterCollider.y == rect.y)
+        {
+            if (characterCollider.h > rect.h)
+            {
+                yOverlap = rect.h;
+            }
+            else
+            {
+                yOverlap = characterCollider.h;
+            }
+        }
+
+        if (characterCollider.h > rect.h && yOverlap > rect.h)
+        {
+            yOverlap = rect.h;
+        }
+        else if (characterCollider.h < rect.h && yOverlap > characterCollider.h)
+        {
+            yOverlap = characterCollider.h;
+        }
+
+        //std::cout << xOverlap << "    " << yOverlap << '\n';
 
         if ((yOverlap < xOverlap) && (characterCollider.y < rect.y))
         {
-            m_position = Vector2D<double>{m_position.getx(), 1.0*rect.y - characterCollider.h};
+            m_position = Vector2D<double>{ m_position.getx(), 1.0 * rect.y - characterCollider.h };
             m_velocity.yScale(0);
             m_movement = STOP;
             ++yCollideCount;
         }
         else if ((yOverlap < xOverlap) && (characterCollider.y > rect.y))
         {
-            m_position = Vector2D<double>{m_position.getx(), 1.0*rect.y + rect.h};
+            m_position = Vector2D<double>{ m_position.getx(), 1.0 * rect.y + rect.h };
             m_velocity.yScale(0);
             ++yCollideCount;
         }
@@ -175,7 +227,7 @@ void Character::mapCollideCheck(std::vector<std::vector<Tile>>& map)
         }
     }
 
-    //Stops motion when colliding with wall
+    //Stops motion when colliding with wall and prevents momentum stopping issue when landing on flat ground
     if (xCollideCount != 0 && yCollideCount == 0)
     {
         m_velocity.xScale(0);
