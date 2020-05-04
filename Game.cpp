@@ -2,12 +2,12 @@
 
 SDL_Renderer* TextureW::m_renderer = nullptr;
 
-static std::vector<SDL_Event> events;
-
-TimerW stepTimer;
-
 Game::Game()
-{}
+    : m_stateMachine{ new StateMachine{} }
+{
+    m_stateMachine->setNextState(GameState::PLAY_GAME);
+    m_stateMachine->changeState();
+}
 
 Game::~Game()
 {}
@@ -50,59 +50,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
         m_isRunning = true;
     }
-
-    m_player = new Player("Assets/MrPix.png", 200, 200);
-    camera.setPos(0, 0);
-
-    m_map = new Map();
-    if (!m_map->loadMap("Assets/Maps/sideScroller.txt"))
-    {
-        std::cout << "Map not loaded!" << '\n';
-    }
 }
 
-void Game::handleEvents()
+void Game::singleLoop()
 {
-    SDL_Event event;
-    while (SDL_PollEvent(&event) != 0)
+    if (m_stateMachine->gameLoop() == GameState::EXIT)
     {
-        events.push_back(event);
+        m_isRunning = false;
     }
-
-    InputHandler::playerControlsKeyHold(m_player);
- 
-    for (auto& element : events)
-    {
-        if (!(InputHandler::windowEvent(element)))
-        {
-            m_isRunning = false;
-        }
-
-        InputHandler::playerControlsKeyPress(m_player, element);
-    }
-
-    events.clear();
-}
-
-void Game::update()
-{
-    double timeStep = stepTimer.getTicks() / 1000.0;
-    //std::cout << timeStep << '\n';
-
-    m_player->update(timeStep, m_map->getMap());
-
-    stepTimer.start();
-}
-
-void Game::render()
-{
-    SDL_SetRenderDrawColor(TextureW::m_renderer, 0, 0, 0, 0);
-    SDL_RenderClear(TextureW::m_renderer);
-
-    m_map->drawMap();
-    m_player->draw();
-
-    SDL_RenderPresent(TextureW::m_renderer);
 }
 
 void Game::close()
@@ -110,14 +65,11 @@ void Game::close()
     SDL_DestroyWindow(m_window);
     m_window = nullptr;
 
+    delete m_stateMachine;
+    m_stateMachine = nullptr;
+
     SDL_DestroyRenderer(TextureW::m_renderer);
     TextureW::m_renderer = nullptr;
-    
-    delete m_player;
-    m_player = nullptr;
-
-    delete m_map;
-    m_map = nullptr;
 
     IMG_Quit();
     SDL_Quit();

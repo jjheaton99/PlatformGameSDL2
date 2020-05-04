@@ -39,7 +39,7 @@ void Character::motion(double acceleration, double deceleration, double maxVel)
     }
 }
 
-void Character::edgeCheck()
+void Character::edgeCheck(Camera& camera)
 {
     if (m_position.getx() < 0)
     {

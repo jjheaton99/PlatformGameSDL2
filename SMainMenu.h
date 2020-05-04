@@ -8,8 +8,8 @@ public:
     SMainMenu() {};
     ~SMainMenu() {};
 
-    void handleEvents() {};
-    void update() {};
+    State handleEvents() { return STATE_NULL; };
+    State update() { return STATE_NULL; };
     void render() {};
 };
 

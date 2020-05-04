@@ -75,15 +75,14 @@ bool Map::loadMap(const char* fileName)
 
         mapFile.close();
 
-        int levelHeight{ static_cast<int>(m_map.size()) * m_map[0][0].getSize() };
-        int levelWidth{ static_cast<int>(m_map[0].size()) * m_map[0][0].getSize() };
-        camera.setBoundary(levelWidth, levelHeight);
+        m_levelHeight = static_cast<int>(m_map.size()) * m_map[0][0].getSize();
+        m_levelWidth = static_cast<int>(m_map[0].size()) * m_map[0][0].getSize();
 
         return true;
     }
 }
 
-void Map::drawMap()
+void Map::drawMap(Camera& camera)
 {
     for (index_type row{ 0 }; row < m_map.size(); ++row)
     {
@@ -91,7 +90,7 @@ void Map::drawMap()
         {
             m_map[row][column].setPos(column * static_cast<int>(m_map[row][column].getSize()), 
                 row * static_cast<int>(m_map[row][column].getSize()));
-            m_map[row][column].draw();
+            m_map[row][column].draw(camera);
         }
     }
 }

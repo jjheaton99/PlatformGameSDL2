@@ -27,13 +27,13 @@ Player::~Player()
     destroy();
 }
 
-void Player::update(double timeStep, std::vector<std::vector<Tile>>& map)
+void Player::update(double timeStep, std::vector<std::vector<Tile>>& map, Camera& camera)
 {
     Vector2D<double> timeScaledVel{ Vector2D<double>{m_velocity.getx()* timeStep, m_velocity.gety()* timeStep} };
     m_position.add(timeScaledVel);
     
     mapCollideCheck(map);
-    edgeCheck();
+    edgeCheck(camera);
     m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 
     motion(30, 0.9, m_maxVel);
@@ -45,7 +45,7 @@ void Player::update(double timeStep, std::vector<std::vector<Tile>>& map)
     m_dstRect.y = static_cast<int>(m_position.gety());
 
     spriteAnimate(timeStep);
-    moveCamera();
+    moveCamera(camera);
 }
 
 void Player::cycleWalkAnimation(double timeStep)
@@ -116,19 +116,23 @@ void Player::spriteAnimate(double timeStep)
     m_srcRect = m_spriteRects[m_spriteIndex];
 }
 
-void Player::draw()
+void Player::draw(Camera& camera)
 {   
     SDL_RendererFlip flip{ SDL_FLIP_NONE };
     if (m_isFlipped)
     {
         flip = SDL_FLIP_HORIZONTAL;
     }
-    m_texture.draw(m_srcRect, m_dstRect, 0, nullptr, flip);
+
+    if (m_collider.collideCheck(camera.getCollider()))
+    {
+        SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
+        m_texture.draw(m_srcRect, relativeDstRect, 0, nullptr, flip);
+    }
 }
 
-void Player::moveCamera()
+void Player::moveCamera(Camera& camera)
 {
-
     camera.setPos(static_cast<int>(m_position.getx()) - (Constants::screenWidth / 2),
         static_cast<int>(m_position.gety()) - (Constants::screenHeight / 2));
 

@@ -3,7 +3,7 @@
 #include "Vector2D.h"
 #include "TextureW.h"
 #include "Collider.h"
-#include "GameCamera.h"
+#include "Camera.h"
 #include <vector>
 #include <cmath>
 
@@ -22,7 +22,7 @@ public:
     GameObject(const char* fileName, double xPos = 0, double yPos = 0, int colliderWidth = 0, int colliderHeight = 0);
     ~GameObject();
 
-    virtual void draw();
+    virtual void draw(Camera& camera);
     virtual void destroy();
     Collider& getCollider() { return m_collider; }
 };

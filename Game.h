@@ -3,12 +3,8 @@
 #include "SDL.h"
 #include "SDL_Image.h"
 #include "TextureW.h"
-#include "Player.h"
-#include "InputHandler.h"
 #include "TimerW.h"
-#include "Map.h"
 #include "StateMachine.h"
-#include <vector>
 #include <iostream>
 
 class Game
@@ -16,8 +12,7 @@ class Game
 private:
     bool m_isRunning;
     SDL_Window* m_window;
-    Player* m_player;
-    Map* m_map;
+    StateMachine* m_stateMachine;
 
 public:
     Game();
@@ -25,9 +20,7 @@ public:
 
     void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
     
-    void handleEvents();
-    void update();
-    void render();
+    void singleLoop();
     void close();
     
     bool running() { return m_isRunning; }

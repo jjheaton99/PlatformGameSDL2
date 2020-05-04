@@ -1,8 +1,14 @@
 #include "StateMachine.h"
 
-void StateMachine::setNextState(State nextState)
+StateMachine::StateMachine()
+{}
+
+StateMachine::~StateMachine()
+{}
+
+void StateMachine::setNextState(GameState::State nextState)
 {
-    if (nextState != EXIT)
+    if (nextState != GameState::EXIT)
     {
         m_nextState = nextState;
     }
@@ -10,25 +16,41 @@ void StateMachine::setNextState(State nextState)
 
 void StateMachine::changeState()
 {
-    if (m_nextState != STATE_NULL)
+    if (m_nextState != GameState::STATE_NULL)
     {
-        if (m_nextState != EXIT)
+        if (m_nextState != GameState::EXIT)
         {
             delete m_currentState;
         }
 
         switch (m_nextState)
         {
-        case MAIN_MENU:
+        case GameState::MAIN_MENU:
             m_currentState = new SMainMenu{};
             break;
-        case LEVEL_1:
-            m_currentState = new SLevel1{};
+        case GameState::PLAY_GAME:
+            m_currentState = new SPlayGame{};
             break;
         }
 
         m_currentStateID = m_nextState;
 
-        m_nextState = STATE_NULL;
+        m_nextState = GameState::STATE_NULL;
     }
+}
+
+GameState::State StateMachine::gameLoop()
+{
+    setNextState(m_currentState->handleEvents());
+
+    if (m_nextState == GameState::STATE_NULL)
+    {
+        setNextState(m_currentState->update());
+    }
+
+    changeState();
+
+    m_currentState->render();
+    
+    return m_currentStateID;
 }

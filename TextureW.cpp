@@ -20,12 +20,7 @@ void TextureW::load(const char* fileName)
 
 void TextureW::draw(SDL_Rect& srcRect, SDL_Rect& dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip)
 {
-    SDL_Rect relativeDstRect{};
-    relativeDstRect.x = dstRect.x - camera.getx();
-    relativeDstRect.y = dstRect.y - camera.gety();
-    relativeDstRect.w = dstRect.w;
-    relativeDstRect.h = dstRect.h;
-    SDL_RenderCopyEx(m_renderer, m_texture, &srcRect, &relativeDstRect, angle, centre, flip);
+    SDL_RenderCopyEx(m_renderer, m_texture, &srcRect, &dstRect, angle, centre, flip);
 }
 
 void TextureW::free()

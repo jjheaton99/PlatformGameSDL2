@@ -10,9 +10,7 @@ int main(int argc, char* args[])
 
     while (game->running())
     {
-        game->handleEvents();
-        game->update();
-        game->render();
+        game->singleLoop();
     }
 
     game->close();

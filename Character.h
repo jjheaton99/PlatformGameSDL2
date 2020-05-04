@@ -28,13 +28,11 @@ protected:
         int characterColumn, int tileSize, SDL_Rect& characterCollider);
     virtual bool checkForPlatforms(std::vector<std::vector<Tile>>& map, int characterRow,
         int characterColumn, int tileSize, SDL_Rect& characterCollider);
-    virtual void edgeCheck();
+    virtual void edgeCheck(Camera& camera);
 
 public:
     Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
     ~Character();
-
-    virtual void update(double timeStep, std::vector<std::vector<Tile>>& map) = 0;
 
     const Vector2D<double>& getVel() { return m_velocity; }
     void setVel(double xVel, double yVel) { m_velocity = Vector2D<double>{ xVel, yVel }; }

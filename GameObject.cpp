@@ -10,11 +10,12 @@ GameObject::~GameObject()
 {
 }
 
-void GameObject::draw()
+void GameObject::draw(Camera& camera)
 {
     if (m_collider.collideCheck(camera.getCollider()))
     {
-        m_texture.draw(m_srcRect, m_dstRect, 0, nullptr, SDL_FLIP_NONE);
+        SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
+        m_texture.draw(m_srcRect, relativeDstRect, 0, nullptr, SDL_FLIP_NONE);
     }
 }
 

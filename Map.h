@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Tile.h"
-#include "GameCamera.h"
+#include "Camera.h"
 #include <array>
 #include <vector>
 #include <fstream>
@@ -18,6 +18,8 @@ private:
     map_type m_map;
     Tile m_background;
     Tile m_block;
+    int m_levelWidth;
+    int m_levelHeight;
    
     void pushTile(int tileNumber, std::vector<Tile>& tileRow);
 
@@ -27,9 +29,11 @@ public:
 
     bool loadMap(const char* fileName);
     //void loadMap(layout_type map);
-    void drawMap();
+    void drawMap(Camera& camera);
 
     std::vector<std::vector <Tile>>& getMap() { return m_map; }
+    int getLevelWidth() { return m_levelWidth; }
+    int getLevelHeight() { return m_levelHeight; }
 };
 
 /*

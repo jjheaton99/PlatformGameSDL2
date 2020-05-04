@@ -23,7 +23,6 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameObject.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26812;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26812;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -32,7 +31,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="SLevel1.cpp" />
+    <ClCompile Include="SPlayGame.cpp" />
     <ClCompile Include="SMainMenu.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="TextureW.cpp" />
@@ -44,14 +43,13 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="SLevel1.h" />
+    <ClInclude Include="SPlayGame.h" />
     <ClInclude Include="SMainMenu.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="TextureW.h" />
