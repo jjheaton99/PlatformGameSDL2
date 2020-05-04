@@ -1,10 +1,82 @@
-#include "Game.h"
-#include "Vector2D.h"
+#include "SDL.h"
+#include "TextureW.h"
+#include "StateMachine.h"
+#include "Constants.h"
+#include <iostream>
+#include <vector>
 
-Game* game = nullptr;
+SDL_Renderer* TextureW::m_renderer{ nullptr };
+SDL_Window* window{ nullptr };
+StateMachine* stateMachine{ nullptr };
+
+void init(int flags)
+{
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+    {
+        std::cout << "SDL initialisation unsuccessful! SDL_Error: " << SDL_GetError() << '\n';
+    }
+
+    else
+    {
+        window = SDL_CreateWindow("SDL2 Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Constants::screenWidth, Constants::screenHeight, flags);
+        if (!window)
+        {
+            std::cout << "Window not created! SDL_Error: " << SDL_GetError() << '\n';
+        }
+
+        else
+        {
+            TextureW::m_renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+            if (!TextureW::m_renderer)
+            {
+                std::cout << "Renderer not created! SDL_Error: " << SDL_GetError() << '\n';
+            }
+
+            else
+            {
+                SDL_SetRenderDrawColor(TextureW::m_renderer, 0, 0, 0, 0);
+            }
+        }
+
+        stateMachine = new StateMachine{ GameState::PLAY_GAME };
+    }
+}
+
+void close()
+{
+    SDL_DestroyWindow(window);
+    window = nullptr;
+
+    delete stateMachine;
+    stateMachine = nullptr;
+
+    SDL_DestroyRenderer(TextureW::m_renderer);
+    TextureW::m_renderer = nullptr;
+
+    IMG_Quit();
+    SDL_Quit();
+}
+
 int main(int argc, char* args[])
 {
-    game = new Game();
+    int flags{ 0 };
+
+    init(flags);
+
+    while (stateMachine->getCurrentStateID() != GameState::EXIT)
+    {
+        stateMachine->gameLoop();
+    }
+
+    close();
+
+    return 0;
+}
+
+/*
+int main(int argc, char* args[])
+{
+    Game* game = new Game();
 
     game->init("2D Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Constants::screenWidth, Constants::screenHeight, false);
 
@@ -19,6 +91,7 @@ int main(int argc, char* args[])
 
     return 0;
 }
+*/
 
 /*
 const int FPS{ 60 };

@@ -1,17 +1,27 @@
 #include "StateMachine.h"
 
-StateMachine::StateMachine()
-{}
+StateMachine::StateMachine(GameState::State currentStateID, GameState::State nextState)
+    : m_currentStateID{currentStateID}, m_nextState{nextState}
+{
+    switch (m_currentStateID)
+    {
+    case GameState::MAIN_MENU:
+        m_currentState = new SMainMenu{};
+        break;
+    case GameState::PLAY_GAME:
+        m_currentState = new SPlayGame{};
+        break;
+    default:
+        break;
+    }
+}
 
 StateMachine::~StateMachine()
 {}
 
 void StateMachine::setNextState(GameState::State nextState)
 {
-    if (nextState != GameState::EXIT)
-    {
-        m_nextState = nextState;
-    }
+    m_nextState = nextState;
 }
 
 void StateMachine::changeState()
@@ -21,6 +31,7 @@ void StateMachine::changeState()
         if (m_nextState != GameState::EXIT)
         {
             delete m_currentState;
+            m_currentState = nullptr;
         }
 
         switch (m_nextState)
@@ -31,6 +42,8 @@ void StateMachine::changeState()
         case GameState::PLAY_GAME:
             m_currentState = new SPlayGame{};
             break;
+        default:
+            break;
         }
 
         m_currentStateID = m_nextState;
@@ -39,7 +52,7 @@ void StateMachine::changeState()
     }
 }
 
-GameState::State StateMachine::gameLoop()
+void StateMachine::gameLoop()
 {
     setNextState(m_currentState->handleEvents());
 
@@ -50,7 +63,7 @@ GameState::State StateMachine::gameLoop()
 
     changeState();
 
+    SDL_RenderClear(TextureW::m_renderer);
     m_currentState->render();
-    
-    return m_currentStateID;
+    SDL_RenderPresent(TextureW::m_renderer);
 }

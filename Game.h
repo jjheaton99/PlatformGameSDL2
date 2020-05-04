@@ -1,9 +1,7 @@
 #pragma once
 
 #include "SDL.h"
-#include "SDL_Image.h"
 #include "TextureW.h"
-#include "TimerW.h"
 #include "StateMachine.h"
 #include <iostream>
 

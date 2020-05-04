@@ -1,13 +1,10 @@
 #include "Game.h"
 
-SDL_Renderer* TextureW::m_renderer = nullptr;
+//SDL_Renderer* TextureW::m_renderer = nullptr;
 
 Game::Game()
-    : m_stateMachine{ new StateMachine{} }
-{
-    m_stateMachine->setNextState(GameState::PLAY_GAME);
-    m_stateMachine->changeState();
-}
+    : m_stateMachine{ new StateMachine{GameState::PLAY_GAME} }
+{}
 
 Game::~Game()
 {}
@@ -54,7 +51,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 void Game::singleLoop()
 {
-    if (m_stateMachine->gameLoop() == GameState::EXIT)
+    m_stateMachine->gameLoop();
+    if(m_stateMachine->getCurrentStateID() == GameState::EXIT)
     {
         m_isRunning = false;
     }

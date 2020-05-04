@@ -6,6 +6,10 @@
 
 class GameState
 {
+protected:
+    std::vector<SDL_Event> m_events;
+    InputHandler m_inputHandler{};
+
 public:
     enum State
     {
@@ -15,9 +19,11 @@ public:
         EXIT
     };
 
+    GameState() {};
+    ~GameState() {};
+
     virtual State handleEvents() = 0;
     virtual State update() = 0;
     virtual void render() = 0;
-    virtual ~GameState() {};
 };
 

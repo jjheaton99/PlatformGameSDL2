@@ -14,9 +14,7 @@ private:
     Player* m_player;
     Camera m_camera{};
     TimerW m_stepTimer;
-    std::vector<SDL_Event> m_events;
 
-    
 public:
     SPlayGame(const char* mapFile = "Assets/Maps/sideScroller.txt", const char* playerFile = "Assets/MrPix.png");
     ~SPlayGame();

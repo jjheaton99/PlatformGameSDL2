@@ -23,7 +23,7 @@ private:
     std::array<SDL_Rect, spriteSheetCount>::size_type m_spriteIndex;
     bool m_isFlipped{ false };
     double m_animationTime{ 0 };
-    double m_maxVel{ 5000 };
+    double m_maxVel{ 3000 };
 
     void cycleWalkAnimation(double timeStep);
     void cycleIdleAnimation(double timeStep);

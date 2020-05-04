@@ -5,14 +5,13 @@
 
 class InputHandler
 {
-private:
+public:
     InputHandler();
     ~InputHandler();
 
-public:
-    static bool windowEvent(SDL_Event& event);
-    static void playerControlsKeyHold(Player* player);
-    static void playerControlsKeyPress(Player* player, SDL_Event& event);
+    bool windowEvent(SDL_Event& event);
+    void playerControlsKeyHold(Player* player);
+    void playerControlsKeyPress(Player* player, SDL_Event& event);
 };
 
 // static void playerControlsTopDown(Player* player);

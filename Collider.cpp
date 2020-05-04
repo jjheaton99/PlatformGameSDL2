@@ -7,8 +7,7 @@ Collider::Collider(int width, int height)
 }
 
 Collider::~Collider()
-{
-}
+{}
 
 void Collider::setPosition(int x, int y)
 {

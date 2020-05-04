@@ -28,16 +28,17 @@ GameState::State SPlayGame::handleEvents()
         m_events.push_back(event);
     }
 
-    InputHandler::playerControlsKeyHold(m_player);
+    m_inputHandler.playerControlsKeyHold(m_player);
 
-    for (auto& element : m_events)
+    for (SDL_Event& element : m_events)
     {
-        if (!(InputHandler::windowEvent(element)))
+        if (!(m_inputHandler.windowEvent(element)))
         {
+            std::cout << "ayyyy" << '\n';
             return EXIT;
         }
 
-        InputHandler::playerControlsKeyPress(m_player, element);
+        m_inputHandler.playerControlsKeyPress(m_player, element);
     }
 
     return STATE_NULL;
@@ -56,11 +57,6 @@ GameState::State SPlayGame::update()
 
 void SPlayGame::render()
 {
-    SDL_SetRenderDrawColor(TextureW::m_renderer, 0, 0, 0, 0);
-    SDL_RenderClear(TextureW::m_renderer);
-
     m_map->drawMap(m_camera);
     m_player->draw(m_camera);
-
-    SDL_RenderPresent(TextureW::m_renderer);
 }
