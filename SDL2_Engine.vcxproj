@@ -32,6 +32,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SLevel1.cpp" />
+    <ClCompile Include="SMainMenu.cpp" />
+    <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="TextureW.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TimerW.cpp" />
@@ -44,9 +47,13 @@
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="SLevel1.h" />
+    <ClInclude Include="SMainMenu.h" />
+    <ClInclude Include="StateMachine.h" />
     <ClInclude Include="TextureW.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TimerW.h" />

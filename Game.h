@@ -7,6 +7,7 @@
 #include "InputHandler.h"
 #include "TimerW.h"
 #include "Map.h"
+#include "StateMachine.h"
 #include <vector>
 #include <iostream>
 
