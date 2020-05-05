@@ -14,13 +14,13 @@ void TextureW::load(const char* fileName)
         std::cout << "Unable to load image! SDL_Error: " << SDL_GetError() << '\n';
     }
 
-    m_texture = SDL_CreateTextureFromSurface(m_renderer, tmpSurface);
+    m_texture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
     SDL_FreeSurface(tmpSurface);
 }
 
 void TextureW::draw(SDL_Rect& srcRect, SDL_Rect& dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip)
 {
-    SDL_RenderCopyEx(m_renderer, m_texture, &srcRect, &dstRect, angle, centre, flip);
+    SDL_RenderCopyEx(renderer, m_texture, &srcRect, &dstRect, angle, centre, flip);
 }
 
 void TextureW::free()

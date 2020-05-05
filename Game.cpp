@@ -1,6 +1,6 @@
 #include "Game.h"
 
-//SDL_Renderer* TextureW::m_renderer = nullptr;
+//SDL_Renderer* TextureW::renderer = nullptr;
 
 Game::Game()
     : m_stateMachine{ new StateMachine{GameState::PLAY_GAME} }
@@ -33,15 +33,15 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
         else
         {
-            TextureW::m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
-            if (!TextureW::m_renderer)
+            TextureW::renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+            if (!TextureW::renderer)
             {
                 std::cout << "Renderer not created! SDL_Error: " << SDL_GetError() << '\n';
             }
 
             else
             {
-                SDL_SetRenderDrawColor(TextureW::m_renderer, 0, 0, 0, 0);
+                SDL_SetRenderDrawColor(TextureW::renderer, 0, 0, 0, 0);
             }
         }
 
@@ -66,8 +66,8 @@ void Game::close()
     delete m_stateMachine;
     m_stateMachine = nullptr;
 
-    SDL_DestroyRenderer(TextureW::m_renderer);
-    TextureW::m_renderer = nullptr;
+    SDL_DestroyRenderer(TextureW::renderer);
+    TextureW::renderer = nullptr;
 
     IMG_Quit();
     SDL_Quit();

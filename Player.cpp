@@ -38,7 +38,7 @@ void Player::update(double timeStep, std::vector<std::vector<Tile>>& map, Camera
 
     motion(30, 0.9, m_maxVel);
 
-    //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
+    std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
     //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
 
     m_dstRect.x = static_cast<int>(m_position.getx());

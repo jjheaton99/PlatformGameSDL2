@@ -1,7 +1,7 @@
 #include "SPlayGame.h"
 
 SPlayGame::SPlayGame(const char* mapFile, const char* playerFile)
-    : m_map{ new Map{} }, m_player{ new Player{playerFile, 200, 200} }
+    : m_map{ new Map{} }, m_player{ new Player{playerFile, 200, 2000} }
 {
     if (!m_map->loadMap(mapFile))
     {
@@ -34,7 +34,6 @@ GameState::State SPlayGame::handleEvents()
     {
         if (!(m_inputHandler.windowEvent(element)))
         {
-            std::cout << "ayyyy" << '\n';
             return EXIT;
         }
 

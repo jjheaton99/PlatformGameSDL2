@@ -63,7 +63,7 @@ void StateMachine::gameLoop()
 
     changeState();
 
-    SDL_RenderClear(TextureW::m_renderer);
+    SDL_RenderClear(TextureW::renderer);
     m_currentState->render();
-    SDL_RenderPresent(TextureW::m_renderer);
+    SDL_RenderPresent(TextureW::renderer);
 }

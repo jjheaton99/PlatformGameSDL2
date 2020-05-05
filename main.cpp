@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-SDL_Renderer* TextureW::m_renderer{ nullptr };
+SDL_Renderer* TextureW::renderer{ nullptr };
 SDL_Window* window{ nullptr };
 StateMachine* stateMachine{ nullptr };
 
@@ -26,15 +26,15 @@ void init(int flags)
 
         else
         {
-            TextureW::m_renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-            if (!TextureW::m_renderer)
+            TextureW::renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+            if (!TextureW::renderer)
             {
                 std::cout << "Renderer not created! SDL_Error: " << SDL_GetError() << '\n';
             }
 
             else
             {
-                SDL_SetRenderDrawColor(TextureW::m_renderer, 0, 0, 0, 0);
+                SDL_SetRenderDrawColor(TextureW::renderer, 0, 0, 0, 0);
             }
         }
 
@@ -50,8 +50,8 @@ void close()
     delete stateMachine;
     stateMachine = nullptr;
 
-    SDL_DestroyRenderer(TextureW::m_renderer);
-    TextureW::m_renderer = nullptr;
+    SDL_DestroyRenderer(TextureW::renderer);
+    TextureW::renderer = nullptr;
 
     IMG_Quit();
     SDL_Quit();
@@ -72,26 +72,6 @@ int main(int argc, char* args[])
 
     return 0;
 }
-
-/*
-int main(int argc, char* args[])
-{
-    Game* game = new Game();
-
-    game->init("2D Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Constants::screenWidth, Constants::screenHeight, false);
-
-    while (game->running())
-    {
-        game->singleLoop();
-    }
-
-    game->close();
-    delete game;
-    game = nullptr;
-
-    return 0;
-}
-*/
 
 /*
 const int FPS{ 60 };
