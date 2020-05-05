@@ -1,39 +1,35 @@
 #include "Game.h"
 
-//SDL_Renderer* TextureW::renderer = nullptr;
+SDL_Renderer* TextureW::renderer{ nullptr };
 
 Game::Game()
-    : m_stateMachine{ new StateMachine{GameState::PLAY_GAME} }
-{}
+{
+    init();
+}
 
 Game::~Game()
-{}
-
-void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
 {
-    int flags{ 0 };
-    if (fullscreen)
-    {
-        flags = SDL_WINDOW_FULLSCREEN;
-    }
+    close();
+}
 
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+void Game::init()
+{
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         std::cout << "SDL initialisation unsuccessful! SDL_Error: " << SDL_GetError() << '\n';
-        m_isRunning = false;
     }
 
     else
     {
-        m_window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
-        if (!m_window)
+        window = SDL_CreateWindow("SDL2 Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Constants::screenWidth, Constants::screenHeight, 0);
+        if (!window)
         {
             std::cout << "Window not created! SDL_Error: " << SDL_GetError() << '\n';
         }
 
         else
         {
-            TextureW::renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+            TextureW::renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
             if (!TextureW::renderer)
             {
                 std::cout << "Renderer not created! SDL_Error: " << SDL_GetError() << '\n';
@@ -45,30 +41,44 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
             }
         }
 
-        m_isRunning = true;
-    }
-}
-
-void Game::singleLoop()
-{
-    m_stateMachine->gameLoop();
-    if(m_stateMachine->getCurrentStateID() == GameState::EXIT)
-    {
-        m_isRunning = false;
+        stateMachine = new StateMachine{ /*GameState::PLAY_GAME*/ };
     }
 }
 
 void Game::close()
 {
-    SDL_DestroyWindow(m_window);
-    m_window = nullptr;
+    SDL_DestroyWindow(window);
+    window = nullptr;
 
-    delete m_stateMachine;
-    m_stateMachine = nullptr;
+    delete stateMachine;
+    stateMachine = nullptr;
 
     SDL_DestroyRenderer(TextureW::renderer);
     TextureW::renderer = nullptr;
 
     IMG_Quit();
     SDL_Quit();
+}
+
+void Game::gameLoop()
+{
+    while (stateMachine->getCurrentStateID() != GameState::EXIT)
+    {
+        stateMachine->gameLoop();
+        if (stateMachine->hasSetFullscreen())
+        {
+            if (!m_isFullscreen)
+            {
+                SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+                m_isFullscreen = true;
+                stateMachine->resetSetFullscreen();
+            }
+            else if (m_isFullscreen)
+            {
+                SDL_SetWindowFullscreen(window, 0);
+                m_isFullscreen = false;
+                stateMachine->resetSetFullscreen();
+            }
+        }
+    }
 }

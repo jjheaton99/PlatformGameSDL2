@@ -6,10 +6,17 @@
 class InputHandler
 {
 public:
+    enum WindowEvent
+    {
+        EVENT_NULL,
+        FULLSCREEN,
+        QUIT
+    };
+
     InputHandler();
     ~InputHandler();
 
-    bool windowEvent(SDL_Event& event);
+    WindowEvent windowEvent(SDL_Event& event);
     void playerControlsKeyHold(Player* player);
     void playerControlsKeyPress(Player* player, SDL_Event& event);
 };

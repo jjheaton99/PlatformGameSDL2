@@ -3,25 +3,23 @@
 #include "SDL.h"
 #include "TextureW.h"
 #include "StateMachine.h"
+#include "Constants.h"
 #include <iostream>
+#include <vector>
 
 class Game
 {
 private:
-    bool m_isRunning;
-    SDL_Window* m_window;
-    StateMachine* m_stateMachine;
+    SDL_Window* window{ nullptr };
+    StateMachine* stateMachine{ nullptr };
+
+    bool m_isFullscreen{ false };
 
 public:
     Game();
     ~Game();
 
-    void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
-    
-    void singleLoop();
+    void init();
     void close();
-    
-    bool running() { return m_isRunning; }
+    void gameLoop();
 };
-
-

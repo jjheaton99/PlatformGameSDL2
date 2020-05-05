@@ -6,24 +6,27 @@ InputHandler::InputHandler()
 InputHandler::~InputHandler()
 {}
 
-bool InputHandler::windowEvent(SDL_Event& event)
+InputHandler::WindowEvent InputHandler::windowEvent(SDL_Event& event)
 {
     if (event.type == SDL_QUIT)
-        return false;
+        return QUIT;
 
     else if (event.type == SDL_KEYDOWN)
     {
         switch (event.key.keysym.sym)
         {
         case SDLK_ESCAPE:
-            return false;
+            return QUIT;
+            break;
+        case SDLK_f:
+            return FULLSCREEN;
             break;
         default:
             break;
         }
     }
 
-    return true;
+    return EVENT_NULL;
 }
 
 void InputHandler::playerControlsKeyHold(Player* player)

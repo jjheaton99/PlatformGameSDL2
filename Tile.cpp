@@ -13,8 +13,7 @@ Tile::Tile(const char* fileName, Type type, double xPos, double yPos, int size)
 }
 
 Tile::~Tile()
-{
-}
+{}
 
 void Tile::setPos(int xPos, int yPos)
 {

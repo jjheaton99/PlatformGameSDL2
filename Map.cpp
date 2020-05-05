@@ -90,7 +90,7 @@ void Map::drawMap(Camera& camera)
         {
             m_map[row][column].setPos(column * static_cast<int>(m_map[row][column].getSize()), 
                 row * static_cast<int>(m_map[row][column].getSize()));
-            m_map[row][column].draw(camera);
+            m_map[row][column].cameraDraw(camera);
         }
     }
 }

@@ -32,9 +32,16 @@ GameState::State SPlayGame::handleEvents()
 
     for (SDL_Event& element : m_events)
     {
-        if (!(m_inputHandler.windowEvent(element)))
+        switch (m_inputHandler.windowEvent(element))
         {
+        case InputHandler::QUIT:
             return EXIT;
+        case InputHandler::FULLSCREEN:
+            m_setFullscreen = true;
+            break;
+        case InputHandler::EVENT_NULL:
+        default:
+            break;
         }
 
         m_inputHandler.playerControlsKeyPress(m_player, element);
@@ -57,5 +64,5 @@ GameState::State SPlayGame::update()
 void SPlayGame::render()
 {
     m_map->drawMap(m_camera);
-    m_player->draw(m_camera);
+    m_player->cameraDraw(m_camera);
 }

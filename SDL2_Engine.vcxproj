@@ -30,6 +30,8 @@
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MenuButton.cpp" />
+    <ClCompile Include="TextureObject.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SPlayGame.cpp" />
     <ClCompile Include="SMainMenu.cpp" />
@@ -48,6 +50,8 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MenuButton.h" />
+    <ClInclude Include="TextureObject.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SPlayGame.h" />
     <ClInclude Include="SMainMenu.h" />

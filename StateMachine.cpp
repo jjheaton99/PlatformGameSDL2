@@ -55,6 +55,11 @@ void StateMachine::changeState()
 void StateMachine::gameLoop()
 {
     setNextState(m_currentState->handleEvents());
+    if (m_currentState->hasSetFullscreen())
+    {
+        m_setFullscreen = true;
+        m_currentState->resetSetFullscreen();
+    }
 
     if (m_nextState == GameState::STATE_NULL)
     {
