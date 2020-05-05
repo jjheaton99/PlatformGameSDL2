@@ -12,10 +12,11 @@ private:
     int m_yBoundary;
 
 public:
-    Camera(int width = Constants::screenWidth, int height = Constants::screenHeight,
+    Camera(int width = g_screenWidth, int height = g_screenHeight,
         int xpos = 0, int ypos = 0, int xBoundary = 0, int yBoundary = 0);
     ~Camera();
 
+    void resize();
     void setPos(int xpos, int ypos);
     void setBoundary(int xBoundary, int yBoundary);
 

@@ -8,10 +8,7 @@ InputHandler::~InputHandler()
 
 InputHandler::WindowEvent InputHandler::windowEvent(SDL_Event& event)
 {
-    if (event.type == SDL_QUIT)
-        return QUIT;
-
-    else if (event.type == SDL_KEYDOWN)
+    if (event.type == SDL_KEYDOWN)
     {
         switch (event.key.keysym.sym)
         {
@@ -27,6 +24,11 @@ InputHandler::WindowEvent InputHandler::windowEvent(SDL_Event& event)
     }
 
     return EVENT_NULL;
+}
+
+void InputHandler::mainMenuControls(SDL_Event& event)
+{
+
 }
 
 void InputHandler::playerControlsKeyHold(Player* player)

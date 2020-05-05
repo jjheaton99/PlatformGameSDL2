@@ -7,6 +7,14 @@ Camera::Camera(int width, int height, int xpos, int ypos, int xBoundary, int yBo
 Camera::~Camera()
 {}
 
+void Camera::resize()
+{
+    m_rect.w = g_screenWidth;
+    m_rect.h = g_screenHeight;
+
+    m_collider.setDimensions(g_screenWidth, g_screenHeight);
+}
+
 void Camera::setPos(int xpos, int ypos)
 {
     m_rect.x = xpos;

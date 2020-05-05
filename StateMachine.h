@@ -3,6 +3,7 @@
 #include "GameState.h"
 #include "SMainMenu.h"
 #include "SPlayGame.h"
+#include "WindowW.h"
 
 class StateMachine
 {
@@ -12,8 +13,6 @@ private:
 
     GameState* m_currentState;
 
-    bool m_setFullscreen{ false };
-
 public:
     StateMachine(GameState::State currentStateID = GameState::MAIN_MENU, GameState::State nextState = GameState::STATE_NULL);
     ~StateMachine();
@@ -22,8 +21,5 @@ public:
     void changeState();
     void gameLoop();
     GameState::State getCurrentStateID() { return m_currentStateID; }
-
-    void resetSetFullscreen() { m_setFullscreen = false; }
-    bool hasSetFullscreen() { return m_setFullscreen; }
 };
 

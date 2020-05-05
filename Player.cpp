@@ -133,8 +133,8 @@ void Player::cameraDraw(Camera& camera)
 
 void Player::moveCamera(Camera& camera)
 {
-    camera.setPos(static_cast<int>(m_position.getx()) - (Constants::screenWidth / 2),
-        static_cast<int>(m_position.gety()) - (Constants::screenHeight / 2));
+    camera.setPos(static_cast<int>(m_position.getx()) - (g_screenWidth / 2),
+        static_cast<int>(m_position.gety()) - (g_screenHeight / 2));
 
     //Now to boundary check the camera
     if (!camera.xInBoundary() && !camera.yInBoundary())

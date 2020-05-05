@@ -19,6 +19,8 @@ public:
     SPlayGame(const char* mapFile = "Assets/Maps/sideScroller.txt", const char* playerFile = "Assets/MrPix.png");
     ~SPlayGame();
 
+    void playerControlsKeyHold();
+    void playerControlsKeyPress(SDL_Event& event);
     State handleEvents();
     State update();
     void render();

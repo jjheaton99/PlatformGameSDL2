@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 #include "SDL_Image.h"
+#include "GlobalObjects.h"
 #include <iostream>
 
 //Texture wrapper class
@@ -18,7 +19,7 @@ public:
     void setBlendingMode(SDL_BlendMode mode);
     void setAlpha(Uint8 alpha);
 
-    static SDL_Renderer* renderer;
+    //static SDL_Renderer* renderer;
 
 private:
     SDL_Texture* m_texture;

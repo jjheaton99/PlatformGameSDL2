@@ -1,84 +1,66 @@
 #include "Game.h"
 
-SDL_Renderer* TextureW::renderer{ nullptr };
-
 Game::Game()
-{
-    init();
-}
+{}
 
 Game::~Game()
-{
-    close();
-}
+{}
 
-void Game::init()
+bool Game::init()
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         std::cout << "SDL initialisation unsuccessful! SDL_Error: " << SDL_GetError() << '\n';
+        return false;
     }
 
     else
     {
-        window = SDL_CreateWindow("SDL2 Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Constants::screenWidth, Constants::screenHeight, 0);
-        if (!window)
+        if (!g_window.init())
         {
-            std::cout << "Window not created! SDL_Error: " << SDL_GetError() << '\n';
+            std::cout << "Window could not be initialised! SDL_Error: " << SDL_GetError() << '\n';
+            return false;
         }
 
         else
         {
-            TextureW::renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-            if (!TextureW::renderer)
+            g_renderer = g_window.createRenderer();
+            if (g_renderer == nullptr)
             {
-                std::cout << "Renderer not created! SDL_Error: " << SDL_GetError() << '\n';
+                std::cout << "Window could not be initialised! SDL_Error: " << SDL_GetError() << '\n';
+                return false;
             }
 
             else
             {
-                SDL_SetRenderDrawColor(TextureW::renderer, 0, 0, 0, 0);
+                SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 0);
+                m_stateMachine = new StateMachine{};
+                return true;
             }
         }
-
-        stateMachine = new StateMachine{ /*GameState::PLAY_GAME*/ };
     }
 }
 
 void Game::close()
 {
-    SDL_DestroyWindow(window);
-    window = nullptr;
+    SDL_DestroyRenderer(g_renderer);
+    g_renderer = nullptr;
 
-    delete stateMachine;
-    stateMachine = nullptr;
-
-    SDL_DestroyRenderer(TextureW::renderer);
-    TextureW::renderer = nullptr;
+    g_window.destroy();
 
     IMG_Quit();
     SDL_Quit();
 }
 
-void Game::gameLoop()
+void Game::playGame()
 {
-    while (stateMachine->getCurrentStateID() != GameState::EXIT)
+    if (init())
     {
-        stateMachine->gameLoop();
-        if (stateMachine->hasSetFullscreen())
+        while (m_stateMachine->getCurrentStateID() != GameState::EXIT)
         {
-            if (!m_isFullscreen)
-            {
-                SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-                m_isFullscreen = true;
-                stateMachine->resetSetFullscreen();
-            }
-            else if (m_isFullscreen)
-            {
-                SDL_SetWindowFullscreen(window, 0);
-                m_isFullscreen = false;
-                stateMachine->resetSetFullscreen();
-            }
+            m_stateMachine->gameLoop();
         }
     }
+
+    close();
 }

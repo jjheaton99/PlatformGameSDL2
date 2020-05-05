@@ -22,11 +22,13 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="Constants.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26812;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26812;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
+    <ClCompile Include="GlobalObjects.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -39,6 +41,7 @@
     <ClCompile Include="TextureW.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TimerW.cpp" />
+    <ClCompile Include="WindowW.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -48,6 +51,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GlobalObjects.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MenuButton.h" />
@@ -60,6 +64,7 @@
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TimerW.h" />
     <ClInclude Include="Vector2D.h" />
+    <ClInclude Include="WindowW.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -3,14 +3,13 @@
 #include "SDL.h"
 #include "InputHandler.h"
 #include "TimerW.h"
+#include "GlobalObjects.h"
 
 class GameState
 {
 protected:
     std::vector<SDL_Event> m_events;
     InputHandler m_inputHandler{};
-
-    bool m_setFullscreen{ false };
 
 public:
     enum State
@@ -28,7 +27,7 @@ public:
     virtual State update() = 0;
     virtual void render() = 0;
 
-    void resetSetFullscreen() { m_setFullscreen = false; }
-    bool hasSetFullscreen() { return m_setFullscreen; }
+    void pushEvent(SDL_Event& event) { m_events.push_back(event); }
+    void clearEvents() { m_events.clear(); }
 };
 

@@ -18,33 +18,49 @@ SPlayGame::~SPlayGame()
     delete m_map;
 }
 
+void SPlayGame::playerControlsKeyHold()
+{
+    if (!(m_player->getMovement() == Player::AIRBORNE))
+    {
+        const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
+
+        if (currentKeyState[SDL_SCANCODE_A])
+            m_player->moveLeft();
+        else if (currentKeyState[SDL_SCANCODE_D])
+            m_player->moveRight();
+        else
+            m_player->stop();
+    }
+}
+
+void SPlayGame::playerControlsKeyPress(SDL_Event& event)
+{
+    if (event.type == SDL_KEYDOWN)
+    {
+        if (!(m_player->getMovement() == Player::AIRBORNE))
+        {
+            double jumpVel{ 1500.0 };
+
+            switch (event.key.keysym.sym)
+            {
+            case SDLK_SPACE:
+                m_player->setVel(m_player->getVel().getx(), -jumpVel);
+                m_player->makeAirborne();
+                break;
+            default:
+                break;
+            }
+        }
+    }
+}
+
 GameState::State SPlayGame::handleEvents()
 {
-    m_events.clear();
-
-    SDL_Event event;
-    while (SDL_PollEvent(&event) != 0)
-    {
-        m_events.push_back(event);
-    }
-
-    m_inputHandler.playerControlsKeyHold(m_player);
+    playerControlsKeyHold();
 
     for (SDL_Event& element : m_events)
     {
-        switch (m_inputHandler.windowEvent(element))
-        {
-        case InputHandler::QUIT:
-            return EXIT;
-        case InputHandler::FULLSCREEN:
-            m_setFullscreen = true;
-            break;
-        case InputHandler::EVENT_NULL:
-        default:
-            break;
-        }
-
-        m_inputHandler.playerControlsKeyPress(m_player, element);
+        playerControlsKeyPress(element);
     }
 
     return STATE_NULL;
@@ -57,6 +73,8 @@ GameState::State SPlayGame::update()
     m_player->update(timeStep, m_map->getMap(), m_camera);
 
     m_stepTimer.start();
+
+    m_camera.resize();
 
     return STATE_NULL;
 }

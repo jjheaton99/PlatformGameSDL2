@@ -25,3 +25,9 @@ void MenuButton::draw()
         m_texture.draw(m_srcRect, m_dstRect, 0, nullptr, SDL_FLIP_NONE);
     }
 }
+
+void MenuButton::setPos(int xPos, int yPos)
+{
+    m_dstRect.x = xPos;
+    m_dstRect.y = yPos;
+}

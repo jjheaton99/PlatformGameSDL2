@@ -19,5 +19,7 @@ public:
 
     void select() { m_isSelected = true; }
     void deselect() { m_isSelected = false; }
+
+    void setPos(int xPos, int yPos);
 };
 

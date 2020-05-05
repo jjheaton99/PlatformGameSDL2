@@ -54,12 +54,23 @@ void StateMachine::changeState()
 
 void StateMachine::gameLoop()
 {
-    setNextState(m_currentState->handleEvents());
-    if (m_currentState->hasSetFullscreen())
+    m_currentState->clearEvents();
+    SDL_Event event;
+    while (SDL_PollEvent(&event) != 0)
     {
-        m_setFullscreen = true;
-        m_currentState->resetSetFullscreen();
+        if (event.type == SDL_QUIT)
+        {
+            setNextState(GameState::EXIT);
+            changeState();
+            return;
+        }
+
+        g_window.handleEvent(event);
+
+        m_currentState->pushEvent(event);
     }
+
+    setNextState(m_currentState->handleEvents());
 
     if (m_nextState == GameState::STATE_NULL)
     {
@@ -68,7 +79,7 @@ void StateMachine::gameLoop()
 
     changeState();
 
-    SDL_RenderClear(TextureW::renderer);
+    SDL_RenderClear(g_renderer);
     m_currentState->render();
-    SDL_RenderPresent(TextureW::renderer);
+    SDL_RenderPresent(g_renderer);
 }
