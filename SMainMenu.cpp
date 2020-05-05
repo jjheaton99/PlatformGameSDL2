@@ -13,6 +13,21 @@ SMainMenu::SMainMenu(int buttonWidth, int buttonHeight)
 SMainMenu::~SMainMenu()
 {}
 
+bool mouseIsOnButton(MenuButton& button)
+{
+    int x;
+    int y;
+    SDL_GetMouseState(&x, &y);
+
+    if (x < button.getDstRect().x || x > button.getDstRect().x + button.getDstRect().w
+        || y < button.getDstRect().y || y > button.getDstRect().y + button.getDstRect().h)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool SMainMenu::mainMenuControls(SDL_Event& event)
 {
     if (event.type == SDL_KEYDOWN)
@@ -65,6 +80,44 @@ bool SMainMenu::mainMenuControls(SDL_Event& event)
             return true;
         default:
             return false;
+        }
+    }
+
+    else if (event.type == SDL_MOUSEMOTION)
+    {
+        if (mouseIsOnButton(m_play))
+        {
+            m_currentSelection = PLAY;
+        }
+
+        else if (mouseIsOnButton(m_settings))
+        {
+            m_currentSelection = SETTINGS;
+        }
+
+        else if (mouseIsOnButton(m_quit))
+        {
+            m_currentSelection = QUIT;
+        }
+
+        return false;
+    }
+
+    else if (event.type == SDL_MOUSEBUTTONDOWN)
+    {
+        if (mouseIsOnButton(m_play))
+        {
+            return true;
+        }
+
+        else if (mouseIsOnButton(m_settings))
+        {
+            return true;
+        }
+
+        else if (mouseIsOnButton(m_quit))
+        {
+            return true;
         }
     }
 

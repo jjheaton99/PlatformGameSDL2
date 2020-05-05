@@ -38,9 +38,11 @@ void StateMachine::changeState()
         {
         case GameState::MAIN_MENU:
             m_currentState = new SMainMenu{};
+            SDL_ShowCursor(SDL_ENABLE);
             break;
         case GameState::PLAY_GAME:
             m_currentState = new SPlayGame{};
+            SDL_ShowCursor(SDL_DISABLE);
             break;
         default:
             break;

@@ -5,9 +5,6 @@
 class MenuButton : public TextureObject
 {
 private:
-    int m_buttonWidth;
-    int m_buttonHeight;
-
     bool m_isSelected{ false };
     TextureW m_selectedTexture;
 
@@ -21,5 +18,6 @@ public:
     void deselect() { m_isSelected = false; }
 
     void setPos(int xPos, int yPos);
+    SDL_Rect& getDstRect() { return m_dstRect; }
 };
 
