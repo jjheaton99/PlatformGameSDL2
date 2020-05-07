@@ -1,32 +1,23 @@
 #include "SMainMenu.h"
 
-SMainMenu::SMainMenu(int buttonWidth, int buttonHeight)
-    : m_play{"Assets/MenuButtons/play.png", "Assets/MenuButtons/playSelected.png", 
-    buttonWidth, buttonHeight, (g_screenWidth / 2) - (buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100 },
-    m_settings{ "Assets/MenuButtons/settings.png", "Assets/MenuButtons/settingsSelected.png",
-    buttonWidth, buttonHeight, (g_screenWidth / 2) - (buttonWidth / 2), ((g_screenHeight * 3) / 4) },
-    m_quit{ "Assets/MenuButtons/quit.png", "Assets/MenuButtons/quitSelected.png",
-    buttonWidth, buttonHeight, (g_screenWidth / 2) - (buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100 },
-    m_buttonWidth{buttonWidth}, m_buttonHeight{buttonHeight}
-{}
+SMainMenu::SMainMenu()
+    : m_play{ "Assets/MenuButtons/play.png", "Assets/MenuButtons/playS.png", 60, 14 },
+    m_settings{ "Assets/MenuButtons/settings.png", "Assets/MenuButtons/settingsS.png", 60, 14 },
+    m_quit{ "Assets/MenuButtons/quit.png", "Assets/MenuButtons/quitS.png", 60, 14 }
+{
+    m_buttonWidth = 240;
+    m_buttonHeight = 56;
+
+    m_play.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100, 
+        m_buttonWidth, m_buttonHeight);
+    m_settings.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4),
+        m_buttonWidth, m_buttonHeight);
+    m_quit.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100,
+        m_buttonWidth, m_buttonHeight);
+}
 
 SMainMenu::~SMainMenu()
 {}
-
-bool mouseIsOnButton(MenuButton& button)
-{
-    int x;
-    int y;
-    SDL_GetMouseState(&x, &y);
-
-    if (x < button.getDstRect().x || x > button.getDstRect().x + button.getDstRect().w
-        || y < button.getDstRect().y || y > button.getDstRect().y + button.getDstRect().h)
-    {
-        return false;
-    }
-
-    return true;
-}
 
 bool SMainMenu::mainMenuControls(SDL_Event& event)
 {
@@ -85,17 +76,17 @@ bool SMainMenu::mainMenuControls(SDL_Event& event)
 
     else if (event.type == SDL_MOUSEMOTION)
     {
-        if (mouseIsOnButton(m_play))
+        if (m_play.mouseIsOnButton())
         {
             m_currentSelection = PLAY;
         }
 
-        else if (mouseIsOnButton(m_settings))
+        else if (m_settings.mouseIsOnButton())
         {
             m_currentSelection = SETTINGS;
         }
 
-        else if (mouseIsOnButton(m_quit))
+        else if (m_quit.mouseIsOnButton())
         {
             m_currentSelection = QUIT;
         }
@@ -105,17 +96,17 @@ bool SMainMenu::mainMenuControls(SDL_Event& event)
 
     else if (event.type == SDL_MOUSEBUTTONDOWN)
     {
-        if (mouseIsOnButton(m_play))
+        if (m_play.mouseIsOnButton())
         {
             return true;
         }
 
-        else if (mouseIsOnButton(m_settings))
+        else if (m_settings.mouseIsOnButton())
         {
             return true;
         }
 
-        else if (mouseIsOnButton(m_quit))
+        else if (m_quit.mouseIsOnButton())
         {
             return true;
         }

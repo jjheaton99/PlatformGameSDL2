@@ -60,6 +60,22 @@ GameState::State SPlayGame::handleEvents()
 
     for (SDL_Event& element : m_events)
     {
+        if (element.type == SDL_KEYDOWN)
+        {
+            switch (element.key.keysym.sym)
+            {
+            case SDLK_ESCAPE:
+                m_paused = true;
+                m_stepTimer.pause();
+                return PAUSED;
+            case SDLK_F2:
+                m_paused = true;
+                return MAIN_MENU;
+            default:
+                break;
+            }
+        }
+
         playerControlsKeyPress(element);
     }
 
@@ -70,11 +86,25 @@ GameState::State SPlayGame::update()
 {
     double timeStep = m_stepTimer.getTicks() / 1000.0;
 
-    m_player->update(timeStep, m_map->getMap(), m_camera);
+    if (!m_paused)
+    {
+        m_player->update(timeStep, m_map->getMap(), m_camera);
 
-    m_stepTimer.start();
+        m_stepTimer.start();
 
-    m_camera.resize();
+        m_camera.resize();
+
+        double frameRate{ averageFPS(timeStep) };
+        if (frameRate > 0)
+        {
+            std::cout << frameRate << '\n';
+        }
+
+        return STATE_NULL;
+    }
+
+    m_paused = false;
+    m_stepTimer.resume();
 
     return STATE_NULL;
 }
@@ -83,4 +113,19 @@ void SPlayGame::render()
 {
     m_map->drawMap(m_camera);
     m_player->cameraDraw(m_camera);
+}
+
+double SPlayGame::averageFPS(double timeStep)
+{
+    m_FPSTime += timeStep;
+    ++m_FPSCount;
+    if (m_FPSTime > 0.1)
+    {
+        double averageFPS{ m_FPSCount / m_FPSTime };
+        m_FPSCount = 0;
+        m_FPSTime = 0.0;
+        return averageFPS;
+    }
+
+    return -1.0;
 }

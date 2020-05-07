@@ -6,11 +6,11 @@
 #include <iostream>
 
 //Texture wrapper class
-class TextureW
+class WTexture
 {
 public:
-    TextureW();
-    ~TextureW();
+    WTexture();
+    ~WTexture();
 
     void load(const char* fileName);
     void draw(SDL_Rect& srcRect, SDL_Rect& dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip);

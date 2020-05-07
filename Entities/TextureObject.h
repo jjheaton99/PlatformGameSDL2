@@ -2,14 +2,14 @@
 
 #include "SDL.h"
 #include "Vector2D.h"
-#include "TextureW.h"
+#include "WTexture.h"
 
 class TextureObject
 {
 protected:
     Vector2D<double> m_position;
 
-    TextureW m_texture;
+    WTexture m_texture;
     SDL_Rect m_srcRect;
     SDL_Rect m_dstRect;
 

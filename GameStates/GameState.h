@@ -1,15 +1,14 @@
 #pragma once
 
 #include "SDL.h"
-#include "InputHandler.h"
-#include "TimerW.h"
+#include "WTimer.h"
 #include "GlobalObjects.h"
+#include <vector>
 
 class GameState
 {
 protected:
     std::vector<SDL_Event> m_events;
-    InputHandler m_inputHandler{};
 
 public:
     enum State
@@ -17,6 +16,8 @@ public:
         STATE_NULL,
         MAIN_MENU,
         PLAY_GAME,
+        PAUSED,
+        SETTINGS,
         EXIT
     };
 

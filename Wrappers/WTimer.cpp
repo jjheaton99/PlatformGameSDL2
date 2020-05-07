@@ -1,12 +1,12 @@
-#include "TimerW.h"
+#include "WTimer.h"
 
-TimerW::TimerW()
+WTimer::WTimer()
 {}
 
-TimerW::~TimerW()
+WTimer::~WTimer()
 {}
 
-void TimerW::start()
+void WTimer::start()
 {
     m_started = true;
     m_paused = false;
@@ -15,7 +15,7 @@ void TimerW::start()
     m_pausedTicks = 0;
 }
 
-void TimerW::stop()
+void WTimer::stop()
 {
     m_started = false;
     m_paused = false;
@@ -24,7 +24,7 @@ void TimerW::stop()
     m_pausedTicks = 0;
 }
 
-void TimerW::pause()
+void WTimer::pause()
 {
     if (m_started && !m_paused)
     {
@@ -35,7 +35,7 @@ void TimerW::pause()
     }
 }
 
-void TimerW::resume()
+void WTimer::resume()
 {
     if (m_started && m_paused)
     {
@@ -46,7 +46,7 @@ void TimerW::resume()
     }
 }
 
-Uint32 TimerW::getTicks()
+Uint32 WTimer::getTicks()
 {
     Uint32 time{ 0 };
 

@@ -1,12 +1,12 @@
-#include "WindowW.h"
+#include "WWindow.h"
 
-WindowW::WindowW()
+WWindow::WWindow()
 {}
 
-WindowW::~WindowW()
+WWindow::~WWindow()
 {}
 
-bool WindowW::init()
+bool WWindow::init()
 {
     m_window = SDL_CreateWindow("SDL2 Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, g_screenWidth, g_screenHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     SDL_SetWindowMinimumSize(m_window, 1600, 900);
@@ -15,12 +15,12 @@ bool WindowW::init()
     return m_window != nullptr;
 }
 
-SDL_Renderer* WindowW::createRenderer()
+SDL_Renderer* WWindow::createRenderer()
 {
     return SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED /*| SDL_RENDERER_PRESENTVSYNC*/);
 }
 
-void WindowW::handleEvent(SDL_Event& event)
+void WWindow::handleEvent(SDL_Event& event)
 {
     if (event.type == SDL_WINDOWEVENT)
     {
@@ -65,7 +65,7 @@ void WindowW::handleEvent(SDL_Event& event)
     }
 }
 
-void WindowW::destroy()
+void WWindow::destroy()
 {
     SDL_DestroyWindow(m_window);
     m_window = nullptr;

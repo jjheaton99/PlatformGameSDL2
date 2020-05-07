@@ -3,14 +3,14 @@
 StateMachine::StateMachine(GameState::State currentStateID, GameState::State nextState)
     : m_currentStateID{currentStateID}, m_nextState{nextState}
 {
+    m_playGame = new SPlayGame{};
+
     switch (m_currentStateID)
     {
     case GameState::MAIN_MENU:
         m_currentState = new SMainMenu{};
         break;
     case GameState::PLAY_GAME:
-        m_currentState = new SPlayGame{};
-        break;
     default:
         break;
     }
@@ -28,7 +28,7 @@ void StateMachine::changeState()
 {
     if (m_nextState != GameState::STATE_NULL)
     {
-        if (m_nextState != GameState::EXIT)
+        if (m_nextState != GameState::EXIT && m_currentStateID != GameState::PLAY_GAME)
         {
             delete m_currentState;
             m_currentState = nullptr;
@@ -37,13 +37,27 @@ void StateMachine::changeState()
         switch (m_nextState)
         {
         case GameState::MAIN_MENU:
+            delete m_playGame;
+            m_playGame = new SPlayGame{};
             m_currentState = new SMainMenu{};
             SDL_ShowCursor(SDL_ENABLE);
             break;
+
         case GameState::PLAY_GAME:
-            m_currentState = new SPlayGame{};
+            m_currentState = m_playGame;
             SDL_ShowCursor(SDL_DISABLE);
             break;
+
+        case GameState::PAUSED:
+            m_currentState = new SPaused{};
+            SDL_ShowCursor(SDL_ENABLE);
+            break;
+
+        case GameState::SETTINGS:
+            m_currentState = new SSettings{};
+            SDL_ShowCursor(SDL_ENABLE);
+            break;
+
         default:
             break;
         }
@@ -81,6 +95,7 @@ void StateMachine::gameLoop()
 
     changeState();
 
+    SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 0);
     SDL_RenderClear(g_renderer);
     m_currentState->render();
     SDL_RenderPresent(g_renderer);

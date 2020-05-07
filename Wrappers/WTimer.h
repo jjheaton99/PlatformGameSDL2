@@ -2,7 +2,7 @@
 
 #include "SDL.h"
 
-class TimerW
+class WTimer
 {
 private:
     Uint32 m_startTicks{ 0 };
@@ -12,8 +12,8 @@ private:
     bool m_paused{ false };
 
 public:
-    TimerW();
-    ~TimerW();
+    WTimer();
+    ~WTimer();
 
     void start();
     void stop();

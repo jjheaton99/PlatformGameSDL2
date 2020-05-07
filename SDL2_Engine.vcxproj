@@ -19,52 +19,51 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Character.cpp" />
-    <ClCompile Include="Collider.cpp" />
-    <ClCompile Include="Constants.cpp" />
+    <ClCompile Include="Entities\Character.cpp" />
+    <ClCompile Include="Entities\GameObject.cpp" />
+    <ClCompile Include="Entities\Player.cpp" />
+    <ClCompile Include="Entities\TextureObject.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameObject.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26812;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26812;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="GlobalObjects.cpp" />
-    <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="GameStates\SMainMenu.cpp" />
+    <ClCompile Include="GameStates\SPlayGame.cpp" />
+    <ClCompile Include="GameStates\SSettings.cpp" />
+    <ClCompile Include="GameStates\StateMachine.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Map.cpp" />
-    <ClCompile Include="MenuButton.cpp" />
-    <ClCompile Include="TextureObject.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="SPlayGame.cpp" />
-    <ClCompile Include="SMainMenu.cpp" />
-    <ClCompile Include="StateMachine.cpp" />
-    <ClCompile Include="TextureW.cpp" />
-    <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="TimerW.cpp" />
-    <ClCompile Include="WindowW.cpp" />
+    <ClCompile Include="Mapping\Camera.cpp" />
+    <ClCompile Include="Mapping\Map.cpp" />
+    <ClCompile Include="Mapping\Tile.cpp" />
+    <ClCompile Include="Misc\Collider.cpp" />
+    <ClCompile Include="Misc\Constants.cpp" />
+    <ClCompile Include="Misc\GlobalObjects.cpp" />
+    <ClCompile Include="Misc\MenuButton.cpp" />
+    <ClCompile Include="SPaused.cpp" />
+    <ClCompile Include="Wrappers\WTexture.cpp" />
+    <ClCompile Include="Wrappers\WTimer.cpp" />
+    <ClCompile Include="Wrappers\WWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Character.h" />
-    <ClInclude Include="Collider.h" />
+    <ClInclude Include="Entities\Character.h" />
+    <ClInclude Include="Entities\GameObject.h" />
+    <ClInclude Include="Entities\Player.h" />
+    <ClInclude Include="Entities\TextureObject.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Constants.h" />
-    <ClInclude Include="GameState.h" />
-    <ClInclude Include="GlobalObjects.h" />
-    <ClInclude Include="InputHandler.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="MenuButton.h" />
-    <ClInclude Include="TextureObject.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="SPlayGame.h" />
-    <ClInclude Include="SMainMenu.h" />
-    <ClInclude Include="StateMachine.h" />
-    <ClInclude Include="TextureW.h" />
-    <ClInclude Include="Tile.h" />
-    <ClInclude Include="TimerW.h" />
-    <ClInclude Include="Vector2D.h" />
-    <ClInclude Include="WindowW.h" />
+    <ClInclude Include="GameStates\GameState.h" />
+    <ClInclude Include="GameStates\SMainMenu.h" />
+    <ClInclude Include="GameStates\SPaused.h" />
+    <ClInclude Include="GameStates\SPlayGame.h" />
+    <ClInclude Include="GameStates\SSettings.h" />
+    <ClInclude Include="GameStates\StateMachine.h" />
+    <ClInclude Include="Mapping\Camera.h" />
+    <ClInclude Include="Mapping\Map.h" />
+    <ClInclude Include="Mapping\Tile.h" />
+    <ClInclude Include="Misc\Collider.h" />
+    <ClInclude Include="Misc\Constants.h" />
+    <ClInclude Include="Misc\GlobalObjects.h" />
+    <ClInclude Include="Misc\MenuButton.h" />
+    <ClInclude Include="Misc\Vector2D.h" />
+    <ClInclude Include="Wrappers\WTexture.h" />
+    <ClInclude Include="Wrappers\WTimer.h" />
+    <ClInclude Include="Wrappers\WWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -119,7 +118,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_ttf-2.0.15\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_mixer-2.0.4\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_image-2.0.5\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\jj_he\source\repos\SDL\SDL2_Engine\Wrappers;C:\Users\jj_he\source\repos\SDL\SDL2_Engine\Misc;C:\Users\jj_he\source\repos\SDL\SDL2_Engine\Mapping;C:\Users\jj_he\source\repos\SDL\SDL2_Engine\GameStates;C:\Users\jj_he\source\repos\SDL\SDL2_Engine\Entities;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_ttf-2.0.15\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_mixer-2.0.4\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_image-2.0.5\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_ttf-2.0.15\lib\x86;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_mixer-2.0.4\lib\x86;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_image-2.0.5\lib\x86;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2-2.0.12\lib\x86;$(LibraryPath)</LibraryPath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
@@ -128,7 +127,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_ttf-2.0.15\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_mixer-2.0.4\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_image-2.0.5\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\jj_he\source\repos\SDL\SDL2_Engine\Wrappers;C:\Users\jj_he\source\repos\SDL\SDL2_Engine\Misc;C:\Users\jj_he\source\repos\SDL\SDL2_Engine\Mapping;C:\Users\jj_he\source\repos\SDL\SDL2_Engine\GameStates;C:\Users\jj_he\source\repos\SDL\SDL2_Engine\Entities;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_ttf-2.0.15\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_mixer-2.0.4\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_image-2.0.5\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_ttf-2.0.15\lib\x86;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_mixer-2.0.4\lib\x86;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2_image-2.0.5\lib\x86;C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Development libraries\SDL2-2.0.12\lib\x86;$(LibraryPath)</LibraryPath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>

@@ -3,7 +3,7 @@
 #include "SDL.h"
 #include "Constants.h"
 
-class WindowW
+class WWindow
 {
 private:
     SDL_Window* m_window{ nullptr };
@@ -12,8 +12,8 @@ private:
     bool m_minimised{ false };
 
 public:
-    WindowW();
-    ~WindowW();
+    WWindow();
+    ~WWindow();
 
     bool init();
     SDL_Renderer* createRenderer();

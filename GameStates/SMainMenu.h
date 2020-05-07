@@ -23,11 +23,12 @@ private:
     int m_buttonWidth;
     int m_buttonHeight;
 
+    bool mainMenuControls(SDL_Event& event);
+
 public:
-    SMainMenu(int buttonWidth = 59 * 4, int buttonHeight = 14 * 4);
+    SMainMenu();
     ~SMainMenu();
 
-    bool mainMenuControls(SDL_Event& event);
     State handleEvents();
     State update();
     void render();

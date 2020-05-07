@@ -1,11 +1,11 @@
 #pragma once
 
 #include "SDL.h"
-#include "TextureW.h"
+#include "WTexture.h"
 #include "StateMachine.h"
 #include "Constants.h"
 #include "GlobalObjects.h"
-#include "WindowW.h"
+#include "WWindow.h"
 #include <iostream>
 #include <vector>
 
