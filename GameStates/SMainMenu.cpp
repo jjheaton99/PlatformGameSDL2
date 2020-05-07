@@ -119,19 +119,21 @@ GameState::State SMainMenu::handleEvents()
 {
     for (SDL_Event& element : m_events)
     {
+        if (element.type == SDL_KEYDOWN && element.key.keysym.sym == SDLK_ESCAPE)
+        {
+            return EXIT;
+        }
+
         if (mainMenuControls(element))
         {
             switch (m_currentSelection)
             {
             case SMainMenu::PLAY:
                 return PLAY_GAME;
-                break;
             case SMainMenu::SETTINGS:
-                return STATE_NULL;
-                break;
+                return GameState::SETTINGS;
             case SMainMenu::QUIT:
                 return EXIT;
-                break;
             default:
                 break;
             }

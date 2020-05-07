@@ -48,6 +48,7 @@ void WWindow::handleEvent(SDL_Event& event)
         }
     }
     
+    /*
     else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F1)
     {
         if (m_fullscreen)
@@ -62,6 +63,24 @@ void WWindow::handleEvent(SDL_Event& event)
             g_screenHeight = 1080;
             m_fullscreen = true;
         }
+    }
+    */
+}
+
+void WWindow::fullscreenOnOff()
+{
+    switch (m_fullscreen)
+    {
+    case true:
+        m_fullscreen = false;
+        SDL_SetWindowFullscreen(m_window, 0);
+        break;
+    case false:
+        m_fullscreen = true;
+        SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+        g_screenWidth = 1920;
+        g_screenHeight = 1080;
+        break;
     }
 }
 

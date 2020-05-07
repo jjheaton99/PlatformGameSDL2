@@ -11,6 +11,7 @@ class StateMachine
 {
 private:
     GameState::State m_currentStateID;
+    GameState::State m_prevStateID;
     GameState::State m_nextState;
 
     GameState* m_currentState;

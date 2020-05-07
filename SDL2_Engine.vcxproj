@@ -25,6 +25,7 @@
     <ClCompile Include="Entities\TextureObject.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameStates\SMainMenu.cpp" />
+    <ClCompile Include="GameStates\SPaused.cpp" />
     <ClCompile Include="GameStates\SPlayGame.cpp" />
     <ClCompile Include="GameStates\SSettings.cpp" />
     <ClCompile Include="GameStates\StateMachine.cpp" />
@@ -36,7 +37,6 @@
     <ClCompile Include="Misc\Constants.cpp" />
     <ClCompile Include="Misc\GlobalObjects.cpp" />
     <ClCompile Include="Misc\MenuButton.cpp" />
-    <ClCompile Include="SPaused.cpp" />
     <ClCompile Include="Wrappers\WTexture.cpp" />
     <ClCompile Include="Wrappers\WTimer.cpp" />
     <ClCompile Include="Wrappers\WWindow.cpp" />

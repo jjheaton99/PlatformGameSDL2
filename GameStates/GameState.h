@@ -18,6 +18,7 @@ public:
         PLAY_GAME,
         PAUSED,
         SETTINGS,
+        PREVIOUS,
         EXIT
     };
 

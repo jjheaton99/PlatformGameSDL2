@@ -14,6 +14,8 @@ StateMachine::StateMachine(GameState::State currentStateID, GameState::State nex
     default:
         break;
     }
+
+    m_prevStateID = m_currentStateID;
 }
 
 StateMachine::~StateMachine()
@@ -58,12 +60,49 @@ void StateMachine::changeState()
             SDL_ShowCursor(SDL_ENABLE);
             break;
 
+        case GameState::PREVIOUS:
+            switch (m_prevStateID)
+            {
+            case GameState::MAIN_MENU:
+                delete m_playGame;
+                m_playGame = new SPlayGame{};
+                m_currentState = new SMainMenu{};
+                SDL_ShowCursor(SDL_ENABLE);
+                m_currentStateID = GameState::MAIN_MENU;
+                break;
+
+            case GameState::PLAY_GAME:
+                m_currentState = m_playGame;
+                SDL_ShowCursor(SDL_DISABLE);
+                m_currentStateID = GameState::PLAY_GAME;
+                break;
+
+            case GameState::PAUSED:
+                m_currentState = new SPaused{};
+                SDL_ShowCursor(SDL_ENABLE);
+                m_currentStateID = GameState::PAUSED;
+                break;
+
+            case GameState::SETTINGS:
+                m_currentState = new SSettings{};
+                SDL_ShowCursor(SDL_ENABLE);
+                m_currentStateID = GameState::SETTINGS;
+                break;
+
+            default:
+                break;
+            }
+            break;
+
         default:
             break;
         }
 
-        m_currentStateID = m_nextState;
-
+        m_prevStateID = m_currentStateID;
+        if (m_nextState != GameState::PREVIOUS)
+        {
+            m_currentStateID = m_nextState;
+        }
         m_nextState = GameState::STATE_NULL;
     }
 }

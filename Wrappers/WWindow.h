@@ -22,5 +22,7 @@ public:
 
     bool isFullscreen() { return m_fullscreen; }
     bool isMinimised() { return m_minimised; }
+
+    void fullscreenOnOff();
 };
 
