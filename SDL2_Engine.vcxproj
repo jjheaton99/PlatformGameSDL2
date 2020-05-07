@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Entities\Character.cpp" />
     <ClCompile Include="Entities\GameObject.cpp" />
+    <ClCompile Include="Entities\GroundedCharacter.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Entities\TextureObject.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -44,6 +45,7 @@
   <ItemGroup>
     <ClInclude Include="Entities\Character.h" />
     <ClInclude Include="Entities\GameObject.h" />
+    <ClInclude Include="Entities\GroundedCharacter.h" />
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="Entities\TextureObject.h" />
     <ClInclude Include="Game.h" />

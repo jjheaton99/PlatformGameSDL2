@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Character.h"
+#include "GroundedCharacter.h"
 #include "Constants.h"
 #include <array>
 #include <cmath>
 #include <cstdint>
 
-class Player : public Character
+class Player : public GroundedCharacter
 {
 private:
     static const int spriteSheetCount{ 28 };
