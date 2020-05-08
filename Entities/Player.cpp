@@ -46,6 +46,42 @@ void Player::update(double timeStep, std::vector<std::vector<Tile>>& map, Camera
 
     spriteAnimate(timeStep);
     moveCamera(camera);
+
+    if (m_dodgingLeft || m_dodgingRight)
+    {
+        m_dodgeTimer += timeStep;
+        m_totalDodgeTimer += timeStep;
+        if (m_dodgeTimer > 0.03)
+        {
+            m_dodgeTimer = 0;
+            if (m_dodgingLeft)
+            {
+                m_angle -= 36;
+            }
+            else if (m_dodgingRight)
+            {
+                m_angle += 36;
+            }
+        }
+        if (m_totalDodgeTimer > 0.3)
+        {
+            m_dodgingLeft = false;
+            m_dodgingRight = false;
+            m_totalDodgeTimer = 0.0;
+            m_angle = 0.0;
+            m_dodgeCooling = true;
+        }
+    }
+
+    if (m_dodgeCooling)
+    {
+        m_dodgeTimer += timeStep;
+        if (m_dodgeTimer > m_dodgeCooldown)
+        {
+            m_dodgeTimer = 0.0;
+            m_dodgeCooling = false;
+        }
+    }
 }
 
 void Player::cycleWalkAnimation(double timeStep)
@@ -127,7 +163,7 @@ void Player::cameraDraw(Camera& camera)
     if (m_collider.collideCheck(camera.getCollider()))
     {
         SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
-        m_texture.draw(m_srcRect, relativeDstRect, 0, nullptr, flip);
+        m_texture.draw(m_srcRect, relativeDstRect, m_angle, nullptr, flip);
     }
 }
 
@@ -185,4 +221,16 @@ void Player::moveCamera(Camera& camera)
             camera.setPos(camera.getx(), camera.getyMax());
         }
     }
+}
+
+void Player::dodgeLeft() 
+{
+    m_dodgingLeft = true;
+    m_dodgeCooling = true;
+}
+
+void Player::dodgeRight() 
+{
+    m_dodgingRight = true;
+    m_dodgeCooling = true;
 }

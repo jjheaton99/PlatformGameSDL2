@@ -7,6 +7,7 @@ Camera::Camera(int width, int height, int xpos, int ypos, int xBoundary, int yBo
 Camera::~Camera()
 {}
 
+//resizes to screen dimensions
 void Camera::resize()
 {
     m_rect.w = g_screenWidth;
@@ -20,7 +21,7 @@ void Camera::setPos(int xpos, int ypos)
     m_rect.x = xpos;
     m_rect.y = ypos;
 
-    //move the collider
+    //collider must follow position
     m_collider.setPosition(xpos, ypos);
 }
 
@@ -30,6 +31,7 @@ void Camera::setBoundary(int xBoundary, int yBoundary)
     m_yBoundary = yBoundary;
 }
 
+//functions for checking if camera is in the bounds of the level
 bool Camera::xInBoundary()
 {
     return (m_rect.x >= 0 && m_rect.x <= m_xBoundary - m_rect.w);

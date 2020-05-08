@@ -3,15 +3,20 @@
 #include "SDL.h"
 #include "Collider.h"
 
+//Camera class for rendering portion of map that is on screen
 class Camera
 {
 private:
+    //collider to check if an object is on screen
     Collider m_collider;
+    //sdl rect for camera size and position
     SDL_Rect m_rect;
+    //boundaries are maximum displacements of camera
     int m_xBoundary;
     int m_yBoundary;
 
 public:
+    //camera size defaulted to screen dimensions
     Camera(int width = g_screenWidth, int height = g_screenHeight,
         int xpos = 0, int ypos = 0, int xBoundary = 0, int yBoundary = 0);
     ~Camera();

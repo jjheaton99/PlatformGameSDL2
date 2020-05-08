@@ -35,8 +35,26 @@ void SPlayGame::playerControlsKeyHold()
 
 void SPlayGame::playerControlsKeyPress(SDL_Event& event)
 {
+    const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
+
     if (event.type == SDL_KEYDOWN)
     {
+        if (event.key.keysym.sym == SDLK_LSHIFT && !m_player->isDodging() && !m_player->dodgeCooling())
+        {
+
+            if (currentKeyState[SDL_SCANCODE_A])
+            {
+                m_player->addVel(Vector2D<double>{-500.0, 0});
+                m_player->dodgeLeft();
+            }
+                
+            else if (currentKeyState[SDL_SCANCODE_D])
+            {
+                m_player->addVel(Vector2D<double>{500.0, 0});
+                m_player->dodgeRight();
+            }
+        }
+
         if (!(m_player->getMovement() == Player::AIRBORNE))
         {
             double jumpVel{ 1500.0 };

@@ -6,9 +6,11 @@
 #include <vector>
 #include <cmath>
 
+//base class for gameplay objects
 class GameObject : public TextureObject
 {
 protected:
+    //all gameplay objects could need collision checking
     Collider m_collider;
 
 public:

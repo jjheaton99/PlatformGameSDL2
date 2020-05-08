@@ -7,12 +7,13 @@ Character::Character(const char* fileName, double xStartPos, double yStartPos, d
 Character::~Character()
 {}
 
-//Checks tiles in the vicinity of the character to find collisions
+//checks tiles in the vicinity of the character to find collisions and stores colliding tiles in a vector
 std::vector<SDL_Rect> Character::getCollideTileBoxes(std::vector<std::vector<Tile>>& map, int characterRow, 
     int characterColumn, int tileSize, SDL_Rect& characterCollider)
 {
     std::vector<SDL_Rect> collisionRects;
 
+    //checks all tiles that could be overlapping with character collision box 
     for (int row{ characterRow }; row * tileSize <= characterCollider.y + characterCollider.h; ++row)
     {
         for (int column{ characterColumn }; column * tileSize <= characterCollider.x + characterCollider.w; ++column)
