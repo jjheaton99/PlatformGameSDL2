@@ -10,7 +10,6 @@
 class GameObject : public TextureObject
 {
 protected:
-    //all gameplay objects could need collision checking
     Collider m_collider;
 
 public:

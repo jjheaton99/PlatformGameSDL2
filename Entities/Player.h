@@ -29,6 +29,8 @@ private:
     double m_animationTime{ 0 };
     const double m_maxVel{ 3000.0 };
 
+    void motion() override;
+
     void cycleWalkAnimation(double timeStep);
     void cycleIdleAnimation(double timeStep);
     void spriteAnimate(double timeStep);

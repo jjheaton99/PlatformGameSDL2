@@ -55,7 +55,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
             }
         }
 
-        if (!(m_player->getMovement() == Player::AIRBORNE))
+        if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isDodging())
         {
             double jumpVel{ 1500.0 };
 

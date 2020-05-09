@@ -9,10 +9,10 @@
 #include <iostream>
 #include <vector>
 
+//the game class manages the initialisation, running and closing of the game
 class Game
 {
 private:
-    //SDL_Window* window{ nullptr };
     StateMachine* m_stateMachine{ nullptr };
 
 public:

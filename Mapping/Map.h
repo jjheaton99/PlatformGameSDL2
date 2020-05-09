@@ -7,11 +7,11 @@
 #include <fstream>
 #include <string>
 
+//class for managing tilemapping
 class Map
 {
 public:
     using map_type = std::vector<std::vector <Tile>>;
-    //using layout_type = std::array<std::array<int, 32>, 18>;
     using index_type = map_type::size_type;
 
 private:

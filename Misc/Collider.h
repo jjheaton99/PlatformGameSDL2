@@ -2,11 +2,13 @@
 
 #include "SDL.h"
 #include "Vector2D.h"
+#include <vector>
 
+//class for managing hitboxes and checking collisions between hitboxes
 class Collider
 {
 private:
-    SDL_Rect m_box;
+    SDL_Rect m_hitBox;
 
 public:
     Collider(int width, int height);
@@ -14,7 +16,7 @@ public:
 
     void setPosition(int x, int y);
     void setDimensions(int w, int h);
-    SDL_Rect& getBox() { return m_box; }
+    SDL_Rect& getHitBox() { return m_hitBox; }
 
     bool collideCheck(Collider& collider);
 };

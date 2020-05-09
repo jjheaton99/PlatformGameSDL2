@@ -2,8 +2,8 @@
 
 Collider::Collider(int width, int height)
 {
-    m_box.w = width;
-    m_box.h = height;
+    m_hitBox.w = width;
+    m_hitBox.h = height;
 }
 
 Collider::~Collider()
@@ -11,20 +11,20 @@ Collider::~Collider()
 
 void Collider::setPosition(int x, int y)
 {
-    m_box.x = x;
-    m_box.y = y;
+    m_hitBox.x = x;
+    m_hitBox.y = y;
 }
 
 void Collider::setDimensions(int w, int h)
 {
-    m_box.w = w;
-    m_box.h = h;
+    m_hitBox.w = w;
+    m_hitBox.h = h;
 }
 
 bool Collider::collideCheck(Collider& collider)
 {
-    return (m_box.x < (collider.getBox().x + collider.getBox().w)
-        && m_box.x >(collider.getBox().x - m_box.w)
-        && m_box.y < (collider.getBox().y + collider.getBox().h)
-        && m_box.y >(collider.getBox().y - m_box.h));
+    return (m_hitBox.x < (collider.getHitBox().x + collider.getHitBox().w)
+        && m_hitBox.x >(collider.getHitBox().x - m_hitBox.w)
+        && m_hitBox.y < (collider.getHitBox().y + collider.getHitBox().h)
+        && m_hitBox.y >(collider.getHitBox().y - m_hitBox.h));
 }

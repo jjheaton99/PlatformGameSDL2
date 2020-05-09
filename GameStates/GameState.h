@@ -5,9 +5,12 @@
 #include "GlobalObjects.h"
 #include <vector>
 
+//base class for any state of the game
 class GameState
 {
 protected:
+    //events are stored in a vector in case we want to handle them in multiple separate functions
+    //this ensures events arent 'deleted' through polling in one function before all handling functions have been called
     std::vector<SDL_Event> m_events;
 
 public:

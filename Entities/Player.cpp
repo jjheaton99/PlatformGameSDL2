@@ -1,6 +1,6 @@
 #include "Player.h"
 
-//Player collision box width = 0.56 * collision box height
+//Player collision hitBox width = 0.56 * collision hitBox height
 Player::Player(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel)
     : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, 56, 100)
 {
@@ -12,12 +12,13 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
         m_spriteRects[i].y = 0;
     }
 
-    m_xMaxSpeed = 700;
+    m_yMaxSpeed = 3000.0;
+    m_xMaxSpeed = 700.0;
     
     m_spriteIndex = 0;
 
-    m_dstRect.w = m_collider.getBox().h;
-    m_dstRect.h = m_collider.getBox().h;
+    m_dstRect.w = m_collider.getHitBox().h;
+    m_dstRect.h = m_collider.getHitBox().h;
 
     m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 }
@@ -31,12 +32,19 @@ void Player::update(double timeStep, std::vector<std::vector<Tile>>& map, Camera
 {
     Vector2D<double> timeScaledVel{ Vector2D<double>{m_velocity.getx()* timeStep, m_velocity.gety()* timeStep} };
     m_position.add(timeScaledVel);
-    
-    mapCollideCheck(map);
-    edgeCheck(camera);
+    //collider position is moved after each function that can change character position
     m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 
-    motion(30, 0.9, m_maxVel);
+    motion();
+
+    //edge check goes before map collision check to prevent vector subcript error when going off the edge
+    if (edgeCheck(camera))
+    {
+        m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
+    }
+
+    mapCollideCheck(map);
+    m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 
     //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
     //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
@@ -80,6 +88,48 @@ void Player::update(double timeStep, std::vector<std::vector<Tile>>& map, Camera
         {
             m_dodgeTimer = 0.0;
             m_dodgeCooling = false;
+        }
+    }
+}
+
+//adjusts velocity of player depending on state of motion
+void Player::motion()
+{
+    if (m_movement == AIRBORNE && !(m_velocity.gety() > m_yMaxSpeed))
+    {
+        //grounded characters fall when airborne
+        m_velocity.add(Vector2D<double>{0, Constants::g});
+    }
+    //velocity increased/decreased unless at max horizontal velocity
+    else if (m_movement == LEFT)
+    {
+        if (m_velocity.getx() < -m_xMaxSpeed)
+        {
+            m_velocity.xScale(0.99);
+        }
+        else
+        {
+            m_velocity.add(Vector2D<double>{-30, 0});
+        }
+    }
+    else if (m_movement == RIGHT)
+    {
+        if (m_velocity.getx() > m_xMaxSpeed)
+        {
+            m_velocity.xScale(0.99);
+        }
+        else
+        {
+            m_velocity.add(Vector2D<double>{30, 0});
+        }
+    }
+    else
+    {
+        //deceleration when stopped moving
+        m_velocity.xScale(0.9);
+        if (std::abs(m_velocity.getx()) < 0.01)
+        {
+            m_velocity.xScale(0);
         }
     }
 }

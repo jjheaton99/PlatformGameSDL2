@@ -2,6 +2,7 @@
 
 #include "Character.h"
 
+//class for characters bound by gravity
 class GroundedCharacter : public Character
 {
 public:
@@ -16,15 +17,13 @@ public:
 
 protected:
     Movement m_movement{ AIRBORNE };
-    //maximum character horizontal velocity
-    double m_xMaxSpeed{ 0 };
 
     virtual void mapCollideCheck(std::vector<std::vector<Tile>>& map) override;
-    virtual bool checkForPlatforms(std::vector<std::vector<Tile>>& map, int characterRow,
-        int characterColumn, int tileSize, SDL_Rect& characterCollider);
-    virtual void edgeCheck(Camera& camera) override;
+    virtual bool checkForGround(std::vector<std::vector<Tile>>& map, int characterRow,
+        int characterColumn, int tileSize, SDL_Rect& characterColliderBox);
+    virtual bool edgeCheck(Camera& camera) override;
     
-    virtual void motion(double acceleration, double deceleration, double maxVel) override;
+    virtual void motion() = 0;
 
 public:
     GroundedCharacter(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);

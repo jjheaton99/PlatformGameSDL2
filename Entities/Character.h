@@ -11,18 +11,22 @@
 class Character : public GameObject
 {
 protected:
-    //characters have a velocity for movement
     Vector2D<double> m_velocity;
+
+    double m_yMaxSpeed{ 0 };
+    double m_xMaxSpeed{ 0 };
+
+    std::vector<SDL_Rect> m_tileHitBoxes;
 
     //for checking collisions with map tiles
     virtual void mapCollideCheck(std::vector<std::vector<Tile>>& map) = 0;
-    virtual std::vector<SDL_Rect> getCollideTileBoxes(std::vector<std::vector<Tile>>& map, int characterRow, 
-        int characterColumn, int tileSize, SDL_Rect& characterCollider);
+    virtual void getCollideTileHitBoxes(std::vector<std::vector<Tile>>& map, int characterRow,
+        int characterColumn, int tileSize, SDL_Rect& characterColliderBox);
     //for checking collisions with the edge of the map
-    virtual void edgeCheck(Camera& camera) = 0;
+    virtual bool edgeCheck(Camera& camera) = 0;
 
     //for adjusting character velocity
-    virtual void motion(double acceleration, double deceleration, double maxVel) = 0;
+    virtual void motion() = 0;
 
 public:
     Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
