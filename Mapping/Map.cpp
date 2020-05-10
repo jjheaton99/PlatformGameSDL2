@@ -33,7 +33,7 @@ void Map::pushTile(int tileNumber, std::vector<Tile>& tileRow)
 bool Map::loadMap(const char* fileName)
 {
     //Erase any previous map
-    m_map.resize(0);
+    m_map.clear();
 
     std::ifstream mapFile(fileName);
     if (!mapFile.is_open())
@@ -78,18 +78,40 @@ bool Map::loadMap(const char* fileName)
         m_levelHeight = static_cast<int>(m_map.size()) * m_map[0][0].getSize();
         m_levelWidth = static_cast<int>(m_map[0].size()) * m_map[0][0].getSize();
 
+        setTiles();
+
         return true;
     }
 }
 
-void Map::drawMap(Camera& camera)
+void Map::setTiles()
 {
     for (index_type row{ 0 }; row < m_map.size(); ++row)
     {
         for (index_type column{ 0 }; column < m_map[0].size(); ++column)
         {
-            m_map[row][column].setPos(column * static_cast<int>(m_map[row][column].getSize()), 
+            m_map[row][column].setPos(column * static_cast<int>(m_map[row][column].getSize()),
                 row * static_cast<int>(m_map[row][column].getSize()));
+        }
+    }
+}
+
+Map::index_type Map::cameraCoordToMapIndex(int coord)
+{
+    return (coord - (coord % m_map[0][0].getSize())) / m_map[0][0].getSize();
+}
+
+void Map::drawMap(Camera& camera)
+{
+    index_type xmaxCameraIndex{ cameraCoordToMapIndex(camera.getx() + camera.getw()) };
+    index_type ymaxCameraIndex{ cameraCoordToMapIndex(camera.gety() + camera.geth()) };
+    //for loop statements ensure only tiles in focus of camera are drawn
+    for (index_type row{ cameraCoordToMapIndex(camera.gety()) };
+        row < (ymaxCameraIndex + 1 < m_map.size() ? ymaxCameraIndex + 1: m_map.size()); ++row)
+    {
+        for (index_type column{ cameraCoordToMapIndex(camera.getx()) };
+            column < (xmaxCameraIndex + 1 < m_map[0].size() ? xmaxCameraIndex + 1: m_map[0].size()); ++column)
+        {
             m_map[row][column].cameraDraw(camera);
         }
     }

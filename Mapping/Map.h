@@ -22,6 +22,8 @@ private:
     int m_levelHeight;
    
     void pushTile(int tileNumber, std::vector<Tile>& tileRow);
+    index_type cameraCoordToMapIndex(int coord);
+    void setTiles();
 
 public:
     Map();

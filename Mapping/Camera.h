@@ -27,6 +27,8 @@ public:
 
     int getx() { return m_rect.x; }
     int gety() { return m_rect.y; }
+    int getw() { return m_rect.w; }
+    int geth() { return m_rect.h; }
     int getxBoundary() { return m_xBoundary; }
     int getyBoundary() { return m_yBoundary; }
     int getxMax() { return m_xBoundary - m_rect.w; }
