@@ -44,20 +44,36 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
 
             if (currentKeyState[SDL_SCANCODE_A])
             {
-                m_player->addVel(Vector2D<double>{-500.0, 0});
+                if (m_player->getVel().getx() >= 0.0)
+                {
+                    m_player->addVel(Vector2D<double>{-12.5, 0});
+                }
+                else if (m_player->getVel().getx() < 0.0)
+                {
+                    m_player->addVel(Vector2D<double>{-6.5, 0});
+                }
+
                 m_player->dodgeLeft();
             }
                 
             else if (currentKeyState[SDL_SCANCODE_D])
             {
-                m_player->addVel(Vector2D<double>{500.0, 0});
+                if (m_player->getVel().getx() >= 0.0)
+                {
+                    m_player->addVel(Vector2D<double>{6.5, 0});
+                }
+                else if (m_player->getVel().getx() < 0.0)
+                {
+                    m_player->addVel(Vector2D<double>{12.5, 0});
+                }
+
                 m_player->dodgeRight();
             }
         }
 
         if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isDodging())
         {
-            double jumpVel{ 1500.0 };
+            double jumpVel{ 25.0 };
 
             switch (event.key.keysym.sym)
             {
@@ -106,7 +122,13 @@ GameState::State SPlayGame::update()
 
     if (!m_paused)
     {
-        m_player->update(timeStep, m_map->getMap(), m_camera);
+        m_timeAccumulator += timeStep;
+
+        while (m_timeAccumulator > Constants::updateStep)
+        {
+            m_timeAccumulator -= Constants::updateStep;
+            m_player->update(m_map->getMap(), m_camera);
+        }
 
         m_stepTimer.start();
 
@@ -115,7 +137,7 @@ GameState::State SPlayGame::update()
         double frameRate{ averageFPS(timeStep) };
         if (frameRate > 0)
         {
-            std::cout << frameRate << '\n';
+            //std::cout << frameRate << '\n';
         }
 
         return STATE_NULL;

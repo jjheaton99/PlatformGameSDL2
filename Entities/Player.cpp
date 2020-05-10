@@ -4,7 +4,7 @@
 Player::Player(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel)
     : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, 56, 100)
 {
-    for (int i{ 0 }; i < spriteSheetCount; ++i)
+    for (int i{ 0 }; i < m_spriteSheetCount; ++i)
     {
         m_spriteRects[i].w = 32;
         m_spriteRects[i].h = 32;
@@ -12,8 +12,9 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
         m_spriteRects[i].y = 0;
     }
 
-    m_yMaxSpeed = 3000.0;
-    m_xMaxSpeed = 700.0;
+    m_yMaxSpeed = 25.0;
+    m_xMaxSpeed = 12.0;
+    m_walkAcceleration = 0.8;
     
     m_spriteIndex = 0;
 
@@ -28,9 +29,9 @@ Player::~Player()
     destroy();
 }
 
-void Player::update(double timeStep, std::vector<std::vector<Tile>>& map, Camera& camera)
+void Player::update(std::vector<std::vector<Tile>>& map, Camera& camera)
 {
-    Vector2D<double> timeScaledVel{ Vector2D<double>{m_velocity.getx()* timeStep, m_velocity.gety()* timeStep} };
+    Vector2D<double> timeScaledVel{ Vector2D<double>{m_velocity.getx(), m_velocity.gety()} };
     m_position.add(timeScaledVel);
     //collider position is moved after each function that can change character position
     m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
@@ -46,36 +47,33 @@ void Player::update(double timeStep, std::vector<std::vector<Tile>>& map, Camera
     mapCollideCheck(map);
     m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 
-    //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
+    std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
     //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
 
     m_dstRect.x = static_cast<int>(m_position.getx());
     m_dstRect.y = static_cast<int>(m_position.gety());
 
-    spriteAnimate(timeStep);
+    spriteAnimate();
     moveCamera(camera);
 
     if (m_dodgingLeft || m_dodgingRight)
     {
-        m_dodgeTimer += timeStep;
-        m_totalDodgeTimer += timeStep;
-        if (m_dodgeTimer > 0.03)
+        if (m_dodgingLeft)
         {
-            m_dodgeTimer = 0;
-            if (m_dodgingLeft)
-            {
-                m_angle -= 36;
-            }
-            else if (m_dodgingRight)
-            {
-                m_angle += 36;
-            }
+            m_angle -= 20;
         }
-        if (m_totalDodgeTimer > 0.3)
+        else if (m_dodgingRight)
+        {
+            m_angle += 20;
+        }
+
+        ++m_dodgeStepCount;
+
+        if (m_dodgeStepCount > static_cast<int>(0.3 / Constants::updateStep))
         {
             m_dodgingLeft = false;
             m_dodgingRight = false;
-            m_totalDodgeTimer = 0.0;
+            m_dodgeStepCount = 0;
             m_angle = 0.0;
             m_dodgeCooling = true;
         }
@@ -83,10 +81,10 @@ void Player::update(double timeStep, std::vector<std::vector<Tile>>& map, Camera
 
     if (m_dodgeCooling)
     {
-        m_dodgeTimer += timeStep;
-        if (m_dodgeTimer > m_dodgeCooldown)
+        ++m_dodgeStepCount;
+        if (m_dodgeStepCount > static_cast<int>(m_dodgeCooldown / Constants::updateStep))
         {
-            m_dodgeTimer = 0.0;
+            m_dodgeStepCount = 0;
             m_dodgeCooling = false;
         }
     }
@@ -103,44 +101,54 @@ void Player::motion()
     //velocity increased/decreased unless at max horizontal velocity
     else if (m_movement == LEFT)
     {
-        if (m_velocity.getx() < -m_xMaxSpeed)
+        if (m_velocity.getx() - m_walkAcceleration >= -m_xMaxSpeed)
         {
-            m_velocity.xScale(0.99);
+            m_velocity.add(Vector2D<double>{-m_walkAcceleration, 0});
         }
         else
         {
-            m_velocity.add(Vector2D<double>{-30, 0});
+            m_velocity.xScale(0.0);
+            m_velocity.add(Vector2D<double>{-m_xMaxSpeed, 0});
         }
     }
     else if (m_movement == RIGHT)
     {
-        if (m_velocity.getx() > m_xMaxSpeed)
+        if (m_velocity.getx() + m_walkAcceleration <= m_xMaxSpeed)
         {
-            m_velocity.xScale(0.99);
+            m_velocity.add(Vector2D<double>{m_walkAcceleration, 0});
         }
         else
         {
-            m_velocity.add(Vector2D<double>{30, 0});
+            m_velocity.xScale(0.0);
+            m_velocity.add(Vector2D<double>{m_xMaxSpeed, 0});
         }
     }
     else
     {
         //deceleration when stopped moving
-        m_velocity.xScale(0.9);
-        if (std::abs(m_velocity.getx()) < 0.01)
+        m_velocity.xScale(0.83);
+        if (std::abs(m_velocity.getx()) < 0.1)
         {
             m_velocity.xScale(0);
         }
     }
+
+    if (m_velocity.getx() < -m_xMaxSpeed)
+    {
+        m_velocity.subtract(Vector2D<double>{ -0.1, 0 });
+    }
+    if (m_velocity.getx() > m_xMaxSpeed)
+    {
+        m_velocity.subtract(Vector2D<double>{ 0.1, 0 });
+    }
 }
 
-void Player::cycleWalkAnimation(double timeStep)
+void Player::cycleWalkAnimation()
 {
-    m_animationTime += timeStep;
-    if (m_animationTime > timeBetweenSpriteFrames)
+    ++m_animationStep;
+    if (m_animationStep >= 2)
     {
-        m_animationTime = 0.0;
-
+        m_animationStep = 0;
         ++m_spriteIndex;
         if (m_spriteIndex > 26)
         {
@@ -149,13 +157,12 @@ void Player::cycleWalkAnimation(double timeStep)
     }
 }
 
-void Player::cycleIdleAnimation(double timeStep)
+void Player::cycleIdleAnimation()
 {
-    m_animationTime += timeStep;
-    if (m_animationTime > (timeBetweenSpriteFrames * 3.0))
+    ++m_animationStep;
+    if (m_animationStep >= 6)
     {
-        m_animationTime = 0.0;
-
+        m_animationStep = 0;
         ++m_spriteIndex;
         if (m_spriteIndex > 4)
         {
@@ -164,12 +171,11 @@ void Player::cycleIdleAnimation(double timeStep)
     }
 }
 
-void Player::spriteAnimate(double timeStep)
+void Player::spriteAnimate()
 {
     if (m_movement == AIRBORNE)
     {
         m_spriteIndex = 27;
-        m_animationTime = 0.0;
     }
 
     else if (m_movement == LEFT)
@@ -180,7 +186,7 @@ void Player::spriteAnimate(double timeStep)
             m_spriteIndex = 5;
         }
         
-        cycleWalkAnimation(timeStep);
+        cycleWalkAnimation();
     }
 
     else if (m_movement == RIGHT)
@@ -191,12 +197,12 @@ void Player::spriteAnimate(double timeStep)
             m_spriteIndex = 5;
         }
 
-        cycleWalkAnimation(timeStep);
+        cycleWalkAnimation();
     }
 
     else
     {
-        cycleIdleAnimation(timeStep);
+        cycleIdleAnimation();
     }
 
     m_srcRect = m_spriteRects[m_spriteIndex];

@@ -15,7 +15,6 @@ private:
     Camera m_camera{};
     WTimer m_stepTimer;
     double m_timeAccumulator{ 0.0 };
-    double m_updateStep{1.0 / 60.0};
 
     double m_FPSTime{ 0.0 };
     int m_FPSCount{ 0 };

@@ -10,11 +10,10 @@
 class Player : public GroundedCharacter
 {
 private:
-    static const int spriteSheetCount{ 28 };
-    const double timeBetweenSpriteFrames{ 0.033333 };
+    static const int m_spriteSheetCount{ 28 };
 
-    std::array<SDL_Rect, spriteSheetCount> m_spriteRects;
-    std::array<SDL_Rect, spriteSheetCount>::size_type m_spriteIndex;
+    std::array<SDL_Rect, m_spriteSheetCount> m_spriteRects;
+    std::array<SDL_Rect, m_spriteSheetCount>::size_type m_spriteIndex;
     bool m_isFlipped{ false };
 
     //member variables for controlling dodge timing and animation
@@ -22,26 +21,22 @@ private:
     bool m_dodgeCooling{ false };
     bool m_dodgingLeft{ false };
     bool m_dodgingRight{ false };
-    double m_dodgeTimer{ 0.0 };
-    double m_totalDodgeTimer{ 0.0 };
+    int m_dodgeStepCount{ 0 };
     double m_angle{ 0.0 };
 
-    double m_animationTime{ 0 };
-    const double m_maxVel{ 3000.0 };
+    int m_animationStep{ 0 };
+    void cycleWalkAnimation();
+    void cycleIdleAnimation();
+    void spriteAnimate();
 
     void motion() override;
-
-    void cycleWalkAnimation(double timeStep);
-    void cycleIdleAnimation(double timeStep);
-    void spriteAnimate(double timeStep);
-
     void moveCamera(Camera& camera);
 
 public:
     Player(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0);
     ~Player();
 
-    void update(double timeStep, std::vector<std::vector<Tile>>& map, Camera& camera);
+    void update(std::vector<std::vector<Tile>>& map, Camera& camera);
     void cameraDraw(Camera& camera) override;
 
     bool dodgeCooling() { return m_dodgeCooling; }

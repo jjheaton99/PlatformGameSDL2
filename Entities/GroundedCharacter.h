@@ -17,6 +17,7 @@ public:
 
 protected:
     Movement m_movement{ AIRBORNE };
+    double m_walkAcceleration{ 0 };
 
     virtual void mapCollideCheck(std::vector<std::vector<Tile>>& map) override;
     virtual bool checkForGround(std::vector<std::vector<Tile>>& map, int characterRow,
