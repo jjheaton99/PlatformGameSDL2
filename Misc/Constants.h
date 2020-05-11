@@ -8,6 +8,7 @@ namespace Constants
     //g defines acceleration due to gravity for game objects
     const double g{ 1.25 };
     const double updateStep{ 1.0 / 60.0 };
+    const int tileSize{ 60 };
 }
 
 //some globals included for convenience

@@ -19,5 +19,6 @@ public:
     SDL_Rect& getHitBox() { return m_hitBox; }
 
     bool collideCheck(Collider& collider);
+    static double axisBoxOverlap(int pos1, int pos2, int size1, int size2);
 };
 

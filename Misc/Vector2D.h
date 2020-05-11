@@ -16,8 +16,11 @@ public:
     ~Vector2D();
 
     T magnitude() const;
+    double direction() const;
     void add(const Vector2D& vector);
+    void add(T x, T y);
     void subtract(const Vector2D& vector);
+    void subtract(T x, T y);
     void scale(T factor);
     void xScale(T factor);
     void yScale(T factor);
@@ -45,6 +48,28 @@ T Vector2D<T>::magnitude() const
 }
 
 template<class T>
+//zero direction defined along x axis, increasing clockwise until 360 degrees for downward y coordinates
+double Vector2D<T>::direction() const
+{
+    if (m_x > 0 && m_y > 0)
+    {
+        return std::atan(m_y / m_x) * (180.0 / Constants::pi);
+    }
+    else if (m_x < 0 && m_y > 0)
+    {
+        return 180.0 - (std::atan(- m_y / m_x) * (180.0 / Constants::pi));
+    }
+    else if (m_x < 0 && m_y < 0)
+    {
+        return 180.0 + (std::atan(m_y / m_x) * (180.0 / Constants::pi));
+    }
+    else
+    {
+        return 360.0 - (std::atan(- m_y / m_x) * (180.0 / Constants::pi));
+    }
+}
+
+template<class T>
 void Vector2D<T>::add(const Vector2D& vector)
 {
     m_x += vector.m_x;
@@ -52,10 +77,24 @@ void Vector2D<T>::add(const Vector2D& vector)
 }
 
 template<class T>
+void Vector2D<T>::add(T x, T y)
+{
+    m_x += x;
+    m_y += y;
+}
+
+template<class T>
 void Vector2D<T>::subtract(const Vector2D& vector)
 {
     m_x -= vector.m_x;
     m_y -= vector.m_y;
+}
+
+template<class T>
+void Vector2D<T>::subtract(T x, T y)
+{
+    m_x -= x;
+    m_y -= y;
 }
 
 template<class T>
@@ -86,6 +125,7 @@ T Vector2D<T>::innerProduct(const Vector2D& vector)
 template<class T>
 void Vector2D<T>::rotate(T angle)
 {
+    //clockwise rotation with y positive going down screen
     double radAngle{ (Constants::pi / 180.0) * static_cast<double>(angle) };
     T tempx{ m_x };
 

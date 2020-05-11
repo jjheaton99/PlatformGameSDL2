@@ -8,23 +8,34 @@ Character::~Character()
 {}
 
 //checks tiles in the vicinity of the character to find collisions and stores colliding tiles in a vector
-void Character::getCollideTileHitBoxes(std::vector<std::vector<Tile>>& map, int characterRow, 
+void Character::collideTileHitBoxes(std::vector<std::vector<Tile>>& map, int characterRow, 
     int characterColumn, int tileSize, SDL_Rect& characterColliderBox)
 {
     //delete any existing hitboxes 
-    m_tileHitBoxes.clear();
+    m_solidHitBoxes.clear();
+    m_platformHitBoxes.clear();
 
     //checks all tiles that could be overlapping with character collision hitBox 
     for (int row{ characterRow }; row * tileSize <= characterColliderBox.y + characterColliderBox.h; ++row)
     {
         for (int column{ characterColumn }; column * tileSize <= characterColliderBox.x + characterColliderBox.w; ++column)
         {
-            if (map[row][column].getType() == Tile::SOLID)
+            switch (map[row][column].getType())
             {
+            case Tile::SOLID:
                 if (m_collider.collideCheck(map[row][column].getCollider()))
                 {
-                    m_tileHitBoxes.push_back(map[row][column].getCollider().getHitBox());
+                    m_solidHitBoxes.push_back(map[row][column].getCollider().getHitBox());
                 }
+                break;
+            case Tile::PLATFORM:
+                if (m_collider.collideCheck(map[row][column].getCollider()))
+                {
+                    m_platformHitBoxes.push_back(map[row][column].getCollider().getHitBox());
+                }
+                break;
+            default:
+                break;
             }
         }
     }

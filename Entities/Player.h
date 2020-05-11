@@ -17,12 +17,15 @@ private:
     bool m_isFlipped{ false };
 
     //member variables for controlling dodge timing and animation
-    const double m_dodgeCooldown{0.70};
+    const double m_dodgeDuration{ 0.3 };
+    const double m_dodgeCooldown{ 0.7 };
     bool m_dodgeCooling{ false };
     bool m_dodgingLeft{ false };
     bool m_dodgingRight{ false };
     int m_dodgeStepCount{ 0 };
     double m_angle{ 0.0 };
+
+    int m_crouchStepCount{ 0 };
 
     int m_animationStep{ 0 };
     void cycleWalkAnimation();

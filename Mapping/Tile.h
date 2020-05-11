@@ -8,7 +8,8 @@ public:
     enum Type
     {
         BACKGROUND,
-        SOLID
+        SOLID,
+        PLATFORM
     };
 
 private:
@@ -16,7 +17,7 @@ private:
     int m_size;
     
 public:
-    Tile(const char* fileName = "Assets/background2.png", Type type = BACKGROUND, double xPos = 0, double yPos = 0, int size = 50);
+    Tile(const char* fileName = "Assets/background2.png", Type type = BACKGROUND, double xPos = 0, double yPos = 0, int size = Constants::tileSize);
     ~Tile();
 
     void setPos(int xPos, int yPos);

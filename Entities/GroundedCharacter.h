@@ -18,7 +18,13 @@ public:
 protected:
     Movement m_movement{ AIRBORNE };
     double m_walkAcceleration{ 0 };
+    bool m_crouched{ false };
+    bool m_hasCrouched{ false };
 
+    void deflectUp(double overlap);
+    void deflectDown(double overlap);
+    void deflectLeft(double overlap);
+    void deflectRight(double overlap);
     virtual void mapCollideCheck(std::vector<std::vector<Tile>>& map) override;
     virtual bool checkForGround(std::vector<std::vector<Tile>>& map, int characterRow,
         int characterColumn, int tileSize, SDL_Rect& characterColliderBox);
@@ -35,7 +41,10 @@ public:
     void makeAirborne() { m_movement = AIRBORNE; }
     void moveLeft() { m_movement = LEFT; }
     void moveRight() { m_movement = RIGHT; }
+    void crouch();
+    void uncrouch() { m_crouched = false; }
     void stop() { m_movement = STOP; }
     void addVel(const Vector2D<double>& vel) { m_velocity.add(vel); }
+    void addVel(double x, double y) { m_velocity.add(x, y); }
 };
 

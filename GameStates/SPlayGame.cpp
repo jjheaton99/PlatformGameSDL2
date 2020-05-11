@@ -28,6 +28,8 @@ void SPlayGame::playerControlsKeyHold()
             m_player->moveLeft();
         else if (currentKeyState[SDL_SCANCODE_D])
             m_player->moveRight();
+        else if (currentKeyState[SDL_SCANCODE_S])
+            m_player->crouch();
         else
             m_player->stop();
     }
@@ -46,11 +48,11 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
             {
                 if (m_player->getVel().getx() >= 0.0)
                 {
-                    m_player->addVel(Vector2D<double>{-12.5, 0});
+                    m_player->addVel(-12.5, 0);
                 }
                 else if (m_player->getVel().getx() < 0.0)
                 {
-                    m_player->addVel(Vector2D<double>{-6.5, 0});
+                    m_player->addVel(-6.5, 0);
                 }
 
                 m_player->dodgeLeft();
@@ -60,11 +62,11 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
             {
                 if (m_player->getVel().getx() >= 0.0)
                 {
-                    m_player->addVel(Vector2D<double>{6.5, 0});
+                    m_player->addVel(6.5, 0);
                 }
                 else if (m_player->getVel().getx() < 0.0)
                 {
-                    m_player->addVel(Vector2D<double>{12.5, 0});
+                    m_player->addVel(12.5, 0);
                 }
 
                 m_player->dodgeRight();
@@ -85,6 +87,11 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                 break;
             }
         }
+    }
+
+    if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s)
+    {
+        m_player->uncrouch();
     }
 }
 

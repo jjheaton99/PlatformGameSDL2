@@ -12,19 +12,19 @@ bool GroundedCharacter::edgeCheck(Camera& camera)
 {
     if (m_collider.getHitBox().x <= 0)
     {
-        m_position.subtract(Vector2D<double>{1.0 * m_collider.getHitBox().x - 1.0, 0});
+        m_position.subtract(1.0 * m_collider.getHitBox().x - 1.0, 0);
         setVel(0, m_velocity.gety());
         return true;
     }
     else if (m_collider.getHitBox().x >= camera.getxBoundary() - m_collider.getHitBox().w)
     {
-        m_position.subtract(Vector2D<double>{1.0 * m_collider.getHitBox().x - 1.0 * camera.getxBoundary() + 1.0 * m_collider.getHitBox().w + 1.0, 0});
+        m_position.subtract(1.0 * m_collider.getHitBox().x - 1.0 * camera.getxBoundary() + 1.0 * m_collider.getHitBox().w + 1.0, 0);
         setVel(0, m_velocity.gety());
         return true;
     }
     else if (m_collider.getHitBox().y <= 0)
     {
-        m_position.subtract(Vector2D<double>{0, 1.0 * m_collider.getHitBox().y - 1.0});
+        m_position.subtract(0, 1.0 * m_collider.getHitBox().y - 1.0);
         setVel(m_velocity.getx(), 0);
         return true;
     }
@@ -34,7 +34,7 @@ bool GroundedCharacter::edgeCheck(Camera& camera)
         {
             m_movement = STOP;
         }
-        m_position.subtract(Vector2D<double>{0, 1.0 * m_collider.getHitBox().y - 1.0 * camera.getyBoundary() + 1.0 * m_collider.getHitBox().h + 1.0});
+        m_position.subtract(0, 1.0 * m_collider.getHitBox().y - 1.0 * camera.getyBoundary() + 1.0 * m_collider.getHitBox().h + 1.0);
         setVel(m_velocity.getx(), 0);
         return true;
     }
@@ -49,13 +49,14 @@ bool GroundedCharacter::checkForGround(std::vector<std::vector<Tile>>& map, int 
     {
         for (int column{ characterColumn }; column * tileSize <= characterColliderBox.x + characterColliderBox.w; ++column)
         {
-            if (map[row][column].getType() == Tile::SOLID)
+            if ((map[row][column].getType() == Tile::SOLID && !m_crouched) || map[row][column].getType() == Tile::PLATFORM)
             {
                 //Checks for blocks directly below character whilst not colliding
-                if ((m_position.gety() == 1.0 * map[row][column].getCollider().getHitBox().y - characterColliderBox.h)
+                if ((m_movement != AIRBORNE) 
                     && (map[row][column].getCollider().getHitBox().x > (characterColliderBox.x - map[row][column].getCollider().getHitBox().w))
                     && (map[row][column].getCollider().getHitBox().x < (characterColliderBox.x + characterColliderBox.w)))
                 {
+                    //std::cout << "howdy" << '\n';
                     return true;
                 }
             }
@@ -63,6 +64,35 @@ bool GroundedCharacter::checkForGround(std::vector<std::vector<Tile>>& map, int 
     }
 
     return false;
+}
+
+//adjustments for when character lands on top of a block
+void GroundedCharacter::deflectUp(double overlap)
+{
+    m_position.subtract(0, overlap);
+    m_movement = STOP;
+    m_velocity.yScale(0);
+}
+
+//jumping into overhead block
+void GroundedCharacter::deflectDown(double overlap)
+{
+    m_position.add(0, overlap);
+    m_velocity.yScale(0);
+}
+
+//colliding into the left of a block
+void GroundedCharacter::deflectLeft(double overlap)
+{
+    m_position.subtract(overlap, 0);
+    m_velocity.xScale(0);
+}
+
+//colliding into right of a block
+void GroundedCharacter::deflectRight(double overlap)
+{
+    m_position.add(overlap, 0);
+    m_velocity.xScale(0);
 }
 
 //checks for collision with solid map tiles and adjusts position/velocity
@@ -75,120 +105,81 @@ void GroundedCharacter::mapCollideCheck(std::vector<std::vector<Tile>>& map)
     int characterRow{ (characterColliderBox.y - (characterColliderBox.y % tileSize)) / tileSize };
     //std::cout << characterRow << ' ' << characterColumn << '\n';
 
-    getCollideTileHitBoxes(map, characterRow, characterColumn, tileSize, characterColliderBox);
-    //std::cout << m_tileHitBoxes.size() << '\n';
+    collideTileHitBoxes(map, characterRow, characterColumn, tileSize, characterColliderBox);
+    //std::cout << m_solidHitBoxes.size() << '\n';
 
-    //variables for counting collisions from x and y directions
-    int xCollideCount{ 0 };
-    int yCollideCount{ 0 };
-    for (const auto& rect : m_tileHitBoxes)
+    if (m_solidHitBoxes.size() == 0 && !m_crouched && !m_hasCrouched)
+    {
+        for (const auto& box : m_platformHitBoxes)
+        {
+            double xOverlap{ Collider::axisBoxOverlap(characterColliderBox.x, box.x, characterColliderBox.w, box.w) };
+            double yOverlap{ Collider::axisBoxOverlap(characterColliderBox.y, box.y, characterColliderBox.h, box.h) };
+
+            if ((yOverlap < xOverlap) && (characterColliderBox.y < box.y) && m_velocity.gety() > 0.0)
+            {
+                deflectUp(yOverlap);
+            }
+        }
+    }
+
+    int currentIndex{ 0 };
+    double xMaxOverlap{ 0 };
+    double yMaxOverlap{ 0 };
+    double maxOverlap{ 0 };
+    int maxOverlapIndex{ 0 };
+    for (const auto& box : m_solidHitBoxes)
     {
         //overlap variables are the overlap of the character collider with tile collider in x or y direction
-        double xOverlap{};
-        if (characterColliderBox.x < rect.x)
+        double xOverlap{Collider::axisBoxOverlap(characterColliderBox.x, box.x, characterColliderBox.w, box.w)};
+        double yOverlap{ Collider::axisBoxOverlap(characterColliderBox.y, box.y, characterColliderBox.h, box.h) };
+        
+        if (xOverlap > xMaxOverlap)
         {
-            xOverlap = 1.0 * characterColliderBox.x + characterColliderBox.w - rect.x;
-        }
-        else if (characterColliderBox.x > rect.x)
-        {
-            xOverlap = 1.0 * rect.x + rect.w - characterColliderBox.x;
-        }
-        else if (characterColliderBox.x = rect.x)
-        {
-            if (characterColliderBox.w > rect.w)
+            xMaxOverlap = xOverlap;
+            if (xOverlap > maxOverlap)
             {
-                xOverlap = rect.w;
-            }
-            else
-            {
-                xOverlap = characterColliderBox.w;
+                maxOverlap = xOverlap;
+                maxOverlapIndex = currentIndex;
             }
         }
-
-        if (characterColliderBox.w > rect.w && xOverlap > rect.w)
+        if (yOverlap > yMaxOverlap)
         {
-            xOverlap = rect.w;
-        }
-        else if (characterColliderBox.w < rect.w && xOverlap > characterColliderBox.w)
-        {
-            xOverlap = characterColliderBox.w;
-        }
-
-        double yOverlap{};
-        if (characterColliderBox.y < rect.y)
-        {
-            yOverlap = 1.0 * characterColliderBox.y + characterColliderBox.h - rect.y;
-        }
-        else if (characterColliderBox.y > rect.y)
-        {
-            yOverlap = 1.0 * rect.y + rect.h - characterColliderBox.y;
-        }
-        else if (characterColliderBox.y == rect.y)
-        {
-            if (characterColliderBox.h > rect.h)
+            yMaxOverlap = yOverlap;
+            if (yOverlap > maxOverlap)
             {
-                yOverlap = rect.h;
-            }
-            else
-            {
-                yOverlap = characterColliderBox.h;
+                maxOverlap = yOverlap;
+                maxOverlapIndex = currentIndex;
             }
         }
 
-        if (characterColliderBox.h > rect.h && yOverlap > rect.h)
-        {
-            yOverlap = rect.h;
-        }
-        else if (characterColliderBox.h < rect.h && yOverlap > characterColliderBox.h)
-        {
-            yOverlap = characterColliderBox.h;
-        }
-
-        //std::cout << xOverlap << "    " << yOverlap << '\n';
-
-        //statements for handling four different collision cases
-        //the collision direction is assumed to be the direction with smallest overlap
-        //character is repositioned based on this
-        if ((yOverlap < xOverlap) && (characterColliderBox.y < rect.y))
-        {
-            //adjustments for when character lands on top of a block
-            m_position = Vector2D<double>{ m_position.getx(), 1.0 * rect.y - characterColliderBox.h };
-            m_velocity.yScale(0);
-            m_movement = STOP;
-            ++yCollideCount;
-        }
-        else if ((yOverlap < xOverlap) && (characterColliderBox.y > rect.y))
-        {
-            //jumping into overhead block
-            m_position = Vector2D<double>{ m_position.getx(), 1.0 * rect.y + rect.h };
-            m_velocity.yScale(0);
-            ++yCollideCount;
-        }
-        else if ((xOverlap < yOverlap) && (characterColliderBox.x < rect.x))
-        {
-            //colliding into the right of a block
-            m_position.subtract(Vector2D<double>{xOverlap, 0});
-            //m_position = Vector2D<double>{ 1.0 * rect.x - characterColliderBox.w - 0.01, m_position.gety() };
-            ++xCollideCount;
-        }
-        else if ((xOverlap < yOverlap) && (characterColliderBox.x > rect.x))
-        {
-            //colliding into left of a block
-            m_position.add(Vector2D<double>{xOverlap, 0});
-            //m_position = Vector2D<double>{ 1.0*rect.x + rect.w, m_position.gety() };
-            ++xCollideCount;
-        }
+        ++currentIndex;
     }
 
-    //Stops motion when colliding with wall and prevents momentum stopping issue when landing on flat ground
-    if (xCollideCount != 0 && yCollideCount == 0)
+    if ((yMaxOverlap < xMaxOverlap) && (characterColliderBox.y < m_solidHitBoxes[maxOverlapIndex].y))
     {
-        m_velocity.xScale(0);
+        deflectUp(yMaxOverlap);
+    }
+    else if ((yMaxOverlap < xMaxOverlap) && (characterColliderBox.y > m_solidHitBoxes[maxOverlapIndex].y))
+    {
+        deflectDown(yMaxOverlap);
+    }
+    else if ((xMaxOverlap < yMaxOverlap) && (characterColliderBox.x < m_solidHitBoxes[maxOverlapIndex].x))
+    {
+        deflectLeft(xMaxOverlap);
+    }
+    else if ((xMaxOverlap < yMaxOverlap) && (characterColliderBox.x > m_solidHitBoxes[maxOverlapIndex].x))
+    {
+        deflectRight(xMaxOverlap);
     }
 
-    //causes character to fall when stepping off solid tile platform
     if (!checkForGround(map, characterRow, characterColumn, tileSize, characterColliderBox))
     {
         m_movement = AIRBORNE;
     }
+}
+
+void GroundedCharacter::crouch() 
+{ 
+    m_crouched = true;
+    m_hasCrouched = true;
 }

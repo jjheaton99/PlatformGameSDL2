@@ -2,7 +2,8 @@
 
 Map::Map()
     : m_background{ "Assets/blackGrey.png", Tile::BACKGROUND },
-    m_block{ "Assets/WhiteFadeBlocks/1.png", Tile::SOLID }
+    m_block{ "Assets/WhiteFadeBlocks/1.png", Tile::SOLID },
+    m_platform{ "Assets/WhiteFadeBlocks/13.png", Tile::PLATFORM }
 {
 }
 
@@ -23,7 +24,9 @@ void Map::pushTile(int tileNumber, std::vector<Tile>& tileRow)
     case 1:
         tileRow.push_back(m_block);
         break;
-
+    case 2:
+        tileRow.push_back(m_platform);
+        break;
     default:
         break;
     }

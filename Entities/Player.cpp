@@ -31,8 +31,7 @@ Player::~Player()
 
 void Player::update(std::vector<std::vector<Tile>>& map, Camera& camera)
 {
-    Vector2D<double> timeScaledVel{ Vector2D<double>{m_velocity.getx(), m_velocity.gety()} };
-    m_position.add(timeScaledVel);
+    m_position.add(m_velocity);
     //collider position is moved after each function that can change character position
     m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 
@@ -47,7 +46,7 @@ void Player::update(std::vector<std::vector<Tile>>& map, Camera& camera)
     mapCollideCheck(map);
     m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 
-    std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
+    //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
     //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
 
     m_dstRect.x = static_cast<int>(m_position.getx());
@@ -58,18 +57,20 @@ void Player::update(std::vector<std::vector<Tile>>& map, Camera& camera)
 
     if (m_dodgingLeft || m_dodgingRight)
     {
+        int dodgeFrames = static_cast<int>(m_dodgeDuration / Constants::updateStep);
+
         if (m_dodgingLeft)
         {
-            m_angle -= 20;
+            m_angle -= (360.0 / dodgeFrames);
         }
         else if (m_dodgingRight)
         {
-            m_angle += 20;
+            m_angle += (360.0 / dodgeFrames);
         }
 
         ++m_dodgeStepCount;
 
-        if (m_dodgeStepCount > static_cast<int>(0.3 / Constants::updateStep))
+        if (m_dodgeStepCount > dodgeFrames)
         {
             m_dodgingLeft = false;
             m_dodgingRight = false;
@@ -88,58 +89,77 @@ void Player::update(std::vector<std::vector<Tile>>& map, Camera& camera)
             m_dodgeCooling = false;
         }
     }
+
+    if (m_hasCrouched)
+    {
+        ++m_crouchStepCount;
+        if (m_crouchStepCount > static_cast<int>(std::sqrt((2 * Constants::tileSize) / Constants::g)))
+        {
+            m_hasCrouched = false;
+            m_crouchStepCount = 0;
+        }
+    }
 }
 
 //adjusts velocity of player depending on state of motion
 void Player::motion()
 {
+    if (m_crouched)
+    {
+        m_movement = AIRBORNE;
+        m_velocity.xScale(0.9);
+        {
+            if (std::abs(m_velocity.getx()) < 0.0001)
+            {
+                m_velocity.xScale(0);
+            }
+        }
+    }
+
     if (m_movement == AIRBORNE && !(m_velocity.gety() > m_yMaxSpeed))
     {
         //grounded characters fall when airborne
-        m_velocity.add(Vector2D<double>{0, Constants::g});
+        m_velocity.add(0, Constants::g);
+        //horizontal air resistance
+        if (m_velocity.gety() > m_yMaxSpeed || m_velocity.getx() > m_xMaxSpeed)
+        {
+            m_velocity.xScale(0.9);
+        }
     }
     //velocity increased/decreased unless at max horizontal velocity
     else if (m_movement == LEFT)
     {
         if (m_velocity.getx() - m_walkAcceleration >= -m_xMaxSpeed)
         {
-            m_velocity.add(Vector2D<double>{-m_walkAcceleration, 0});
+            m_velocity.add(-m_walkAcceleration, 0);
         }
         else
         {
             m_velocity.xScale(0.0);
-            m_velocity.add(Vector2D<double>{-m_xMaxSpeed, 0});
+            m_velocity.add(-m_xMaxSpeed, 0);
         }
     }
     else if (m_movement == RIGHT)
     {
         if (m_velocity.getx() + m_walkAcceleration <= m_xMaxSpeed)
         {
-            m_velocity.add(Vector2D<double>{m_walkAcceleration, 0});
+            m_velocity.add(m_walkAcceleration, 0);
         }
         else
         {
             m_velocity.xScale(0.0);
-            m_velocity.add(Vector2D<double>{m_xMaxSpeed, 0});
-        }
-    }
-    else
-    {
-        //deceleration when stopped moving
-        m_velocity.xScale(0.83);
-        if (std::abs(m_velocity.getx()) < 0.1)
-        {
-            m_velocity.xScale(0);
+            m_velocity.add(m_xMaxSpeed, 0);
         }
     }
 
-    if (m_velocity.getx() < -m_xMaxSpeed)
+    else if (m_movement == STOP)
     {
-        m_velocity.subtract(Vector2D<double>{ -0.1, 0 });
-    }
-    if (m_velocity.getx() > m_xMaxSpeed)
-    {
-        m_velocity.subtract(Vector2D<double>{ 0.1, 0 });
+        //deceleration when stopped moving
+        m_velocity.xScale(0.82);
+        if (std::abs(m_velocity.getx()) < 0.0001)
+        {
+            m_velocity.xScale(0);
+        }
     }
 }
 
@@ -173,36 +193,41 @@ void Player::cycleIdleAnimation()
 
 void Player::spriteAnimate()
 {
-    if (m_movement == AIRBORNE)
+    switch (m_movement)
     {
+    case GroundedCharacter::AIRBORNE:
         m_spriteIndex = 27;
-    }
+        break;
 
-    else if (m_movement == LEFT)
-    {
+    case GroundedCharacter::LEFT:
         if (m_isFlipped == false)
         {
             m_isFlipped = true;
             m_spriteIndex = 5;
         }
-        
         cycleWalkAnimation();
-    }
+        break;
 
-    else if (m_movement == RIGHT)
-    {
+    case GroundedCharacter::RIGHT:
         if (m_isFlipped == true)
         {
             m_isFlipped = false;
             m_spriteIndex = 5;
         }
-
         cycleWalkAnimation();
+        break;
+
+    case GroundedCharacter::STOP:
+        cycleIdleAnimation();
+        break;
+
+    default:
+        break;
     }
 
-    else
+    if (m_crouched)
     {
-        cycleIdleAnimation();
+        m_spriteIndex = 0;
     }
 
     m_srcRect = m_spriteRects[m_spriteIndex];

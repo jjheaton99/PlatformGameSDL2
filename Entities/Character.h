@@ -16,11 +16,12 @@ protected:
     double m_yMaxSpeed{ 0 };
     double m_xMaxSpeed{ 0 };
 
-    std::vector<SDL_Rect> m_tileHitBoxes;
+    std::vector<SDL_Rect> m_solidHitBoxes;
+    std::vector<SDL_Rect> m_platformHitBoxes;
 
     //for checking collisions with map tiles
     virtual void mapCollideCheck(std::vector<std::vector<Tile>>& map) = 0;
-    virtual void getCollideTileHitBoxes(std::vector<std::vector<Tile>>& map, int characterRow,
+    virtual void collideTileHitBoxes(std::vector<std::vector<Tile>>& map, int characterRow,
         int characterColumn, int tileSize, SDL_Rect& characterColliderBox);
     //for checking collisions with the edge of the map
     virtual bool edgeCheck(Camera& camera) = 0;

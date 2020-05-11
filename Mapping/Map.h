@@ -18,6 +18,8 @@ private:
     map_type m_map;
     Tile m_background;
     Tile m_block;
+    Tile m_platform;
+
     int m_levelWidth;
     int m_levelHeight;
    
