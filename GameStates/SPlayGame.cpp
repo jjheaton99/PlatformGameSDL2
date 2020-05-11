@@ -20,18 +20,82 @@ SPlayGame::~SPlayGame()
 
 void SPlayGame::playerControlsKeyHold()
 {
-    if (!(m_player->getMovement() == Player::AIRBORNE))
-    {
-        const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
+    const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
 
-        if (currentKeyState[SDL_SCANCODE_A])
-            m_player->moveLeft();
-        else if (currentKeyState[SDL_SCANCODE_D])
-            m_player->moveRight();
-        else if (currentKeyState[SDL_SCANCODE_S])
+    if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isClimbing())
+    {
+        if (currentKeyState[SDL_SCANCODE_S])
+        {
             m_player->crouch();
+        }
+        else if (currentKeyState[SDL_SCANCODE_A])
+        {
+            m_player->moveLeft();
+        }
+        else if (currentKeyState[SDL_SCANCODE_D])
+        {
+            m_player->moveRight();
+        }
         else
+        {
             m_player->stop();
+        }
+    }
+
+    if (currentKeyState[SDL_SCANCODE_W])
+    {
+        if (!m_player->isClimbing() && m_player->collidingWithLadder())
+        {
+            m_player->uncrouch();
+            m_player->setVel(0, 0);
+            //lining player up with ladder
+            //player hit box height is used instead of width because of the dest rect width of the player is equal to the height
+            m_player->setPos(m_player->getLadderxPos() + 0.5 * (1.0 * Constants::tileSize
+                - 1.0 * m_player->getCollider().getHitBox().h), m_player->getPos().gety());
+            m_player->climbUp();
+        }
+        else if (m_player->isClimbing())
+        {
+            if (m_player->collidingWithLadder())
+            {
+                m_player->climbUp();
+            }
+            else
+            {
+                m_player->makeAirborne();
+            }
+        }
+    }
+    else if (currentKeyState[SDL_SCANCODE_S])
+    {
+        if (!m_player->isClimbing() && m_player->collidingWithLadder())
+        {
+            m_player->uncrouch();
+            m_player->setVel(0, 0);
+            m_player->setPos(m_player->getLadderxPos() + 0.5 * (1.0 * Constants::tileSize 
+                - 1.0 * m_player->getCollider().getHitBox().h), m_player->getPos().gety());
+            m_player->climbDown();
+        }
+        else if (m_player->isClimbing())
+        {
+            if (m_player->collidingWithLadder())
+            {
+                m_player->climbDown();
+            }
+            else
+            {
+                m_player->makeAirborne();
+            }
+        }
+    }
+    else if (m_player->isClimbing() && m_player->collidingWithLadder())
+    {
+        m_player->climbStop();
+    }
+
+    if (!currentKeyState[SDL_SCANCODE_S])
+    {
+        m_player->uncrouch();
     }
 }
 
@@ -43,16 +107,28 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
     {
         if (event.key.keysym.sym == SDLK_LSHIFT && !m_player->isDodging() && !m_player->dodgeCooling())
         {
-
             if (currentKeyState[SDL_SCANCODE_A])
             {
-                if (m_player->getVel().getx() >= 0.0)
+                if (m_player->isClimbing())
                 {
+                    m_player->makeAirborne();
                     m_player->addVel(-12.5, 0);
+
                 }
-                else if (m_player->getVel().getx() < 0.0)
+                else if (m_player->getMovement() == Player::AIRBORNE)
                 {
-                    m_player->addVel(-6.5, 0);
+                    if (m_player->getVel().getx() >= 0.0)
+                    {
+                        m_player->addVel(-12.5, 0);
+                    }
+                    else if (m_player->getVel().getx() < 0.0)
+                    {
+                        m_player->addVel(-6.5, 0);
+                    }
+                }
+                else
+                {
+                    m_player->addVel(-20.0, 0);
                 }
 
                 m_player->dodgeLeft();
@@ -60,13 +136,25 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                 
             else if (currentKeyState[SDL_SCANCODE_D])
             {
-                if (m_player->getVel().getx() >= 0.0)
+                if (m_player->isClimbing())
                 {
-                    m_player->addVel(6.5, 0);
-                }
-                else if (m_player->getVel().getx() < 0.0)
-                {
+                    m_player->makeAirborne();
                     m_player->addVel(12.5, 0);
+                }
+                else if (m_player->getMovement() == Player::AIRBORNE)
+                {
+                    if (m_player->getVel().getx() >= 0.0)
+                    {
+                        m_player->addVel(6.5, 0);
+                    }
+                    else if (m_player->getVel().getx() < 0.0)
+                    {
+                        m_player->addVel(12.5, 0);
+                    }
+                }
+                else
+                {
+                    m_player->addVel(20.0, 0);
                 }
 
                 m_player->dodgeRight();
@@ -80,18 +168,26 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
             switch (event.key.keysym.sym)
             {
             case SDLK_SPACE:
+                if (m_player->isClimbing())
+                {
+                    m_player->makeAirborne();
+                    break;
+                }
                 m_player->setVel(m_player->getVel().getx(), -jumpVel);
                 m_player->makeAirborne();
                 break;
+
             default:
                 break;
             }
         }
     }
+}
 
-    if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s)
+void SPlayGame::playerControlsKeyUp(SDL_Event& event)
+{
+    if (event.type == SDL_KEYUP)
     {
-        m_player->uncrouch();
     }
 }
 
@@ -109,9 +205,11 @@ GameState::State SPlayGame::handleEvents()
                 m_paused = true;
                 m_stepTimer.pause();
                 return PAUSED;
+
             case SDLK_F2:
                 m_paused = true;
                 return MAIN_MENU;
+
             default:
                 break;
             }
@@ -144,7 +242,7 @@ GameState::State SPlayGame::update()
         double frameRate{ averageFPS(timeStep) };
         if (frameRate > 0)
         {
-            //std::cout << frameRate << '\n';
+            std::cout << frameRate << '\n';
         }
 
         return STATE_NULL;

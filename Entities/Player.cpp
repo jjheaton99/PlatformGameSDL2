@@ -12,9 +12,10 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
         m_spriteRects[i].y = 0;
     }
 
-    m_yMaxSpeed = 25.0;
+    m_yMaxSpeed = 30.0;
     m_xMaxSpeed = 12.0;
     m_walkAcceleration = 0.8;
+    m_climbSpeed = 10.0;
     
     m_spriteIndex = 0;
 
@@ -101,7 +102,7 @@ void Player::update(std::vector<std::vector<Tile>>& map, Camera& camera)
     }
 }
 
-//adjusts velocity of player depending on state of motion
+//adjusts velocity of player depending on state of motion/////
 void Player::motion()
 {
     if (m_crouched)
@@ -116,50 +117,85 @@ void Player::motion()
         }
     }
 
-    if (m_movement == AIRBORNE && !(m_velocity.gety() > m_yMaxSpeed))
+    switch (m_movement)
     {
-        //grounded characters fall when airborne
-        m_velocity.add(0, Constants::g);
-        //horizontal air resistance
-        if (m_velocity.gety() > m_yMaxSpeed || m_velocity.getx() > m_xMaxSpeed)
+    case GroundedCharacter::AIRBORNE:
+        if (m_velocity.gety() + Constants::g <= m_xMaxSpeed)
         {
-            m_velocity.xScale(0.9);
+            m_velocity.add(0, Constants::g);
         }
-    }
-    //velocity increased/decreased unless at max horizontal velocity
-    else if (m_movement == LEFT)
-    {
+        else
+        {
+            m_velocity.yScale(0.0);
+            m_velocity.add(0, m_yMaxSpeed);
+        }
+
+        if (m_velocity.gety() == m_yMaxSpeed)
+        {
+            m_velocity.xScale(0.95);
+            if (std::abs(m_velocity.getx()) < 0.0001)
+            {
+                m_velocity.xScale(0);
+            }
+        }
+        break;
+
+    case GroundedCharacter::LEFT:
+        //velocity increased/decreased unless at max horizontal velocity
         if (m_velocity.getx() - m_walkAcceleration >= -m_xMaxSpeed)
         {
             m_velocity.add(-m_walkAcceleration, 0);
+        }
+        else if (m_velocity.getx() < -m_xMaxSpeed)
+        {
+            m_velocity.xScale(0.9);
         }
         else
         {
             m_velocity.xScale(0.0);
             m_velocity.add(-m_xMaxSpeed, 0);
         }
-    }
-    else if (m_movement == RIGHT)
-    {
+        break;
+
+    case GroundedCharacter::RIGHT:
         if (m_velocity.getx() + m_walkAcceleration <= m_xMaxSpeed)
         {
             m_velocity.add(m_walkAcceleration, 0);
+        }
+        else if (m_velocity.getx() > m_xMaxSpeed)
+        {
+            m_velocity.xScale(0.9);
         }
         else
         {
             m_velocity.xScale(0.0);
             m_velocity.add(m_xMaxSpeed, 0);
         }
-    }
+        break;
 
-    else if (m_movement == STOP)
-    {
+    case GroundedCharacter::CLIMB_STOP:
+        m_velocity.scale(0);
+        break;
+
+    case GroundedCharacter::CLIMB_UP:
+        setVel(0, -m_climbSpeed);
+        break;
+
+    case GroundedCharacter::CLIMB_DOWN:
+        setVel(0, m_climbSpeed);
+        break;
+
+    case GroundedCharacter::STOP:
         //deceleration when stopped moving
-        m_velocity.xScale(0.82);
+        m_velocity.xScale(0.7);
         if (std::abs(m_velocity.getx()) < 0.0001)
         {
             m_velocity.xScale(0);
         }
+        break;
+
+    default:
+        break;
     }
 }
 

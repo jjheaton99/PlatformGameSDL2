@@ -9,7 +9,8 @@ public:
     {
         BACKGROUND,
         SOLID,
-        PLATFORM
+        PLATFORM,
+        LADDER
     };
 
 private:
@@ -20,7 +21,7 @@ public:
     Tile(const char* fileName = "Assets/background2.png", Type type = BACKGROUND, double xPos = 0, double yPos = 0, int size = Constants::tileSize);
     ~Tile();
 
-    void setPos(int xPos, int yPos);
+    void setPos(double xPos, double yPos) override;
     int getSize() { return m_size; }
     Type getType() { return m_type; }
 };

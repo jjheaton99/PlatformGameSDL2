@@ -15,27 +15,34 @@ void Character::collideTileHitBoxes(std::vector<std::vector<Tile>>& map, int cha
     m_solidHitBoxes.clear();
     m_platformHitBoxes.clear();
 
+    //in case no ladder collisions are found
+    m_collidingWithLadder = false;
+
     //checks all tiles that could be overlapping with character collision hitBox 
     for (int row{ characterRow }; row * tileSize <= characterColliderBox.y + characterColliderBox.h; ++row)
     {
         for (int column{ characterColumn }; column * tileSize <= characterColliderBox.x + characterColliderBox.w; ++column)
         {
-            switch (map[row][column].getType())
+            if (m_collider.collideCheck(map[row][column].getCollider()))
             {
-            case Tile::SOLID:
-                if (m_collider.collideCheck(map[row][column].getCollider()))
+                switch (map[row][column].getType())
                 {
+                case Tile::SOLID:
                     m_solidHitBoxes.push_back(map[row][column].getCollider().getHitBox());
-                }
-                break;
-            case Tile::PLATFORM:
-                if (m_collider.collideCheck(map[row][column].getCollider()))
-                {
+                    break;
+
+                case Tile::PLATFORM:
                     m_platformHitBoxes.push_back(map[row][column].getCollider().getHitBox());
+                    break;
+
+                case Tile::LADDER:
+                    m_collidingWithLadder = true;
+                    m_ladderxPos = map[row][column].getCollider().getHitBox().x;
+                    break;
+
+                default:
+                    break;
                 }
-                break;
-            default:
-                break;
             }
         }
     }

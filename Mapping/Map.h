@@ -19,6 +19,7 @@ private:
     Tile m_background;
     Tile m_block;
     Tile m_platform;
+    Tile m_ladder;
 
     int m_levelWidth;
     int m_levelHeight;

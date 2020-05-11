@@ -15,10 +15,10 @@ Tile::Tile(const char* fileName, Type type, double xPos, double yPos, int size)
 Tile::~Tile()
 {}
 
-void Tile::setPos(int xPos, int yPos)
+void Tile::setPos(double xPos, double yPos)
 {
-    m_dstRect.x = xPos;
-    m_dstRect.y = yPos;
+    m_dstRect.x = static_cast<int>(xPos);
+    m_dstRect.y = static_cast<int>(yPos);
 
     m_collider.setPosition(xPos, yPos);
 }

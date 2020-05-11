@@ -45,6 +45,11 @@ bool GroundedCharacter::edgeCheck(Camera& camera)
 bool GroundedCharacter::checkForGround(std::vector<std::vector<Tile>>& map, int characterRow,
     int characterColumn, int tileSize, SDL_Rect& characterColliderBox)
 {
+    if (m_collidingWithLadder)
+    {
+        return true;
+    }
+
     for (int row{ characterRow }; row * tileSize <= characterColliderBox.y + characterColliderBox.h; ++row)
     {
         for (int column{ characterColumn }; column * tileSize <= characterColliderBox.x + characterColliderBox.w; ++column)
@@ -52,7 +57,7 @@ bool GroundedCharacter::checkForGround(std::vector<std::vector<Tile>>& map, int 
             if ((map[row][column].getType() == Tile::SOLID && !m_crouched) || map[row][column].getType() == Tile::PLATFORM)
             {
                 //Checks for blocks directly below character whilst not colliding
-                if ((m_movement != AIRBORNE) 
+                if ((m_movement != AIRBORNE)
                     && (map[row][column].getCollider().getHitBox().x > (characterColliderBox.x - map[row][column].getCollider().getHitBox().w))
                     && (map[row][column].getCollider().getHitBox().x < (characterColliderBox.x + characterColliderBox.w)))
                 {

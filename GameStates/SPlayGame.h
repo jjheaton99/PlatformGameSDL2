@@ -21,6 +21,7 @@ private:
 
     void playerControlsKeyHold();
     void playerControlsKeyPress(SDL_Event& event);
+    void playerControlsKeyUp(SDL_Event& event);
 
     double averageFPS(double timeStep);
 
