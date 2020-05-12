@@ -24,6 +24,6 @@ public:
     void setNextState(GameState::State nextState);
     void changeState();
     void gameLoop();
-    GameState::State getCurrentStateID() { return m_currentStateID; }
+    GameState::State getCurrentStateID() const { return m_currentStateID; }
 };
 

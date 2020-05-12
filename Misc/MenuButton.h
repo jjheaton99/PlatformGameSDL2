@@ -12,15 +12,15 @@ public:
     MenuButton(const char* fileName, const char* selectedTextureFileName, int width = 0, int height = 0, int xPos = 0, int yPos = 0);
     ~MenuButton();
 
-    void draw() override;
+    void draw() const override;
 
     void select() { m_isSelected = true; }
     void deselect() { m_isSelected = false; }
 
     void setPos(int xPos, int yPos);
     void setDstRect(int xPos, int yPos, int width, int height);
-    SDL_Rect& getDstRect() { return m_dstRect; }
+    const SDL_Rect& getDstRect() const { return m_dstRect; }
 
-    bool mouseIsOnButton();
+    bool mouseIsOnButton() const;
 };
 

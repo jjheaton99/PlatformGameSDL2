@@ -11,7 +11,7 @@
 class Player : public GroundedCharacter
 {
 private:
-    static const int m_spriteSheetCount{ 29 };
+    static const int m_spriteSheetCount{ 26 };
 
     std::array<SDL_Rect, m_spriteSheetCount> m_spriteRects;
     std::array<SDL_Rect, m_spriteSheetCount>::size_type m_spriteIndex;
@@ -41,15 +41,15 @@ private:
 public:
     Player(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0);
 
-    void update(std::vector<std::vector<Tile>>& map, Camera& camera);
-    void cameraDraw(Camera& camera) override;
+    void update(const std::vector<std::vector<Tile>>& map, Camera& camera);
+    void cameraDraw(const Camera& camera) const override;
 
-    bool dodgeCooling() { return m_dodgeCooling; }
-    bool isDodging() { return m_dodgingLeft || m_dodgingRight; }
+    bool dodgeCooling() const { return m_dodgeCooling; }
+    bool isDodging() const { return m_dodgingLeft || m_dodgingRight; }
     void dodgeLeft();
     void dodgeRight();
     void attackLeft();
     void attackRight();
-    bool isAttacking() { return m_sideAttack.isAttacking(); }
-    bool isFacingLeft() { return m_facingLeft; }
+    bool isAttacking() const { return m_sideAttack.isAttacking(); }
+    bool isFacingLeft() const { return m_facingLeft; }
 };

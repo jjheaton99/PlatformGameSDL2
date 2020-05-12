@@ -9,11 +9,11 @@ MeleeObject::~MeleeObject()
     destroy();
 }
 
-void MeleeObject::cameraDraw(Camera& camera)
+void MeleeObject::cameraDraw(const Camera& camera) const
 {
-    if (m_attacking)
+    if (m_attacking && m_counter != 0)
     {
-        SDL_Point rotationPoint{ m_offset.getx(), m_offset.gety() };
+        SDL_Point rotationPoint{ static_cast<int>(m_offset.getx()), static_cast<int>(m_offset.gety()) };
         if (m_collider.collideCheck(camera.getCollider()))
         {
             SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };

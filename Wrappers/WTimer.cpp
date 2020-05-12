@@ -46,7 +46,7 @@ void WTimer::resume()
     }
 }
 
-Uint32 WTimer::getTicks()
+Uint32 WTimer::getTicks() const
 {
     Uint32 time{ 0 };
 

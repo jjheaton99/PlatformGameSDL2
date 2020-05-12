@@ -18,7 +18,7 @@ void WTexture::load(const char* fileName)
     SDL_FreeSurface(tmpSurface);
 }
 
-void WTexture::draw(SDL_Rect& srcRect, SDL_Rect& dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip)
+void WTexture::draw(const SDL_Rect& srcRect, const SDL_Rect& dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip) const
 {
     SDL_RenderCopyEx(g_renderer, m_texture, &srcRect, &dstRect, angle, centre, flip);
 }

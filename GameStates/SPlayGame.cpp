@@ -67,14 +67,7 @@ void SPlayGame::playerControlsKeyHold()
     }
     else if (currentKeyState[SDL_SCANCODE_S])
     {
-        if (!m_player->isClimbing() && m_player->collidingWithLadder())
-        {
-            m_player->uncrouch();
-            m_player->setVel(0, 0);
-            m_player->setPos(m_player->getLadderxPos() + 0.5 * Constants::tileSize - 50.0, m_player->getPos().gety());
-            m_player->climbDown();
-        }
-        else if (m_player->isClimbing())
+        if (m_player->isClimbing())
         {
             if (m_player->collidingWithLadder())
             {
@@ -121,7 +114,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
             break;
 
         case SDLK_LSHIFT:
-            if (!m_player->isDodging() && !m_player->dodgeCooling())
+            if (!m_player->isDodging() && !m_player->dodgeCooling() && !m_player->isAttacking())
             {
                 if (currentKeyState[SDL_SCANCODE_A])
                 {
@@ -193,21 +186,24 @@ void SPlayGame::playerControlsMouseClick(SDL_Event& event)
         switch (event.button.button)
         {
         case SDL_BUTTON_LEFT:
-            if (currentKeyState[SDL_SCANCODE_A])
+            if (!m_player->isAttacking() && !m_player->isDodging() && !m_player->isClimbing())
             {
-                m_player->attackLeft();
-            }
-            else if (currentKeyState[SDL_SCANCODE_D])
-            {
-                m_player->attackRight();
-            }
-            else if (m_player->isFacingLeft())
-            {
-                m_player->attackLeft();
-            }
-            else
-            {
-                m_player->attackRight();
+                if (currentKeyState[SDL_SCANCODE_A])
+                {
+                    m_player->attackLeft();
+                }
+                else if (currentKeyState[SDL_SCANCODE_D])
+                {
+                    m_player->attackRight();
+                }
+                else if (m_player->isFacingLeft())
+                {
+                    m_player->attackLeft();
+                }
+                else
+                {
+                    m_player->attackRight();
+                }
             }
             break;
         default:
@@ -238,6 +234,11 @@ GameState::State SPlayGame::handleEvents()
             default:
                 break;
             }
+        }
+
+        if (element.type == SDL_MOUSEMOTION)
+        {
+            g_window.setMouseCentre();
         }
 
         playerControlsKeyPress(element);

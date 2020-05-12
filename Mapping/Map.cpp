@@ -3,8 +3,8 @@
 Map::Map()
     : m_background{ "Assets/blackGrey.png", Tile::BACKGROUND },
     m_block{ "Assets/WhiteFadeBlocks/1.png", Tile::SOLID },
-    m_platform{ "Assets/WhiteFadeBlocks/13.png", Tile::PLATFORM },
-    m_ladder{ "Assets/block2.png.", Tile::LADDER}
+    m_platform{ "Assets/platform.png", Tile::PLATFORM },
+    m_ladder{ "Assets/ladder.png.", Tile::LADDER}
 {
 }
 
@@ -97,18 +97,18 @@ void Map::setTiles()
     {
         for (index_type column{ 0 }; column < m_map[0].size(); ++column)
         {
-            m_map[row][column].setPos(column * static_cast<int>(m_map[row][column].getSize()),
-                row * static_cast<int>(m_map[row][column].getSize()));
+            m_map[row][column].setPos(1.0 * column * m_map[row][column].getSize(),
+                1.0 * row * m_map[row][column].getSize());
         }
     }
 }
 
-Map::index_type Map::cameraCoordToMapIndex(int coord)
+Map::index_type Map::cameraCoordToMapIndex(int coord) const
 {
     return (coord - (coord % m_map[0][0].getSize())) / m_map[0][0].getSize();
 }
 
-void Map::drawMap(Camera& camera)
+void Map::drawMap(const Camera& camera) const
 {
     index_type xmaxCameraIndex{ cameraCoordToMapIndex(camera.getx() + camera.getw()) };
     index_type ymaxCameraIndex{ cameraCoordToMapIndex(camera.gety() + camera.geth()) };

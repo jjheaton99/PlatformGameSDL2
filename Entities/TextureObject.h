@@ -20,10 +20,10 @@ public:
     TextureObject(const char* fileName, double xPos = 0, double yPos = 0);
     virtual ~TextureObject();
 
-    virtual void draw();
+    virtual void draw() const;
     virtual void destroy();
 
-    const Vector2D<double>& getPos() { return m_position; }
+    const Vector2D<double>& getPos() const { return m_position; }
     virtual void setPos(double xPos, double yPos) { m_position = Vector2D{ xPos, yPos }; }
 };
 

@@ -13,7 +13,7 @@ public:
     ~WTexture();
 
     void load(const char* fileName);
-    void draw(SDL_Rect& srcRect, SDL_Rect& dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip);
+    void draw(const SDL_Rect& srcRect, const SDL_Rect& dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip) const;
     void free();
     void setColour(Uint8 R, Uint8 G, Uint8 B);
     void setBlendingMode(SDL_BlendMode mode);

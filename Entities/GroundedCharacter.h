@@ -29,10 +29,10 @@ protected:
     void deflectDown(double overlap);
     void deflectLeft(double overlap);
     void deflectRight(double overlap);
-    virtual void mapCollideCheck(std::vector<std::vector<Tile>>& map) override;
-    virtual bool checkForGround(std::vector<std::vector<Tile>>& map, int characterRow,
-        int characterColumn, int tileSize, SDL_Rect& characterColliderBox);
-    virtual bool edgeCheck(Camera& camera) override;
+    virtual void mapCollideCheck(const std::vector<std::vector<Tile>>& map) override;
+    virtual bool checkForGround(const std::vector<std::vector<Tile>>& map, int characterRow,
+        int characterColumn, int tileSize, const SDL_Rect& characterColliderBox);
+    virtual bool edgeCheck(const Camera& camera) override;
     
     virtual void motion() = 0;
 
@@ -40,7 +40,7 @@ public:
     GroundedCharacter(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
     virtual ~GroundedCharacter();
 
-    Movement getMovement() { return m_movement; }
+    Movement getMovement() const { return m_movement; }
     //functions for changing state of motion
     void makeAirborne() { m_movement = AIRBORNE; }
     void moveLeft() { m_movement = LEFT; }
@@ -50,7 +50,7 @@ public:
     void climbStop() { m_movement = CLIMB_STOP; }
     void climbUp() { m_movement = CLIMB_UP; }
     void climbDown() { m_movement = CLIMB_DOWN; }
-    bool isClimbing() { return (m_movement == CLIMB_STOP || m_movement == CLIMB_UP || m_movement == CLIMB_DOWN); }
+    bool isClimbing() const { return (m_movement == CLIMB_STOP || m_movement == CLIMB_UP || m_movement == CLIMB_DOWN); }
 
     void crouch();
     void uncrouch() { m_crouched = false; }

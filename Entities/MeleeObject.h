@@ -22,10 +22,11 @@ public:
 
     virtual void update() = 0;
 
-    virtual void cameraDraw(Camera& camera) override;
+    virtual void cameraDraw(const Camera& camera) const override;
     void faceLeft() { m_facingLeft = true; }
     void faceRight() { m_facingLeft = false; }
     void attack() { m_attacking = true; }
-    bool isAttacking() { return m_attacking; }
+    bool isAttacking() const { return m_attacking; }
+    void setAngle(double angle) { m_angle = angle; }
 };
 

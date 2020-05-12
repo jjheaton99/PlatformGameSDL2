@@ -20,9 +20,9 @@ public:
     void pause();
     void resume();
 
-    Uint32 getTicks();
+    Uint32 getTicks() const;
 
-    bool isStarted() { return m_started; }
-    bool isPaused() { return m_started && m_paused; }
+    bool isStarted() const { return m_started; }
+    bool isPaused() const { return m_started && m_paused; }
 };
 

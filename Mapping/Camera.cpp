@@ -32,12 +32,12 @@ void Camera::setBoundary(int xBoundary, int yBoundary)
 }
 
 //functions for checking if camera is in the bounds of the level
-bool Camera::xInBoundary()
+bool Camera::xInBoundary() const
 {
     return (m_rect.x >= 0 && m_rect.x <= m_xBoundary - m_rect.w);
 }
 
-bool Camera::yInBoundary()
+bool Camera::yInBoundary() const
 {
     return (m_rect.y >= 0 && m_rect.y <= m_yBoundary - m_rect.h);
 }

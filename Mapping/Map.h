@@ -25,7 +25,7 @@ private:
     int m_levelHeight;
    
     void pushTile(int tileNumber, std::vector<Tile>& tileRow);
-    index_type cameraCoordToMapIndex(int coord);
+    index_type cameraCoordToMapIndex(int coord) const;
     void setTiles();
 
 public:
@@ -34,11 +34,11 @@ public:
 
     bool loadMap(const char* fileName);
     //void loadMap(layout_type map);
-    void drawMap(Camera& camera);
+    void drawMap(const Camera& camera) const;
 
-    std::vector<std::vector <Tile>>& getMap() { return m_map; }
-    int getLevelWidth() { return m_levelWidth; }
-    int getLevelHeight() { return m_levelHeight; }
+    const std::vector<std::vector <Tile>>& getMap() const { return m_map; }
+    int getLevelWidth() const { return m_levelWidth; }
+    int getLevelHeight() const { return m_levelHeight; }
 };
 
 /*

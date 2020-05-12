@@ -20,9 +20,10 @@ public:
     void handleEvent(SDL_Event& event);
     void destroy();
 
-    bool isFullscreen() { return m_fullscreen; }
-    bool isMinimised() { return m_minimised; }
+    bool isFullscreen() const { return m_fullscreen; }
+    bool isMinimised() const { return m_minimised; }
 
     void fullscreenOnOff();
+    void setMouseCentre();
 };
 

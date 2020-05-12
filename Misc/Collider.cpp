@@ -1,9 +1,11 @@
 #include "Collider.h"
 
-Collider::Collider(int width, int height)
+Collider::Collider(int width, int height, int xPos, int yPos)
 {
     m_hitBox.w = width;
     m_hitBox.h = height;
+    m_hitBox.x = xPos;
+    m_hitBox.y = yPos;
 }
 
 Collider::~Collider()
@@ -21,7 +23,7 @@ void Collider::setDimensions(int w, int h)
     m_hitBox.h = h;
 }
 
-bool Collider::collideCheck(Collider& collider)
+bool Collider::collideCheck(const Collider& collider) const
 {
     return (m_hitBox.x < (collider.getHitBox().x + collider.getHitBox().w)
         && m_hitBox.x >(collider.getHitBox().x - m_hitBox.w)

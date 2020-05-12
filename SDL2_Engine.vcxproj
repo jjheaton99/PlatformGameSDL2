@@ -40,6 +40,7 @@
     <ClCompile Include="Misc\Constants.cpp" />
     <ClCompile Include="Misc\GlobalObjects.cpp" />
     <ClCompile Include="Misc\MenuButton.cpp" />
+    <ClCompile Include="Misc\MultiCollider.cpp" />
     <ClCompile Include="Wrappers\WTexture.cpp" />
     <ClCompile Include="Wrappers\WTimer.cpp" />
     <ClCompile Include="Wrappers\WWindow.cpp" />
@@ -66,6 +67,7 @@
     <ClInclude Include="Misc\Constants.h" />
     <ClInclude Include="Misc\GlobalObjects.h" />
     <ClInclude Include="Misc\MenuButton.h" />
+    <ClInclude Include="Misc\MultiCollider.h" />
     <ClInclude Include="Misc\Vector2D.h" />
     <ClInclude Include="Wrappers\WTexture.h" />
     <ClInclude Include="Wrappers\WTimer.h" />

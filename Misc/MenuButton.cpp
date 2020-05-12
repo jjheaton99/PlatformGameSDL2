@@ -12,7 +12,7 @@ MenuButton::~MenuButton()
     destroy();
 }
 
-void MenuButton::draw()
+void MenuButton::draw() const
 {
     if (m_isSelected)
     {
@@ -36,7 +36,7 @@ void MenuButton::setDstRect(int xPos, int yPos, int width, int height)
     m_dstRect = { xPos, yPos, width, height };
 }
 
-bool MenuButton::mouseIsOnButton()
+bool MenuButton::mouseIsOnButton() const
 {
     int x;
     int y;

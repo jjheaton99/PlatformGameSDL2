@@ -9,7 +9,7 @@ GameObject::~GameObject()
 
 //a modified draw function for drawing objects relative to the camera
 //ensures objects in camera focus are rendered in the correct place
-void GameObject::cameraDraw(Camera& camera)
+void GameObject::cameraDraw(const Camera& camera) const
 {
     if (m_collider.collideCheck(camera.getCollider()))
     {

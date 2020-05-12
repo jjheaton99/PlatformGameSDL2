@@ -9,7 +9,7 @@ TextureObject::TextureObject(const char* fileName, double xPos, double yPos)
 TextureObject::~TextureObject()
 {}
 
-void TextureObject::draw()
+void TextureObject::draw() const
 {
     m_texture.draw(m_srcRect, m_dstRect, 0, nullptr, SDL_FLIP_NONE);
 }

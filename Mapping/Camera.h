@@ -25,17 +25,17 @@ public:
     void setPos(int xpos, int ypos);
     void setBoundary(int xBoundary, int yBoundary);
 
-    int getx() { return m_rect.x; }
-    int gety() { return m_rect.y; }
-    int getw() { return m_rect.w; }
-    int geth() { return m_rect.h; }
-    int getxBoundary() { return m_xBoundary; }
-    int getyBoundary() { return m_yBoundary; }
-    int getxMax() { return m_xBoundary - m_rect.w; }
-    int getyMax() { return m_yBoundary - m_rect.h; }
+    int getx() const { return m_rect.x; }
+    int gety() const { return m_rect.y; }
+    int getw() const { return m_rect.w; }
+    int geth() const { return m_rect.h; }
+    int getxBoundary() const { return m_xBoundary; }
+    int getyBoundary() const { return m_yBoundary; }
+    int getxMax() const { return m_xBoundary - m_rect.w; }
+    int getyMax() const { return m_yBoundary - m_rect.h; }
 
-    bool xInBoundary();
-    bool yInBoundary();
+    bool xInBoundary() const;
+    bool yInBoundary() const;
 
-    Collider& getCollider() { return m_collider; }
+    const Collider& getCollider() const { return m_collider; }
 };

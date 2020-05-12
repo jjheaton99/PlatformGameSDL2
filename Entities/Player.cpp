@@ -25,7 +25,7 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
     m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 }
 
-void Player::update(std::vector<std::vector<Tile>>& map, Camera& camera)
+void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera)
 {
     m_position.add(m_velocity);
     //collider position is moved after each function that can change character position
@@ -204,9 +204,9 @@ void Player::cycleWalkAnimation()
     {
         m_animationStep = 0;
         ++m_spriteIndex;
-        if (m_spriteIndex > 26)
+        if (m_spriteIndex > 21)
         {
-            m_spriteIndex = 5;
+            m_spriteIndex = 0;
         }
     }
 }
@@ -230,14 +230,14 @@ void Player::spriteAnimate()
     switch (m_movement)
     {
     case GroundedCharacter::AIRBORNE:
-        m_spriteIndex = 27;
+        m_spriteIndex = 22;
         break;
 
     case GroundedCharacter::LEFT:
         if (m_facingLeft == false)
         {
             m_facingLeft = true;
-            m_spriteIndex = 5;
+            m_spriteIndex = 0;
         }
         cycleWalkAnimation();
         break;
@@ -246,13 +246,14 @@ void Player::spriteAnimate()
         if (m_facingLeft == true)
         {
             m_facingLeft = false;
-            m_spriteIndex = 5;
+            m_spriteIndex = 0;
         }
         cycleWalkAnimation();
         break;
 
     case GroundedCharacter::STOP:
-        cycleIdleAnimation();
+        //cycleIdleAnimation();
+        m_spriteIndex = 23;
         break;
 
     default:
@@ -261,17 +262,21 @@ void Player::spriteAnimate()
 
     if (m_sideAttack.isAttacking())
     {
-        m_spriteIndex = 28;
+        m_spriteIndex = 24;
     }
     else if (m_crouched)
     {
-        m_spriteIndex = 0;
+        m_spriteIndex = 23;
+    }
+    else if (isClimbing())
+    {
+        m_spriteIndex = 25;
     }
 
     m_srcRect = m_spriteRects[m_spriteIndex];
 }
 
-void Player::cameraDraw(Camera& camera)
+void Player::cameraDraw(const Camera& camera) const
 {   
     SDL_RendererFlip flip{ SDL_FLIP_NONE };
     if (m_facingLeft)
@@ -359,13 +364,23 @@ void Player::dodgeRight()
 void Player::attackLeft()
 {
     m_facingLeft = true;
+    m_sideAttack.setAngle(30.0);
     m_sideAttack.faceLeft();
     m_sideAttack.attack();
+    if (m_movement == AIRBORNE)
+    {
+        m_velocity.add(-5.0, -5.0);
+    }
 }
 
 void Player::attackRight()
 {
     m_facingLeft = false;
+    m_sideAttack.setAngle(-30.0);
     m_sideAttack.faceRight();
     m_sideAttack.attack();
+    if (m_movement == AIRBORNE)
+    {
+        m_velocity.add(5.0, -5.0);
+    }
 }

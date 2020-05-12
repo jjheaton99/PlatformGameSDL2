@@ -8,7 +8,7 @@ GroundedCharacter::~GroundedCharacter()
 {}
 
 //resets velocity if colliding with edge of map
-bool GroundedCharacter::edgeCheck(Camera& camera)
+bool GroundedCharacter::edgeCheck(const Camera& camera)
 {
     if (m_collider.getHitBox().x <= 0)
     {
@@ -42,8 +42,8 @@ bool GroundedCharacter::edgeCheck(Camera& camera)
 }
 
 //checks if character is standing on a solid map tile
-bool GroundedCharacter::checkForGround(std::vector<std::vector<Tile>>& map, int characterRow,
-    int characterColumn, int tileSize, SDL_Rect& characterColliderBox)
+bool GroundedCharacter::checkForGround(const std::vector<std::vector<Tile>>& map, int characterRow,
+    int characterColumn, int tileSize, const SDL_Rect& characterColliderBox)
 {
     if (m_collidingWithLadder)
     {
@@ -101,7 +101,7 @@ void GroundedCharacter::deflectRight(double overlap)
 }
 
 //checks for collision with solid map tiles and adjusts position/velocity
-void GroundedCharacter::mapCollideCheck(std::vector<std::vector<Tile>>& map)
+void GroundedCharacter::mapCollideCheck(const std::vector<std::vector<Tile>>& map)
 {
     int tileSize{ map[0][0].getSize() };
     SDL_Rect characterColliderBox{ m_collider.getHitBox() };
