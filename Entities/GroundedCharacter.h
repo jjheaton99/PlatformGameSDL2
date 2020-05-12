@@ -38,7 +38,7 @@ protected:
 
 public:
     GroundedCharacter(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
-    ~GroundedCharacter();
+    virtual ~GroundedCharacter();
 
     Movement getMovement() { return m_movement; }
     //functions for changing state of motion

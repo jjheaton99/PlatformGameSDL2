@@ -18,7 +18,7 @@ protected:
 public:
     //fileName is the name of the texture png file to load
     TextureObject(const char* fileName, double xPos = 0, double yPos = 0);
-    ~TextureObject();
+    virtual ~TextureObject();
 
     virtual void draw();
     virtual void destroy();

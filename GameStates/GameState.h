@@ -26,7 +26,7 @@ public:
     };
 
     GameState() {};
-    ~GameState() {};
+    virtual ~GameState() {};
 
     virtual State handleEvents() = 0;
     virtual State update() = 0;

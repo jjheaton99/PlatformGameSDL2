@@ -33,7 +33,7 @@ protected:
 
 public:
     Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
-    ~Character();
+    virtual ~Character();
 
     const Vector2D<double>& getVel() { return m_velocity; }
     void setVel(double xVel, double yVel) { m_velocity = Vector2D<double>{ xVel, yVel }; }

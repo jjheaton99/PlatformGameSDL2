@@ -29,6 +29,7 @@ bool Collider::collideCheck(Collider& collider)
         && m_hitBox.y >(collider.getHitBox().y - m_hitBox.h));
 }
 
+//for calculating x or y overlap between two hitboxes
 double Collider::axisBoxOverlap(int pos1, int pos2, int size1, int size2)
 {
     if (pos1 < pos2)

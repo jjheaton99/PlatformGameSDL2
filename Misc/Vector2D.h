@@ -17,13 +17,25 @@ public:
 
     T magnitude() const;
     double direction() const;
+
     void add(const Vector2D& vector);
     void add(T x, T y);
+    friend Vector2D<T> operator+ (const Vector2D<T>& v1, const Vector2D<T>& v2)
+    {
+        return Vector2D<T>{v1.m_x + v2.m_x, v1.m_y + v2.m_y};
+    }
+
     void subtract(const Vector2D& vector);
     void subtract(T x, T y);
+    friend Vector2D<T> operator- (const Vector2D<T>& v1, const Vector2D<T>& v2)
+    {
+        return Vector2D<T>{v1.m_x - v2.m_x, v1.m_y - v2.m_y};
+    }
+
     void scale(T factor);
     void xScale(T factor);
     void yScale(T factor);
+
     T innerProduct(const Vector2D& vector);
     void rotate(T angle);
 

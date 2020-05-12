@@ -98,7 +98,7 @@ bool SPaused::pausedControls(SDL_Event& event)
         return false;
     }
 
-    else if (event.type == SDL_MOUSEBUTTONDOWN)
+    else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
     {
         if (m_resume.mouseIsOnButton())
         {

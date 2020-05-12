@@ -14,7 +14,7 @@ protected:
 
 public:
     GameObject(const char* fileName, double xPos = 0, double yPos = 0, int colliderWidth = 0, int colliderHeight = 0);
-    ~GameObject();
+    virtual ~GameObject();
 
     virtual void cameraDraw(Camera& camera);
     Collider& getCollider() { return m_collider; }

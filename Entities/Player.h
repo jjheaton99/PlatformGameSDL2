@@ -2,6 +2,7 @@
 
 #include "GroundedCharacter.h"
 #include "Constants.h"
+#include "PlayerSideAttack.h"
 #include <array>
 #include <cmath>
 #include <cstdint>
@@ -10,11 +11,13 @@
 class Player : public GroundedCharacter
 {
 private:
-    static const int m_spriteSheetCount{ 28 };
+    static const int m_spriteSheetCount{ 29 };
 
     std::array<SDL_Rect, m_spriteSheetCount> m_spriteRects;
     std::array<SDL_Rect, m_spriteSheetCount>::size_type m_spriteIndex;
-    bool m_isFlipped{ false };
+    bool m_facingLeft{ false };
+
+    PlayerSideAttack m_sideAttack{ 1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 60.0 };
 
     //member variables for controlling dodge timing and animation
     const double m_dodgeDuration{ 0.3 };
@@ -37,7 +40,6 @@ private:
 
 public:
     Player(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0);
-    ~Player();
 
     void update(std::vector<std::vector<Tile>>& map, Camera& camera);
     void cameraDraw(Camera& camera) override;
@@ -46,4 +48,8 @@ public:
     bool isDodging() { return m_dodgingLeft || m_dodgingRight; }
     void dodgeLeft();
     void dodgeRight();
+    void attackLeft();
+    void attackRight();
+    bool isAttacking() { return m_sideAttack.isAttacking(); }
+    bool isFacingLeft() { return m_facingLeft; }
 };

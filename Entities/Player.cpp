@@ -19,15 +19,10 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
     
     m_spriteIndex = 0;
 
-    m_dstRect.w = m_collider.getHitBox().h;
-    m_dstRect.h = m_collider.getHitBox().h;
+    m_dstRect.w = 100;
+    m_dstRect.h = 100;
 
     m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
-}
-
-Player::~Player()
-{
-    destroy();
 }
 
 void Player::update(std::vector<std::vector<Tile>>& map, Camera& camera)
@@ -100,9 +95,12 @@ void Player::update(std::vector<std::vector<Tile>>& map, Camera& camera)
             m_crouchStepCount = 0;
         }
     }
+
+    m_sideAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 60.0);
+    m_sideAttack.update();
 }
 
-//adjusts velocity of player depending on state of motion/////
+//adjusts velocity of player depending on state of motion
 void Player::motion()
 {
     if (m_crouched)
@@ -236,18 +234,18 @@ void Player::spriteAnimate()
         break;
 
     case GroundedCharacter::LEFT:
-        if (m_isFlipped == false)
+        if (m_facingLeft == false)
         {
-            m_isFlipped = true;
+            m_facingLeft = true;
             m_spriteIndex = 5;
         }
         cycleWalkAnimation();
         break;
 
     case GroundedCharacter::RIGHT:
-        if (m_isFlipped == true)
+        if (m_facingLeft == true)
         {
-            m_isFlipped = false;
+            m_facingLeft = false;
             m_spriteIndex = 5;
         }
         cycleWalkAnimation();
@@ -261,7 +259,11 @@ void Player::spriteAnimate()
         break;
     }
 
-    if (m_crouched)
+    if (m_sideAttack.isAttacking())
+    {
+        m_spriteIndex = 28;
+    }
+    else if (m_crouched)
     {
         m_spriteIndex = 0;
     }
@@ -272,7 +274,7 @@ void Player::spriteAnimate()
 void Player::cameraDraw(Camera& camera)
 {   
     SDL_RendererFlip flip{ SDL_FLIP_NONE };
-    if (m_isFlipped)
+    if (m_facingLeft)
     {
         flip = SDL_FLIP_HORIZONTAL;
     }
@@ -282,6 +284,8 @@ void Player::cameraDraw(Camera& camera)
         SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
         m_texture.draw(m_srcRect, relativeDstRect, m_angle, nullptr, flip);
     }
+
+    m_sideAttack.cameraDraw(camera);
 }
 
 void Player::moveCamera(Camera& camera)
@@ -350,4 +354,18 @@ void Player::dodgeRight()
 {
     m_dodgingRight = true;
     m_dodgeCooling = true;
+}
+
+void Player::attackLeft()
+{
+    m_facingLeft = true;
+    m_sideAttack.faceLeft();
+    m_sideAttack.attack();
+}
+
+void Player::attackRight()
+{
+    m_facingLeft = false;
+    m_sideAttack.faceRight();
+    m_sideAttack.attack();
 }

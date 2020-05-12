@@ -5,7 +5,9 @@ Character::Character(const char* fileName, double xStartPos, double yStartPos, d
 {}
 
 Character::~Character()
-{}
+{
+    destroy();
+}
 
 //checks tiles in the vicinity of the character to find collisions and stores colliding tiles in a vector
 void Character::collideTileHitBoxes(std::vector<std::vector<Tile>>& map, int characterRow, 
