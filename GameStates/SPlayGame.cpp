@@ -44,7 +44,7 @@ void SPlayGame::playerControlsKeyHold()
 
     if (currentKeyState[SDL_SCANCODE_W])
     {
-        if (!m_player->isClimbing() && m_player->collidingWithLadder())
+        if (!m_player->isClimbing() && m_player->collidingWithLadder() && !m_player->isDodging())
         {
             m_player->uncrouch();
             m_player->setVel(0, 0);
@@ -137,7 +137,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                     }
                     else
                     {
-                        m_player->addVel(-20.0, 0);
+                        m_player->addVel(-30.0, 0);
                     }
 
                     m_player->dodgeLeft();
@@ -163,7 +163,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                     }
                     else
                     {
-                        m_player->addVel(20.0, 0);
+                        m_player->addVel(30.0, 0);
                     }
 
                     m_player->dodgeRight();

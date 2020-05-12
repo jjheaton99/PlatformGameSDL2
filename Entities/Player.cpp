@@ -53,20 +53,18 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera)
 
     if (m_dodgingLeft || m_dodgingRight)
     {
-        int dodgeFrames = static_cast<int>(m_dodgeDuration / Constants::updateStep);
-
         if (m_dodgingLeft)
         {
-            m_angle -= (360.0 / dodgeFrames);
+            m_angle -= (360.0 / m_dodgeFrames);
         }
         else if (m_dodgingRight)
         {
-            m_angle += (360.0 / dodgeFrames);
+            m_angle += (360.0 / m_dodgeFrames);
         }
 
         ++m_dodgeStepCount;
 
-        if (m_dodgeStepCount > dodgeFrames)
+        if (m_dodgeStepCount > m_dodgeFrames)
         {
             m_dodgingLeft = false;
             m_dodgingRight = false;
@@ -118,7 +116,7 @@ void Player::motion()
     switch (m_movement)
     {
     case GroundedCharacter::AIRBORNE:
-        if (m_velocity.gety() + Constants::g <= m_xMaxSpeed)
+        if (m_velocity.gety() + Constants::g <= m_yMaxSpeed)
         {
             m_velocity.add(0, Constants::g);
         }
@@ -128,7 +126,7 @@ void Player::motion()
             m_velocity.add(0, m_yMaxSpeed);
         }
 
-        if (m_velocity.gety() == m_yMaxSpeed)
+        if (m_velocity.gety() == m_yMaxSpeed || m_velocity.getx() > 1.5 * m_xMaxSpeed)
         {
             m_velocity.xScale(0.95);
             if (std::abs(m_velocity.getx()) < 0.0001)
@@ -347,18 +345,6 @@ void Player::moveCamera(Camera& camera)
             camera.setPos(camera.getx(), camera.getyMax());
         }
     }
-}
-
-void Player::dodgeLeft() 
-{
-    m_dodgingLeft = true;
-    m_dodgeCooling = true;
-}
-
-void Player::dodgeRight() 
-{
-    m_dodgingRight = true;
-    m_dodgeCooling = true;
 }
 
 void Player::attackLeft()

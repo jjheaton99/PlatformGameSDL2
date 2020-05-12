@@ -40,21 +40,3 @@ public:
     int getLevelWidth() const { return m_levelWidth; }
     int getLevelHeight() const { return m_levelHeight; }
 };
-
-/*
-Tile m_block2;
-Tile m_block3;
-Tile m_block4;
-Tile m_block5;
-Tile m_block6;
-Tile m_block7;
-Tile m_block8;
-Tile m_block9;
-Tile m_block10;
-Tile m_block11;
-Tile m_block12;
-Tile m_block13;
-Tile m_block14;
-Tile m_block15;
-Tile m_block16;
-*/

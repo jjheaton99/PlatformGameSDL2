@@ -21,7 +21,8 @@ private:
 
     //member variables for controlling dodge timing and animation
     const double m_dodgeDuration{ 0.3 };
-    const double m_dodgeCooldown{ 0.7 };
+    const double m_dodgeCooldown{ 0.6 };
+    int m_dodgeFrames = static_cast<int>(m_dodgeDuration / Constants::updateStep);
     bool m_dodgeCooling{ false };
     bool m_dodgingLeft{ false };
     bool m_dodgingRight{ false };
@@ -46,8 +47,8 @@ public:
 
     bool dodgeCooling() const { return m_dodgeCooling; }
     bool isDodging() const { return m_dodgingLeft || m_dodgingRight; }
-    void dodgeLeft();
-    void dodgeRight();
+    void dodgeLeft() { m_dodgingLeft = true; }
+    void dodgeRight() { m_dodgingRight = true; }
     void attackLeft();
     void attackRight();
     bool isAttacking() const { return m_sideAttack.isAttacking(); }
