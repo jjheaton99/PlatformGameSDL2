@@ -99,7 +99,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
         switch (event.key.keysym.sym)
         {
         case SDLK_SPACE:
-            if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isDodging())
+            if (!(m_player->getMovement() == Player::AIRBORNE))
             {
                 double jumpVel{ 25.0 };
 
@@ -108,14 +108,29 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                     m_player->makeAirborne();
                     break;
                 }
-                m_player->setVel(m_player->getVel().getx(), -jumpVel);
+
+                m_player->dodgeCancel();
+                m_player->attackCancel();
+                if (std::abs(m_player->getVel().getx()) < 15.0)
+                {
+                    m_player->setVel(m_player->getVel().getx(), -jumpVel);
+                }
+                else if (m_player->isFacingLeft())
+                {
+                    m_player->setVel(-15.0, -jumpVel);
+                }
+                else if (!m_player->isFacingLeft())
+                {
+                    m_player->setVel(15.0, -jumpVel);
+                }
                 m_player->makeAirborne();
             }
             break;
 
         case SDLK_LSHIFT:
-            if (!m_player->isDodging() && !m_player->dodgeCooling() && !m_player->isAttacking())
+            if (!m_player->isDodging() && !m_player->dodgeCooling())
             {
+                m_player->attackCancel();
                 if (currentKeyState[SDL_SCANCODE_A])
                 {
                     if (m_player->isClimbing())
@@ -137,7 +152,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                     }
                     else
                     {
-                        m_player->addVel(-30.0, 0);
+                        m_player->addVel(-20.0, 0);
                     }
 
                     m_player->dodgeLeft();
@@ -163,10 +178,49 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                     }
                     else
                     {
-                        m_player->addVel(30.0, 0);
+                        m_player->addVel(20.0, 0);
                     }
 
                     m_player->dodgeRight();
+                }
+
+                else if (!m_player->isClimbing())
+                {
+                    if (m_player->isFacingLeft())
+                    {
+                        if (m_player->getMovement() == Player::AIRBORNE)
+                        {
+                                m_player->addVel(-12.5, 0);
+                        }
+                        else if (m_player->getMovement() == Player::STOP)
+                        {
+                            m_player->addVel(-40.0, 0);
+                        }
+                        else
+                        {
+                            m_player->addVel(-25.0, 0);
+                        }
+
+                        m_player->dodgeLeft();
+                    }
+
+                    else if (!m_player->isFacingLeft())
+                    {
+                        if (m_player->getMovement() == Player::AIRBORNE)
+                        {
+                            m_player->addVel(12.5, 0);
+                        }
+                        else if (m_player->getMovement() == Player::STOP)
+                        {
+                            m_player->addVel(40.0, 0);
+                        }
+                        else
+                        {
+                            m_player->addVel(25.0, 0);
+                        }
+
+                        m_player->dodgeRight();
+                    }
                 }
             }
             break;
@@ -186,8 +240,9 @@ void SPlayGame::playerControlsMouseClick(SDL_Event& event)
         switch (event.button.button)
         {
         case SDL_BUTTON_LEFT:
-            if (!m_player->isAttacking() && !m_player->isDodging() && !m_player->isClimbing())
+            if (!m_player->isAttacking() && !m_player->isClimbing())
             {
+                m_player->dodgeCancel();
                 if (currentKeyState[SDL_SCANCODE_A])
                 {
                     m_player->attackLeft();

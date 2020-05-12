@@ -20,7 +20,7 @@ private:
     PlayerSideAttack m_sideAttack{ 1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 60.0 };
 
     //member variables for controlling dodge timing and animation
-    const double m_dodgeDuration{ 0.3 };
+    const double m_dodgeDuration{ 0.25 };
     const double m_dodgeCooldown{ 0.6 };
     int m_dodgeFrames = static_cast<int>(m_dodgeDuration / Constants::updateStep);
     bool m_dodgeCooling{ false };
@@ -49,8 +49,12 @@ public:
     bool isDodging() const { return m_dodgingLeft || m_dodgingRight; }
     void dodgeLeft() { m_dodgingLeft = true; }
     void dodgeRight() { m_dodgingRight = true; }
+    void dodgeCancel();
+
     void attackLeft();
     void attackRight();
+    void attackCancel();
     bool isAttacking() const { return m_sideAttack.isAttacking(); }
+
     bool isFacingLeft() const { return m_facingLeft; }
 };

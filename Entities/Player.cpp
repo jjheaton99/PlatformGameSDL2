@@ -262,6 +262,10 @@ void Player::spriteAnimate()
     {
         m_spriteIndex = 24;
     }
+    else if (isDodging())
+    {
+        m_spriteIndex = 22;
+    }
     else if (m_crouched)
     {
         m_spriteIndex = 23;
@@ -368,5 +372,21 @@ void Player::attackRight()
     if (m_movement == AIRBORNE)
     {
         m_velocity.add(5.0, -5.0);
+    }
+}
+
+void Player::dodgeCancel()
+{ 
+    if (isDodging())
+    {
+        m_dodgeStepCount = m_dodgeFrames + 1;
+    }
+}
+
+void Player::attackCancel()
+{
+    if (isAttacking())
+    {
+        m_sideAttack.cancel();
     }
 }
