@@ -96,6 +96,7 @@ void PlayerSideAttack::collideCheck()
     return;
 }
 
+//for testing positions of hitboxes
 /*
 void PlayerSideAttack::cameraDraw(const Camera& camera) const
 {

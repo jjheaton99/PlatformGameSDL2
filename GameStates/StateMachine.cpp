@@ -29,6 +29,7 @@ void StateMachine::changeStateSwitch(GameState::State state)
     switch (state)
     {
     case GameState::MAIN_MENU:
+        //if we return to main menu after starting the game, the game is reset
         if (m_gameStarted)
         {
             delete m_playGame;
@@ -68,6 +69,7 @@ void StateMachine::changeState()
 {
     if (m_nextState != GameState::STATE_NULL)
     {
+        //condition enures we dont delete nullptr when exiting and dont delete the gamestate
         if (m_nextState != GameState::EXIT && m_currentStateID != GameState::PLAY_GAME)
         {
             delete m_currentState;

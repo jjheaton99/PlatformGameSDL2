@@ -3,6 +3,7 @@
 #include "GameState.h"
 #include "Map.h"
 #include "Player.h"
+#include "GameObjectManager.h"
 #include "Camera.h"
 #include "WTimer.h"
 #include <vector>
@@ -12,6 +13,7 @@ class SPlayGame : public GameState
 private:
     Map* m_map;
     Player* m_player;
+    GameObjectManager m_objectManager{};
     Camera m_camera{};
     WTimer m_stepTimer;
     double m_timeAccumulator{ 0.0 };

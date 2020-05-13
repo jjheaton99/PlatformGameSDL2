@@ -315,6 +315,7 @@ GameState::State SPlayGame::update()
         {
             m_timeAccumulator -= Constants::updateStep;
             m_player->update(m_map->getMap(), m_camera);
+            m_objectManager.update(m_map->getMap(), m_camera);
         }
 
         m_stepTimer.start();

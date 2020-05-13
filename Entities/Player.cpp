@@ -21,8 +21,6 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
 
     m_dstRect.w = 100;
     m_dstRect.h = 100;
-
-    m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
 }
 
 void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera)

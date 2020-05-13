@@ -11,6 +11,8 @@
 class Character : public GameObject
 {
 protected:
+    bool m_dead{ false };
+
     Vector2D<double> m_velocity;
 
     double m_yMaxSpeed{ 0 };
@@ -34,6 +36,10 @@ protected:
 public:
     Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
     virtual ~Character();
+
+    bool isDead() const { return m_dead; }
+
+    virtual void update(const std::vector<std::vector<Tile>>& map, Camera& camera) = 0;
 
     const Vector2D<double>& getVel() const { return m_velocity; }
     void setVel(double xVel, double yVel) { m_velocity = Vector2D<double>{ xVel, yVel }; }
