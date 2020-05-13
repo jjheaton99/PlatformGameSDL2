@@ -3,8 +3,6 @@
 StateMachine::StateMachine(GameState::State currentStateID, GameState::State nextState)
     : m_currentStateID{currentStateID}, m_nextState{nextState}
 {
-    m_playGame = new SPlayGame{};
-
     switch (m_currentStateID)
     {
     case GameState::MAIN_MENU:
@@ -26,6 +24,46 @@ void StateMachine::setNextState(GameState::State nextState)
     m_nextState = nextState;
 }
 
+void StateMachine::changeStateSwitch(GameState::State state)
+{
+    switch (state)
+    {
+    case GameState::MAIN_MENU:
+        if (m_gameStarted)
+        {
+            delete m_playGame;
+            m_playGame = nullptr;
+            m_gameStarted = false;
+        }
+        m_currentState = new SMainMenu{};
+        SDL_ShowCursor(SDL_ENABLE);
+        break;
+
+    case GameState::PLAY_GAME:
+        if (!m_playGame)
+        {
+            m_playGame = new SPlayGame{};
+        }
+        m_currentState = m_playGame;
+        SDL_ShowCursor(SDL_DISABLE);
+        m_gameStarted = true;
+        break;
+
+    case GameState::PAUSED:
+        m_currentState = new SPaused{};
+        SDL_ShowCursor(SDL_ENABLE);
+        break;
+
+    case GameState::SETTINGS:
+        m_currentState = new SSettings{};
+        SDL_ShowCursor(SDL_ENABLE);
+        break;
+
+    default:
+        break;
+    }
+}
+
 void StateMachine::changeState()
 {
     if (m_nextState != GameState::STATE_NULL)
@@ -36,66 +74,11 @@ void StateMachine::changeState()
             m_currentState = nullptr;
         }
 
-        switch (m_nextState)
+        changeStateSwitch(m_nextState);
+
+        if (m_nextState == GameState::PREVIOUS)
         {
-        case GameState::MAIN_MENU:
-            delete m_playGame;
-            m_playGame = new SPlayGame{};
-            m_currentState = new SMainMenu{};
-            SDL_ShowCursor(SDL_ENABLE);
-            break;
-
-        case GameState::PLAY_GAME:
-            m_currentState = m_playGame;
-            SDL_ShowCursor(SDL_DISABLE);
-            break;
-
-        case GameState::PAUSED:
-            m_currentState = new SPaused{};
-            SDL_ShowCursor(SDL_ENABLE);
-            break;
-
-        case GameState::SETTINGS:
-            m_currentState = new SSettings{};
-            SDL_ShowCursor(SDL_ENABLE);
-            break;
-
-        case GameState::PREVIOUS:
-            switch (m_prevStateID)
-            {
-            case GameState::MAIN_MENU:
-                delete m_playGame;
-                m_playGame = new SPlayGame{};
-                m_currentState = new SMainMenu{};
-                SDL_ShowCursor(SDL_ENABLE);
-                m_currentStateID = GameState::MAIN_MENU;
-                break;
-
-            case GameState::PLAY_GAME:
-                m_currentState = m_playGame;
-                SDL_ShowCursor(SDL_DISABLE);
-                m_currentStateID = GameState::PLAY_GAME;
-                break;
-
-            case GameState::PAUSED:
-                m_currentState = new SPaused{};
-                SDL_ShowCursor(SDL_ENABLE);
-                m_currentStateID = GameState::PAUSED;
-                break;
-
-            case GameState::SETTINGS:
-                m_currentState = new SSettings{};
-                SDL_ShowCursor(SDL_ENABLE);
-                m_currentStateID = GameState::SETTINGS;
-                break;
-
-            default:
-                break;
-            }
-            break;
-
-        default:
-            break;
+            changeStateSwitch(m_prevStateID);
         }
 
         m_prevStateID = m_currentStateID;

@@ -324,7 +324,7 @@ GameState::State SPlayGame::update()
         double frameRate{ averageFPS(timeStep) };
         if (frameRate > 0)
         {
-            //std::cout << frameRate << '\n';
+            std::cout << frameRate << '\n';
         }
 
         return STATE_NULL;
