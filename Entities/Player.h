@@ -17,7 +17,7 @@ private:
     std::array<SDL_Rect, m_spriteSheetCount>::size_type m_spriteIndex;
     bool m_facingLeft{ false };
 
-    PlayerSideAttack m_sideAttack{ 1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 60.0 };
+    PlayerSideAttack m_sideAttack{};
 
     //member variables for controlling dodge timing and animation
     const double m_dodgeDuration{ 0.25 };

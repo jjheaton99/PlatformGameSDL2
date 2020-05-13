@@ -1,6 +1,8 @@
 #pragma once
 
 #include "GameObject.h"
+#include "MultiCollider.h"
+#include "Tile.h"
 
 class MeleeObject : public GameObject
 {
@@ -21,12 +23,13 @@ public:
     virtual ~MeleeObject();
 
     virtual void update() = 0;
+    virtual void collideCheck() = 0;
 
     virtual void cameraDraw(const Camera& camera) const override;
     void faceLeft() { m_facingLeft = true; }
     void faceRight() { m_facingLeft = false; }
     void attack() { m_attacking = true; }
+    void cancel() { m_counter = static_cast<int>(m_attackDuration / Constants::updateStep) + 1; }
     bool isAttacking() const { return m_attacking; }
-    void setAngle(double angle) { m_angle = angle; }
 };
 

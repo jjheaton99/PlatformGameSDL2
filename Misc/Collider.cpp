@@ -17,6 +17,12 @@ void Collider::setPosition(int x, int y)
     m_hitBox.y = y;
 }
 
+void Collider::setPosition(const Vector2D<double>& position)
+{
+    m_hitBox.x = static_cast<int>(position.getx());
+    m_hitBox.y = static_cast<int>(position.gety());
+}
+
 void Collider::setDimensions(int w, int h)
 {
     m_hitBox.w = w;

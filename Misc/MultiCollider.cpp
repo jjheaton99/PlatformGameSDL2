@@ -39,3 +39,39 @@ bool MultiCollider::collideCheck(const MultiCollider& collider) const
 
     return true;
 }
+
+void MultiCollider::setPosition(int index, int x, int y)
+{
+    if (index < 0 || index >= static_cast<int>(m_colliders.size()))
+    {
+        std::cout << "Provided index out of range of multicollider vector!" << '\n';
+        return;
+    }
+
+    m_colliders[index].setPosition(x, y);
+}
+
+void MultiCollider::setPositions(const Vector2D<double>& basePosition, const std::vector<Vector2D<double>>& positions)
+{
+    if (positions.size() != m_colliders.size())
+    {
+        std::cout << "Positions vector does not match size of colliders vector!" << '\n';
+        return;
+    }
+
+    for (int i{ 0 }; i < static_cast<int>(m_colliders.size()); ++ i)
+    {
+        m_colliders[i].setPosition(basePosition + positions[i]);
+    }
+}
+
+void MultiCollider::setDimensions(int index, int w, int h)
+{
+    if (index < 0 || index >= static_cast<int>(m_colliders.size()))
+    {
+        std::cout << "Provided index out of range of multicollider vector!" << '\n';
+        return;
+    }
+
+    m_colliders[index].setDimensions(w, h);
+}

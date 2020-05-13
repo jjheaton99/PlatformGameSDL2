@@ -4,10 +4,18 @@
 
 class PlayerSideAttack : public MeleeObject
 {
+private:
+    std::vector<Vector2D<double>> m_colliderOffsets;
+    MultiCollider m_multiCollider;
+    
+    void rotateColliders(double angle);
+    void resetColliders();
+
 public:
-    PlayerSideAttack(double xBase, double yBase);
+    PlayerSideAttack(double xBase = 0, double yBase = 0);
 
     void update() override;
-    void cancel() { m_counter = static_cast<int>(m_attackDuration / Constants::updateStep) + 1; }
+    void collideCheck();
+    //void cameraDraw(const Camera& camera) const override;
 };
 

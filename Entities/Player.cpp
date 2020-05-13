@@ -94,7 +94,8 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera)
         }
     }
 
-    m_sideAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 60.0);
+    //attack texture position set with an offset from player position 
+    m_sideAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
     m_sideAttack.update();
 }
 
@@ -354,7 +355,6 @@ void Player::moveCamera(Camera& camera)
 void Player::attackLeft()
 {
     m_facingLeft = true;
-    m_sideAttack.setAngle(30.0);
     m_sideAttack.faceLeft();
     m_sideAttack.attack();
     if (m_movement == AIRBORNE)
@@ -366,7 +366,6 @@ void Player::attackLeft()
 void Player::attackRight()
 {
     m_facingLeft = false;
-    m_sideAttack.setAngle(-30.0);
     m_sideAttack.faceRight();
     m_sideAttack.attack();
     if (m_movement == AIRBORNE)

@@ -15,6 +15,7 @@ public:
     ~Collider();
 
     void setPosition(int x, int y);
+    void setPosition(const Vector2D<double>& position);
     void setDimensions(int w, int h);
     const SDL_Rect& getHitBox() const { return m_hitBox; }
 

@@ -18,12 +18,13 @@ private:
     SPlayGame* m_playGame{ nullptr };
     bool m_gameStarted{ false };
 
+    void changeStateSwitch(GameState::State state);
+
 public:
     StateMachine(GameState::State currentStateID = GameState::MAIN_MENU, GameState::State nextState = GameState::STATE_NULL);
     ~StateMachine();
 
     void setNextState(GameState::State nextState);
-    void changeStateSwitch(GameState::State state);
     void changeState();
     void gameLoop();
     GameState::State getCurrentStateID() const { return m_currentStateID; }
