@@ -21,6 +21,7 @@ void Character::collideTileHitBoxes(const std::vector<std::vector<Tile>>& map, i
     m_collidingWithLadder = false;
 
     //checks all tiles that could be overlapping with character collision hitBox 
+    //character row and column are the indices of the character's position in terms of tiles on the map
     for (int row{ characterRow }; row * tileSize <= characterColliderBox.y + characterColliderBox.h; ++row)
     {
         for (int column{ characterColumn }; column * tileSize <= characterColliderBox.x + characterColliderBox.w; ++column)

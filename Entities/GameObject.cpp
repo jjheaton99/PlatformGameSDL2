@@ -11,6 +11,7 @@ GameObject::~GameObject()
 //ensures objects in camera focus are rendered in the correct place
 void GameObject::cameraDraw(const Camera& camera) const
 {
+    //objects off the screen are not rendered
     if (m_collider.collideCheck(camera.getCollider()))
     {
         SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };

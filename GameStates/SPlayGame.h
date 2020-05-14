@@ -8,12 +8,13 @@
 #include "WTimer.h"
 #include <vector>
 
+//main gameplay state
 class SPlayGame : public GameState
 {
 private:
-    Map* m_map;
-    Player* m_player;
-    GameObjectManager m_objectManager{};
+    std::unique_ptr<Map> m_map{ std::make_unique<Map>() };
+    std::unique_ptr<Player> m_player{ std::make_unique<Player>("Assets/MrPix.png", 200, 2800) };
+    std::unique_ptr<GameObjectManager> m_objectManager{ std::make_unique<GameObjectManager>() };
     Camera m_camera{};
     WTimer m_stepTimer;
     double m_timeAccumulator{ 0.0 };
@@ -30,7 +31,7 @@ private:
     bool m_paused{ false };
 
 public:
-    SPlayGame(const char* mapFile = "Assets/Maps/sideScroller.txt", const char* playerFile = "Assets/MrPix.png");
+    SPlayGame(const char* mapFile = "Assets/Maps/sideScroller.txt");
     ~SPlayGame();
 
     State handleEvents();

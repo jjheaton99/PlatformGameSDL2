@@ -4,7 +4,7 @@ Map::Map()
     : m_background{ "Assets/blackGrey.png", Tile::BACKGROUND },
     m_block{ "Assets/WhiteFadeBlocks/1.png", Tile::SOLID },
     m_platform{ "Assets/platform.png", Tile::PLATFORM },
-    m_ladder{ "Assets/ladder.png.", Tile::LADDER}
+    m_ladder{ "Assets/ladder.png.", Tile::LADDER }
 {
 }
 
@@ -36,7 +36,12 @@ void Map::pushTile(int tileNumber, std::vector<Tile>& tileRow)
     }
 }
 
-//Loads tilemap from text file. Returns false if map wasn't loaded
+//loads tilemap from text file of rows of numbers that correspond to tile positions
+//eg
+//00 01 00 00 00
+//00 01 00 00 00
+//02 02 03 04 05
+//05 04 03 02 01
 bool Map::loadMap(const char* fileName)
 {
     //Erase any previous map
@@ -54,6 +59,7 @@ bool Map::loadMap(const char* fileName)
         std::string line;
         std::vector<Tile> tileRow;
 
+        //reads in file line by line and constructs tilemap row vector
         while (!mapFile.eof())
         {
             std::getline(mapFile, line);
@@ -64,6 +70,7 @@ bool Map::loadMap(const char* fileName)
             index_type index{ 0 };
             index_type spacePos{ line.find(' ', index) };
 
+            //finds all substrings sided by spaces and converts them integers to for pushing tiles
             while (spacePos != std::string::npos)
             {
                 tileNumberString = line.substr(index, spacePos - index);
@@ -74,14 +81,17 @@ bool Map::loadMap(const char* fileName)
                 pushTile(tileNumber, tileRow);
             }
 
+            //last number in the line
             tileNumberString = line.substr(index, line.length() - index);
             pushTile(tileNumber, tileRow);
 
+            //adds the row to the overall map
             m_map.push_back(tileRow);
         }
 
         mapFile.close();
 
+        //level height and width used for determining camera boundary
         m_levelHeight = static_cast<int>(m_map.size()) * m_map[0][0].getSize();
         m_levelWidth = static_cast<int>(m_map[0].size()) * m_map[0][0].getSize();
 
@@ -91,6 +101,7 @@ bool Map::loadMap(const char* fileName)
     }
 }
 
+//sets the positions of all the tiles
 void Map::setTiles()
 {
     for (index_type row{ 0 }; row < m_map.size(); ++row)

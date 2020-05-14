@@ -11,6 +11,7 @@ MultiCollider::MultiCollider(std::vector<SDL_Rect> hitBoxes)
 MultiCollider::~MultiCollider()
 {}
 
+//collide check with single collider
 bool MultiCollider::collideCheck(const Collider& collider) const
 {
     for (const auto& colliderElement : m_colliders)
@@ -24,6 +25,7 @@ bool MultiCollider::collideCheck(const Collider& collider) const
     return false;
 }
 
+//collide check with another multicollider
 bool MultiCollider::collideCheck(const MultiCollider& collider) const
 {
     for (const auto& colliderElement1 : m_colliders)
@@ -40,6 +42,7 @@ bool MultiCollider::collideCheck(const MultiCollider& collider) const
     return true;
 }
 
+//individual collider position
 void MultiCollider::setPosition(int index, int x, int y)
 {
     if (index < 0 || index >= static_cast<int>(m_colliders.size()))
@@ -51,6 +54,7 @@ void MultiCollider::setPosition(int index, int x, int y)
     m_colliders[index].setPosition(x, y);
 }
 
+//takes a vector of positions for moving all the colliders
 void MultiCollider::setPositions(const Vector2D<double>& basePosition, const std::vector<Vector2D<double>>& positions)
 {
     if (positions.size() != m_colliders.size())

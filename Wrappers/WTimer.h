@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 
+//a wrapper class for the SDL timer
 class WTimer
 {
 private:

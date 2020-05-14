@@ -5,6 +5,7 @@
 #include "Tile.h"
 #include "Character.h"
 
+//a base class for directional melee attacks
 class MeleeObject : public GameObject
 {
 protected:

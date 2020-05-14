@@ -33,7 +33,6 @@ public:
     ~Map();
 
     bool loadMap(const char* fileName);
-    //void loadMap(layout_type map);
     void drawMap(const Camera& camera) const;
 
     const std::vector<std::vector <Tile>>& getMap() const { return m_map; }

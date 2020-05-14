@@ -19,6 +19,7 @@ void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const 
 {
     for (auto& enemy : m_enemies)
     {
+        //if enemy is dead and hasnt been deleted yet
         if (enemy && enemy->isDead())
         {
             delete enemy;
@@ -42,6 +43,7 @@ void GameObjectManager::cameraDraw(const Camera& camera) const
     }
 }
 
+//new enemies are spawned with zero velocity by default
 void GameObjectManager::newEnemy(Enemy type, double xPos, double yPos)
 {
     switch (type)

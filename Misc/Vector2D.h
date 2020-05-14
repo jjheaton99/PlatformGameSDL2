@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cmath>
 
+
+//template class for creating 2D vectors and performing operations on them
 template<class T>
 class Vector2D
 {
@@ -63,6 +65,7 @@ template<class T>
 //zero direction defined along x axis, increasing clockwise until 360 degrees for downward y coordinates
 double Vector2D<T>::direction() const
 {
+    //different calculation for each quadrant
     if (m_x > 0 && m_y > 0)
     {
         return std::atan(m_y / m_x) * (180.0 / Constants::pi);
@@ -141,6 +144,7 @@ void Vector2D<T>::rotate(T angle)
     double radAngle{ (Constants::pi / 180.0) * static_cast<double>(angle) };
     T tempx{ m_x };
 
+    //based on 2D vector rotation transformation matrix 
     m_x = static_cast<T>((m_x * std::cos(radAngle)) - (m_y * std::sin(radAngle)));
     m_y = static_cast<T>((tempx * std::sin(radAngle)) + (m_y * std::cos(radAngle)));
 }

@@ -31,6 +31,7 @@ void Collider::setDimensions(int w, int h)
 
 bool Collider::collideCheck(const Collider& collider) const
 {
+    //checks for overlap of both x and y axes between the colliders 
     return (m_hitBox.x < (collider.getHitBox().x + collider.getHitBox().w)
         && m_hitBox.x >(collider.getHitBox().x - m_hitBox.w)
         && m_hitBox.y < (collider.getHitBox().y + collider.getHitBox().h)

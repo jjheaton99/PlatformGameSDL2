@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "Constants.h"
 
+//a wrapper for SDL_Window
 class WWindow
 {
 private:

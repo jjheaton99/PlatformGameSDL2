@@ -45,6 +45,7 @@ bool GroundedCharacter::edgeCheck(const Camera& camera)
 bool GroundedCharacter::checkForGround(const std::vector<std::vector<Tile>>& map, int characterRow,
     int characterColumn, int tileSize, const SDL_Rect& characterColliderBox)
 {
+    //allows characters to continue climbing when in contact with ladders
     if (m_collidingWithLadder)
     {
         return true;
@@ -61,7 +62,6 @@ bool GroundedCharacter::checkForGround(const std::vector<std::vector<Tile>>& map
                     && (map[row][column].getCollider().getHitBox().x > (characterColliderBox.x - map[row][column].getCollider().getHitBox().w))
                     && (map[row][column].getCollider().getHitBox().x < (characterColliderBox.x + characterColliderBox.w)))
                 {
-                    //std::cout << "howdy" << '\n';
                     return true;
                 }
             }
@@ -75,6 +75,7 @@ bool GroundedCharacter::checkForGround(const std::vector<std::vector<Tile>>& map
 void GroundedCharacter::deflectUp(double overlap)
 {
     m_position.subtract(0, overlap);
+    //puts character into walking mode when landing on something
     m_movement = STOP;
     m_velocity.yScale(0);
 }
@@ -101,6 +102,7 @@ void GroundedCharacter::deflectRight(double overlap)
 }
 
 //checks for collision with solid map tiles and adjusts position/velocity
+//collision handling is based on the overlap between colliders
 void GroundedCharacter::mapCollideCheck(const std::vector<std::vector<Tile>>& map)
 {
     int tileSize{ map[0][0].getSize() };
@@ -108,18 +110,19 @@ void GroundedCharacter::mapCollideCheck(const std::vector<std::vector<Tile>>& ma
     //character column and row variables are the position of the character in terms of map tiles
     int characterColumn{ (characterColliderBox.x - (characterColliderBox.x % tileSize)) / tileSize };
     int characterRow{ (characterColliderBox.y - (characterColliderBox.y % tileSize)) / tileSize };
-    //std::cout << characterRow << ' ' << characterColumn << '\n';
 
     collideTileHitBoxes(map, characterRow, characterColumn, tileSize, characterColliderBox);
-    //std::cout << m_solidHitBoxes.size() << '\n';
 
+    //for collisions with platform tiles only
     if (m_solidHitBoxes.size() == 0 && !m_crouched && !m_hasCrouched)
     {
         for (const auto& box : m_platformHitBoxes)
         {
+            //overlap variables are the overlap of the character collider with tile collider in x or y direction
             double xOverlap{ Collider::axisBoxOverlap(characterColliderBox.x, box.x, characterColliderBox.w, box.w) };
             double yOverlap{ Collider::axisBoxOverlap(characterColliderBox.y, box.y, characterColliderBox.h, box.h) };
 
+            //platforms only care about collisions from above
             if ((yOverlap < xOverlap) && (characterColliderBox.y < box.y) && m_velocity.gety() > 0.0)
             {
                 deflectUp(yOverlap);
@@ -132,9 +135,9 @@ void GroundedCharacter::mapCollideCheck(const std::vector<std::vector<Tile>>& ma
     double yMaxOverlap{ 0 };
     double maxOverlap{ 0 };
     int maxOverlapIndex{ 0 };
+    //loops over the solid tiles selects the one with greatest overlap (can be x or y) with character collider
     for (const auto& box : m_solidHitBoxes)
     {
-        //overlap variables are the overlap of the character collider with tile collider in x or y direction
         double xOverlap{Collider::axisBoxOverlap(characterColliderBox.x, box.x, characterColliderBox.w, box.w)};
         double yOverlap{ Collider::axisBoxOverlap(characterColliderBox.y, box.y, characterColliderBox.h, box.h) };
         
@@ -160,6 +163,9 @@ void GroundedCharacter::mapCollideCheck(const std::vector<std::vector<Tile>>& ma
         ++currentIndex;
     }
 
+    //if the character collides with a small amount of the tile, the overlap algorithm could wrongly choose the collision direction
+    //therefore the collision handling is based on only the tile with max overlap
+    //however doesnt help for single tile corner collisions
     if ((yMaxOverlap < xMaxOverlap) && (characterColliderBox.y < m_solidHitBoxes[maxOverlapIndex].y))
     {
         deflectUp(yMaxOverlap);
@@ -177,6 +183,7 @@ void GroundedCharacter::mapCollideCheck(const std::vector<std::vector<Tile>>& ma
         deflectRight(xMaxOverlap);
     }
 
+    //causes character to fall when stepping off platform or solid tile
     if (!checkForGround(map, characterRow, characterColumn, tileSize, characterColliderBox))
     {
         m_movement = AIRBORNE;

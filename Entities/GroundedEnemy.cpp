@@ -14,28 +14,33 @@ GroundedEnemy::GroundedEnemy(const char* fileName, double xStartPos, double ySta
 }
 
 void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, const Vector2D<double>& playerPos)
-{
-    m_position.add(m_velocity);
-    //collider position is moved after each function that can change character position
-    setCollider();
-
-    motion();
-
-    //edge check goes before map collision check to prevent vector subcript error when going off the edge
-    if (edgeCheck(camera))
+{ 
+    //only update when within certain distance from camera for performance
+    if (m_position.getx() > 1.0*camera.getx() - 1000.0 && m_position.getx() < 1.0*camera.getx() + 1.0*camera.getw() + 1000.0
+        && m_position.gety() > 1.0*camera.gety() - 1000.0 && m_position.gety() < 1.0*camera.gety() + 1.0*camera.geth() + 1000.0)
     {
+        m_position.add(m_velocity);
+        //collider position is moved after each function that can change character position
         setCollider();
+
+        motion();
+
+        //edge check goes before map collision check to prevent vector subcript error when going off the edge
+        if (edgeCheck(camera))
+        {
+            setCollider();
+        }
+
+        enemyControls(playerPos);
+        mapCollideCheck(map);
+        setCollider();
+
+        //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
+        //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
+
+        m_dstRect.x = static_cast<int>(m_position.getx());
+        m_dstRect.y = static_cast<int>(m_position.gety());
     }
-
-    enemyControls(playerPos);
-    mapCollideCheck(map);
-    setCollider();
-
-    //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
-    //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
-
-    m_dstRect.x = static_cast<int>(m_position.getx());
-    m_dstRect.y = static_cast<int>(m_position.gety());
 }
 
 void GroundedEnemy::enemyControls(const Vector2D<double>& playerPos)
@@ -54,6 +59,7 @@ void GroundedEnemy::enemyControls(const Vector2D<double>& playerPos)
     }
 }
 
+//similar motion to player character
 void GroundedEnemy::motion()
 {
     switch (m_movement)

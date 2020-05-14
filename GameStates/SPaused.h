@@ -4,6 +4,7 @@
 #include "WTexture.h"
 #include "MenuButton.h"
 
+//separate state for pausing game
 class SPaused : public GameState
 {
 public:

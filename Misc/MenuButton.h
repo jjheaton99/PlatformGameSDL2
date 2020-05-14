@@ -2,10 +2,12 @@
 
 #include "TextureObject.h"
 
+//class for menu control buttons
 class MenuButton : public TextureObject
 {
 private:
     bool m_isSelected{ false };
+    //extra texture for when button is selected
     WTexture m_selectedTexture;
 
 public:

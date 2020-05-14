@@ -3,6 +3,7 @@
 #include "GameState.h"
 #include "MenuButton.h"
 
+//main menu state
 class SMainMenu : public GameState
 {
 public:

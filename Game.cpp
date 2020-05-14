@@ -6,6 +6,7 @@ Game::Game()
 Game::~Game()
 {}
 
+//initialiser function sets up SDL components as well as the state machine 
 bool Game::init()
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -34,7 +35,7 @@ bool Game::init()
             else
             {
                 SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 0);
-                m_stateMachine = new StateMachine{};
+                m_stateMachine.reset(new StateMachine{});
                 return true;
             }
         }
@@ -44,7 +45,7 @@ bool Game::init()
 void Game::close()
 {
     SDL_DestroyRenderer(g_renderer);
-    g_renderer = nullptr;
+    //SDL doesnt like me trying to delete the global renderer when closing
 
     g_window.destroy();
 

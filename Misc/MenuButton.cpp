@@ -12,6 +12,7 @@ MenuButton::~MenuButton()
     destroy();
 }
 
+//draws a different texture if button is selected
 void MenuButton::draw() const
 {
     if (m_isSelected)

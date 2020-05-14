@@ -19,18 +19,18 @@ void StateMachine::changeStateSwitch(GameState::State state)
         //if we return to main menu after starting the game, the game is reset
         if (m_gameStarted)
         {
-            delete m_playGame;
-            m_playGame = nullptr;
+            m_playGame.reset();
             m_gameStarted = false;
         }
-        m_currentState = new SMainMenu{};
+        m_currentState.reset(new SMainMenu{});
         SDL_ShowCursor(SDL_ENABLE);
         break;
 
     case GameState::PLAY_GAME:
+        //creates new game if one doesnt exist
         if (!m_playGame)
         {
-            m_playGame = new SPlayGame{};
+            m_playGame.reset(new SPlayGame{});
         }
         m_currentState = m_playGame;
         SDL_ShowCursor(SDL_DISABLE);
@@ -38,12 +38,12 @@ void StateMachine::changeStateSwitch(GameState::State state)
         break;
 
     case GameState::PAUSED:
-        m_currentState = new SPaused{};
+        m_currentState.reset(new SPaused{});
         SDL_ShowCursor(SDL_ENABLE);
         break;
 
     case GameState::SETTINGS:
-        m_currentState = new SSettings{};
+        m_currentState.reset(new SSettings{});
         SDL_ShowCursor(SDL_ENABLE);
         break;
 
@@ -56,11 +56,10 @@ void StateMachine::changeState()
 {
     if (m_nextState != GameState::STATE_NULL)
     {
-        //condition enures we dont delete nullptr when exiting and dont delete the gamestate
+        //condition enures we dont delete the gamestate
         if (m_nextState != GameState::EXIT && m_currentStateID != GameState::PLAY_GAME)
         {
-            delete m_currentState;
-            m_currentState = nullptr;
+            m_currentState.reset();
         }
 
         if (m_nextState == GameState::PREVIOUS)
@@ -78,6 +77,7 @@ void StateMachine::changeState()
 
 void StateMachine::gameLoop()
 {
+    //all event handlers return a game state if a change is required, STATE_NULL if not
     m_currentState->clearEvents();
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0)
@@ -96,6 +96,7 @@ void StateMachine::gameLoop()
 
     setNextState(m_currentState->handleEvents());
 
+    //updates only if the state is not changing
     if (m_nextState == GameState::STATE_NULL)
     {
         setNextState(m_currentState->update());

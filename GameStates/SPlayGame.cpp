@@ -1,7 +1,6 @@
 #include "SPlayGame.h"
 
-SPlayGame::SPlayGame(const char* mapFile, const char* playerFile)
-    : m_map{ new Map{} }, m_player{ new Player{playerFile, 200, 2800} }
+SPlayGame::SPlayGame(const char* mapFile)
 {
     if (!m_map->loadMap(mapFile))
     {
@@ -13,15 +12,12 @@ SPlayGame::SPlayGame(const char* mapFile, const char* playerFile)
 
     for (int i{ 0 }; i < m_camera.getxBoundary() / 50; ++i)
     {
-        m_objectManager.newEnemy(GameObjectManager::Enemy::GROUNDED, 50.0 * i, 0);
+        m_objectManager->newEnemy(GameObjectManager::Enemy::GROUNDED, 50.0 * i, 2000);
     }
 }
 
 SPlayGame::~SPlayGame()
-{
-    delete m_player;
-    delete m_map;
-}
+{}
 
 void SPlayGame::playerControlsKeyHold()
 {
@@ -319,8 +315,8 @@ GameState::State SPlayGame::update()
         while (m_timeAccumulator > Constants::updateStep)
         {
             m_timeAccumulator -= Constants::updateStep;
-            m_player->update(m_map->getMap(), m_camera, m_objectManager.getEnemies());
-            m_objectManager.update(m_map->getMap(), m_camera, m_player->getPos());
+            m_player->update(m_map->getMap(), m_camera, m_objectManager->getEnemies());
+            m_objectManager->update(m_map->getMap(), m_camera, m_player->getPos());
         }
 
         m_stepTimer.start();
@@ -345,7 +341,7 @@ GameState::State SPlayGame::update()
 void SPlayGame::render()
 {
     m_map->drawMap(m_camera);
-    m_objectManager.cameraDraw(m_camera);
+    m_objectManager->cameraDraw(m_camera);
     m_player->cameraDraw(m_camera);
 }
 

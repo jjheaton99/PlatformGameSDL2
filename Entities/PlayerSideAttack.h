@@ -5,6 +5,7 @@
 #include "GroundedEnemy.h"
 #include <vector>
 
+//the player's swinging side melee attack
 class PlayerSideAttack : public MeleeObject
 {
 private:

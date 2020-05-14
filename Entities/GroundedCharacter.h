@@ -25,6 +25,7 @@ protected:
     bool m_crouched{ false };
     bool m_hasCrouched{ false };
 
+    //tilemap collision handlers
     void deflectUp(double overlap);
     void deflectDown(double overlap);
     void deflectLeft(double overlap);

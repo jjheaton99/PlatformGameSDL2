@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 
+//class for tiles that construct the map
 class Tile : public GameObject
 {
 public:

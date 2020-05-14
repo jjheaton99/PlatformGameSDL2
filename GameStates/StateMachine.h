@@ -6,7 +6,9 @@
 #include "SPaused.h"
 #include "SSettings.h"
 #include "WWindow.h"
+#include <memory>
 
+//a class to control the flow of game states
 class StateMachine
 {
 private:
@@ -14,8 +16,9 @@ private:
     GameState::State m_prevStateID{ GameState::MAIN_MENU };
     GameState::State m_nextState{ GameState::STATE_NULL };
 
-    GameState* m_currentState{ new SMainMenu{} };
-    SPlayGame* m_playGame{ nullptr };
+    std::shared_ptr<GameState> m_currentState{ std::make_shared<SMainMenu>() };
+    //play game state kept separate to allow it to persist through certain states eg pause
+    std::shared_ptr<SPlayGame> m_playGame{ nullptr };
     bool m_gameStarted{ false };
 
     void changeStateSwitch(GameState::State state);

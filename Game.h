@@ -13,7 +13,7 @@
 class Game
 {
 private:
-    StateMachine* m_stateMachine{ nullptr };
+    std::unique_ptr<StateMachine> m_stateMachine{ nullptr };
 
 public:
     Game();

@@ -3,6 +3,7 @@
 #include "Collider.h"
 #include <vector>
 
+//class for creating colliders made of multiple colliders
 class MultiCollider
 {
 private:

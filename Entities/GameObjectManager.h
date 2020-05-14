@@ -5,6 +5,7 @@
 #include "GroundedEnemy.h"
 #include <vector>
 
+//manages the creation, drawing, updating and destruction of objects other than tiles or the player
 class GameObjectManager
 {
 public:
