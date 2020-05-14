@@ -38,11 +38,13 @@ private:
 
     void motion() override;
     void moveCamera(Camera& camera);
+    void setCollider() override { m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety())); }
 
 public:
     Player(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0);
 
-    void update(const std::vector<std::vector<Tile>>& map, Camera& camera) override;
+    void update(const std::vector<std::vector<Tile>>& map, Camera& camera) {};
+    void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<Character*>& enemies);
     void cameraDraw(const Camera& camera) const override;
 
     bool dodgeCooling() const { return m_dodgeCooling; }

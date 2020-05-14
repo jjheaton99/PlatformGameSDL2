@@ -23,22 +23,22 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
     m_dstRect.h = 100;
 }
 
-void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera)
+void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<Character*>& enemies)
 {
     m_position.add(m_velocity);
     //collider position is moved after each function that can change character position
-    m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
+    setCollider();
 
     motion();
 
     //edge check goes before map collision check to prevent vector subcript error when going off the edge
     if (edgeCheck(camera))
     {
-        m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
+        setCollider();
     }
 
     mapCollideCheck(map);
-    m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety()));
+    setCollider();
 
     //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
     //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
@@ -94,7 +94,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera)
 
     //attack texture position set with an offset from player position 
     m_sideAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
-    m_sideAttack.update();
+    m_sideAttack.update(enemies);
 }
 
 //adjusts velocity of player depending on state of motion

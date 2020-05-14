@@ -1,6 +1,9 @@
 #pragma once
 
 #include "MeleeObject.h"
+#include "Character.h"
+#include "GroundedEnemy.h"
+#include <vector>
 
 class PlayerSideAttack : public MeleeObject
 {
@@ -14,8 +17,9 @@ private:
 public:
     PlayerSideAttack(double xBase = 0, double yBase = 0);
 
-    void update() override;
-    void collideCheck();
+    void update() {};
+    void update(std::vector<Character*>& enemies);
+    void collideCheck(std::vector<Character*>& enemies);
     //void cameraDraw(const Camera& camera) const override;
 };
 

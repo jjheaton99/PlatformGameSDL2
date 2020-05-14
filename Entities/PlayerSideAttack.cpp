@@ -41,7 +41,7 @@ void PlayerSideAttack::resetColliders()
     };
 }
 
-void PlayerSideAttack::update()
+void PlayerSideAttack::update(std::vector<Character*>& enemies)
 {
     if (m_attacking)
     {
@@ -80,7 +80,7 @@ void PlayerSideAttack::update()
         m_collider.setPosition(m_totalPosition);
         m_multiCollider.setPositions(m_position, m_colliderOffsets);
 
-        collideCheck();
+        collideCheck(enemies);
 
         ++m_counter;
         if (m_counter > static_cast<int>(m_attackDuration / Constants::updateStep))
@@ -91,9 +91,18 @@ void PlayerSideAttack::update()
     }
 }
 
-void PlayerSideAttack::collideCheck()
+void PlayerSideAttack::collideCheck(std::vector<Character*>& enemies)
 {
-    return;
+    for (auto& enemy : enemies)
+    {
+        if (enemy)
+        {
+            if (m_multiCollider.collideCheck(enemy->getCollider()))
+            {
+                enemy->kill();
+            }
+        }
+    }
 }
 
 //for testing positions of hitboxes

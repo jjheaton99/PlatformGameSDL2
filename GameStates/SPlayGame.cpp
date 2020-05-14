@@ -10,6 +10,8 @@ SPlayGame::SPlayGame(const char* mapFile, const char* playerFile)
 
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
+
+    m_objectManager.newEnemy(GameObjectManager::Enemy::GROUNDED, 500, 500);
 }
 
 SPlayGame::~SPlayGame()
@@ -314,7 +316,7 @@ GameState::State SPlayGame::update()
         while (m_timeAccumulator > Constants::updateStep)
         {
             m_timeAccumulator -= Constants::updateStep;
-            m_player->update(m_map->getMap(), m_camera);
+            m_player->update(m_map->getMap(), m_camera, m_objectManager.getEnemies());
             m_objectManager.update(m_map->getMap(), m_camera);
         }
 
@@ -340,6 +342,7 @@ GameState::State SPlayGame::update()
 void SPlayGame::render()
 {
     m_map->drawMap(m_camera);
+    m_objectManager.cameraDraw(m_camera);
     m_player->cameraDraw(m_camera);
 }
 

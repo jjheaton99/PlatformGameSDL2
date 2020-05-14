@@ -32,12 +32,14 @@ protected:
 
     //for adjusting character velocity
     virtual void motion() = 0;
+    virtual void setCollider() { m_collider.setPosition(static_cast<int>(m_position.getx()), static_cast<int>(m_position.gety())); }
 
 public:
     Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
     virtual ~Character();
 
     bool isDead() const { return m_dead; }
+    void kill() { m_dead = true; }
 
     virtual void update(const std::vector<std::vector<Tile>>& map, Camera& camera) = 0;
 

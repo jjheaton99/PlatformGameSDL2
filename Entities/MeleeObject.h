@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "MultiCollider.h"
 #include "Tile.h"
+#include "Character.h"
 
 class MeleeObject : public GameObject
 {
@@ -23,7 +24,7 @@ public:
     virtual ~MeleeObject();
 
     virtual void update() = 0;
-    virtual void collideCheck() = 0;
+    virtual void collideCheck(std::vector<Character*>& enemies) = 0;
 
     virtual void cameraDraw(const Camera& camera) const override;
     void faceLeft() { m_facingLeft = true; }

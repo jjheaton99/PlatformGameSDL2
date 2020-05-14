@@ -1,20 +1,7 @@
 #include "StateMachine.h"
 
-StateMachine::StateMachine(GameState::State currentStateID, GameState::State nextState)
-    : m_currentStateID{currentStateID}, m_nextState{nextState}
-{
-    switch (m_currentStateID)
-    {
-    case GameState::MAIN_MENU:
-        m_currentState = new SMainMenu{};
-        break;
-    case GameState::PLAY_GAME:
-    default:
-        break;
-    }
-
-    m_prevStateID = m_currentStateID;
-}
+StateMachine::StateMachine()
+{}
 
 StateMachine::~StateMachine()
 {}

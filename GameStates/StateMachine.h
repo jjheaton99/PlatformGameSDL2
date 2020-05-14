@@ -10,18 +10,18 @@
 class StateMachine
 {
 private:
-    GameState::State m_currentStateID;
-    GameState::State m_prevStateID;
-    GameState::State m_nextState;
+    GameState::State m_currentStateID{GameState::MAIN_MENU};
+    GameState::State m_prevStateID{ GameState::MAIN_MENU };
+    GameState::State m_nextState{ GameState::STATE_NULL };
 
-    GameState* m_currentState;
+    GameState* m_currentState{ new SMainMenu{} };
     SPlayGame* m_playGame{ nullptr };
     bool m_gameStarted{ false };
 
     void changeStateSwitch(GameState::State state);
 
 public:
-    StateMachine(GameState::State currentStateID = GameState::MAIN_MENU, GameState::State nextState = GameState::STATE_NULL);
+    StateMachine();
     ~StateMachine();
 
     void setNextState(GameState::State nextState);
