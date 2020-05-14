@@ -33,8 +33,6 @@ protected:
     virtual bool checkForGround(const std::vector<std::vector<Tile>>& map, int characterRow,
         int characterColumn, int tileSize, const SDL_Rect& characterColliderBox);
     virtual bool edgeCheck(const Camera& camera) override;
-    
-    virtual void motion() = 0;
 
 public:
     GroundedCharacter(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);

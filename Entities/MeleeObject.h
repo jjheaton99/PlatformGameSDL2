@@ -23,7 +23,6 @@ public:
     MeleeObject(const char* fileName, double xBase, double yBase, int colliderWidth, int colliderHeight, double attackDuration = 0);
     virtual ~MeleeObject();
 
-    virtual void update() = 0;
     virtual void collideCheck(std::vector<Character*>& enemies) = 0;
 
     virtual void cameraDraw(const Camera& camera) const override;

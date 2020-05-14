@@ -95,7 +95,7 @@ void PlayerSideAttack::collideCheck(std::vector<Character*>& enemies)
 {
     for (auto& enemy : enemies)
     {
-        if (enemy)
+        if (enemy && (enemy->getPos() - m_position).magnitude() < 300)
         {
             if (m_multiCollider.collideCheck(enemy->getCollider()))
             {

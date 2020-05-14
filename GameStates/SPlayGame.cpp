@@ -1,7 +1,7 @@
 #include "SPlayGame.h"
 
 SPlayGame::SPlayGame(const char* mapFile, const char* playerFile)
-    : m_map{ new Map{} }, m_player{ new Player{playerFile, 200, 2000} }
+    : m_map{ new Map{} }, m_player{ new Player{playerFile, 200, 2800} }
 {
     if (!m_map->loadMap(mapFile))
     {
@@ -11,7 +11,10 @@ SPlayGame::SPlayGame(const char* mapFile, const char* playerFile)
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
-    m_objectManager.newEnemy(GameObjectManager::Enemy::GROUNDED, 500, 500);
+    for (int i{ 0 }; i < m_camera.getxBoundary() / 50; ++i)
+    {
+        m_objectManager.newEnemy(GameObjectManager::Enemy::GROUNDED, 50.0 * i, 0);
+    }
 }
 
 SPlayGame::~SPlayGame()
@@ -317,7 +320,7 @@ GameState::State SPlayGame::update()
         {
             m_timeAccumulator -= Constants::updateStep;
             m_player->update(m_map->getMap(), m_camera, m_objectManager.getEnemies());
-            m_objectManager.update(m_map->getMap(), m_camera);
+            m_objectManager.update(m_map->getMap(), m_camera, m_player->getPos());
         }
 
         m_stepTimer.start();
@@ -327,7 +330,7 @@ GameState::State SPlayGame::update()
         double frameRate{ averageFPS(timeStep) };
         if (frameRate > 0)
         {
-            //std::cout << frameRate << '\n';
+            std::cout << frameRate << '\n';
         }
 
         return STATE_NULL;

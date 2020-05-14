@@ -41,7 +41,10 @@ public:
     bool isDead() const { return m_dead; }
     void kill() { m_dead = true; }
 
-    virtual void update(const std::vector<std::vector<Tile>>& map, Camera& camera) = 0;
+    //for player
+    virtual void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<Character*>& enemies) {};
+    //for enemies
+    virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, const Vector2D<double>& playerPos) {};
 
     const Vector2D<double>& getVel() const { return m_velocity; }
     void setVel(double xVel, double yVel) { m_velocity = Vector2D<double>{ xVel, yVel }; }

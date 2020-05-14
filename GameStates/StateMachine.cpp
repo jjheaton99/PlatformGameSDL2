@@ -63,18 +63,15 @@ void StateMachine::changeState()
             m_currentState = nullptr;
         }
 
-        changeStateSwitch(m_nextState);
-
         if (m_nextState == GameState::PREVIOUS)
         {
-            changeStateSwitch(m_prevStateID);
+            m_nextState = m_prevStateID;
         }
 
+        changeStateSwitch(m_nextState);
+
         m_prevStateID = m_currentStateID;
-        if (m_nextState != GameState::PREVIOUS)
-        {
-            m_currentStateID = m_nextState;
-        }
+        m_currentStateID = m_nextState;
         m_nextState = GameState::STATE_NULL;
     }
 }

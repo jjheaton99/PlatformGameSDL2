@@ -17,7 +17,6 @@ private:
 public:
     PlayerSideAttack(double xBase = 0, double yBase = 0);
 
-    void update() {};
     void update(std::vector<Character*>& enemies);
     void collideCheck(std::vector<Character*>& enemies);
     //void cameraDraw(const Camera& camera) const override;

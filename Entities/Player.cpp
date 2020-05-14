@@ -103,7 +103,7 @@ void Player::motion()
     if (m_crouched)
     {
         m_movement = AIRBORNE;
-        m_velocity.xScale(0.9);
+        m_velocity.xScale(0.8);
         {
             if (std::abs(m_velocity.getx()) < 0.0001)
             {
@@ -125,9 +125,9 @@ void Player::motion()
             m_velocity.add(0, m_yMaxSpeed);
         }
 
-        if (m_velocity.gety() == m_yMaxSpeed || m_velocity.getx() > 1.5 * m_xMaxSpeed)
+        if (m_velocity.gety() == m_yMaxSpeed || std::abs(m_velocity.getx()) > m_xMaxSpeed)
         {
-            m_velocity.xScale(0.95);
+            m_velocity.xScale(0.93);
             if (std::abs(m_velocity.getx()) < 0.0001)
             {
                 m_velocity.xScale(0);

@@ -5,10 +5,17 @@ GameObjectManager::GameObjectManager()
 
 GameObjectManager::~GameObjectManager()
 {
-
+    for (auto& enemy : m_enemies)
+    {
+        if (enemy)
+        {
+            delete enemy;
+            enemy = nullptr;
+        }
+    }
 }
 
-void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, Camera& camera)
+void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, const Vector2D<double>& playerPos)
 {
     for (auto& enemy : m_enemies)
     {
@@ -19,7 +26,7 @@ void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, Camera
         }
         if (enemy)
         {
-            enemy->update(map, camera);
+            enemy->update(map, camera, playerPos);
         }
     }
 }
@@ -35,12 +42,12 @@ void GameObjectManager::cameraDraw(const Camera& camera) const
     }
 }
 
-void GameObjectManager::newEnemy(Enemy type, int xPos, int yPos)
+void GameObjectManager::newEnemy(Enemy type, double xPos, double yPos)
 {
     switch (type)
     {
     case GameObjectManager::Enemy::GROUNDED:
-        m_enemies.push_back(new GroundedEnemy{});
+        m_enemies.push_back(new GroundedEnemy{"Assets/Enemies/redSlime.png", xPos, yPos });
         break;
     default:
         break;

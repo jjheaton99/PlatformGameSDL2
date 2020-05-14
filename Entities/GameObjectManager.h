@@ -25,10 +25,10 @@ public:
     GameObjectManager();
     ~GameObjectManager();
 
-    void update(const std::vector<std::vector<Tile>>& map, Camera& camera);
+    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, const Vector2D<double>& playerPos);
     void cameraDraw(const Camera& camera) const;
 
-    void newEnemy(Enemy type, int xPos, int yPos);
+    void newEnemy(Enemy type, double xPos, double yPos);
     std::vector<Character*>& getEnemies() { return m_enemies; }
 };
 

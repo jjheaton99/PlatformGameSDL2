@@ -43,8 +43,7 @@ private:
 public:
     Player(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0);
 
-    void update(const std::vector<std::vector<Tile>>& map, Camera& camera) {};
-    void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<Character*>& enemies);
+    void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<Character*>& enemies) override;
     void cameraDraw(const Camera& camera) const override;
 
     bool dodgeCooling() const { return m_dodgeCooling; }
