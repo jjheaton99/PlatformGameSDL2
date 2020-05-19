@@ -21,7 +21,7 @@ protected:
     Vector2D<double> m_offset{ 0, 0 };
 
 public:
-    MeleeObject(const char* fileName, double xBase, double yBase, int colliderWidth, int colliderHeight, double attackDuration = 0);
+    MeleeObject(const char* fileName, double xBase, double yBase, double colliderWidth, double colliderHeight, double attackDuration = 0);
     virtual ~MeleeObject();
 
     virtual void collideCheck(std::vector<Character*>& enemies) = 0;

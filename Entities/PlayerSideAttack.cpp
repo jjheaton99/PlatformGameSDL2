@@ -10,7 +10,7 @@ PlayerSideAttack::PlayerSideAttack(double xBase, double yBase)
 
     m_offset = Vector2D<double>{ 50.0, 145.0 };
 
-    m_multiCollider = MultiCollider{ std::vector<SDL_Rect>{
+    m_multiCollider = MultiCollider{ std::vector<Collider::DoubleRect>{
             {0, 0, 8, 8},
             {0, 0, 8, 8},
             {0, 0, 8, 8},

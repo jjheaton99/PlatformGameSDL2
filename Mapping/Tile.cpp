@@ -17,5 +17,5 @@ void Tile::setPos(double xPos, double yPos)
     m_dstRect.x = static_cast<int>(xPos);
     m_dstRect.y = static_cast<int>(yPos);
 
-    m_collider.setPosition(static_cast<int>(xPos), static_cast<int>(yPos));
+    m_collider.setPosition(xPos, yPos);
 }

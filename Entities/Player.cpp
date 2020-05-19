@@ -12,7 +12,7 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
         m_spriteRects[i].y = 0;
     }
 
-    m_yMaxSpeed = 30.0;
+    m_yMaxSpeed = 100.0;
     m_xMaxSpeed = 12.0;
     m_walkAcceleration = 0.8;
     m_climbSpeed = 10.0;
@@ -25,23 +25,30 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
 
 void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<Character*>& enemies)
 {
-    m_position.add(m_velocity);
-    //collider position is moved after each function that can change character position
-    setCollider();
-
     motion();
 
     //edge check goes before map collision check to prevent vector subcript error when going off the edge
     if (edgeCheck(camera))
     {
+        //collider position is moved after each function that can change character position
         setCollider();
     }
 
-    mapCollideCheck(map);
-    setCollider();
+    bool collided{ sweepMapCollideCheck(map) };
+    if (collided)
+    { 
+        setCollider(); 
+    }
 
     //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
     //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
+    //std::cout << m_collider.getHitBox().y << "   " << m_collider.getHitBox().x << '\n';
+
+    if (!collided)
+    {
+        m_position.add(m_velocity);
+        setCollider();
+    }
 
     m_dstRect.x = static_cast<int>(m_position.getx());
     m_dstRect.y = static_cast<int>(m_position.gety());

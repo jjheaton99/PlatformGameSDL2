@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-GameObject::GameObject(const char* fileName, double xPos, double yPos, int colliderWidth, int colliderHeight)
+GameObject::GameObject(const char* fileName, double xPos, double yPos, double colliderWidth, double colliderHeight)
     : TextureObject(fileName, xPos, yPos), m_collider{ colliderWidth, colliderHeight }
 {}
 

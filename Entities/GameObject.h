@@ -13,7 +13,7 @@ protected:
     Collider m_collider;
 
 public:
-    GameObject(const char* fileName, double xPos = 0, double yPos = 0, int colliderWidth = 0, int colliderHeight = 0);
+    GameObject(const char* fileName, double xPos = 0, double yPos = 0, double colliderWidth = 0, double colliderHeight = 0);
     virtual ~GameObject();
 
     virtual void cameraDraw(const Camera& camera) const;

@@ -26,13 +26,9 @@ protected:
     bool m_hasCrouched{ false };
 
     //tilemap collision handlers
-    void deflectUp(double overlap);
-    void deflectDown(double overlap);
-    void deflectLeft(double overlap);
-    void deflectRight(double overlap);
-    virtual void mapCollideCheck(const std::vector<std::vector<Tile>>& map) override;
+    virtual bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) override;
     virtual bool checkForGround(const std::vector<std::vector<Tile>>& map, int characterRow,
-        int characterColumn, int tileSize, const SDL_Rect& characterColliderBox);
+        int characterColumn, int tileSize, const Collider::DoubleRect& characterColliderBox);
     virtual bool edgeCheck(const Camera& camera) override;
 
 public:

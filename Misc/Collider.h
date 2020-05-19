@@ -3,23 +3,45 @@
 #include "SDL.h"
 #include "Vector2D.h"
 #include <vector>
+#include <limits>
+#include <algorithm>
+#include <cmath>
 
 //class for managing hitboxes and checking collisions between hitboxes
 class Collider
 {
+public:
+    enum CollisionType
+    {
+        TOP,
+        BOTTOM,
+        LEFT,
+        RIGHT,
+        NONE
+    };
+
+    struct DoubleRect
+    {
+        double x;
+        double y;
+        double w;
+        double h;
+    };
+
 private:
-    SDL_Rect m_hitBox;
+    DoubleRect m_hitBox;
 
 public:
-    Collider(int width, int height, int xPos = 0, int yPos = 0);
+    Collider(double width, double height, double xPos = 0, double yPos = 0);
     ~Collider();
 
-    void setPosition(int x, int y);
+    void setPosition(double x, double y);
     void setPosition(const Vector2D<double>& position);
-    void setDimensions(int w, int h);
-    const SDL_Rect& getHitBox() const { return m_hitBox; }
+    void setDimensions(double w, double h);
+    const DoubleRect& getHitBox() const { return m_hitBox; }
 
     bool collideCheck(const Collider& collider) const;
-    static double axisBoxOverlap(int pos1, int pos2, int size1, int size2);
+    CollisionType tileCollideCheck(const Vector2D<double>& velocity, const Collider& tileCollider) const;
+    static double axisBoxOverlap(double pos1, double pos2, double size1, double size2);
 };
 

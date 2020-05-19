@@ -38,7 +38,7 @@ private:
 
     void motion() override;
     void moveCamera(Camera& camera);
-    void setCollider() override { m_collider.setPosition(static_cast<int>(m_position.getx() + 22), static_cast<int>(m_position.gety())); }
+    void setCollider() override { m_collider.setPosition(m_position.getx() + 22.0, m_position.gety()); }
 
 public:
     Player(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0);

@@ -1,6 +1,6 @@
 #include "MultiCollider.h"
 
-MultiCollider::MultiCollider(std::vector<SDL_Rect> hitBoxes)
+MultiCollider::MultiCollider(std::vector<Collider::DoubleRect> hitBoxes)
 {
     for (const auto& hitBox : hitBoxes)
     {
@@ -43,7 +43,7 @@ bool MultiCollider::collideCheck(const MultiCollider& collider) const
 }
 
 //individual collider position
-void MultiCollider::setPosition(int index, int x, int y)
+void MultiCollider::setPosition(int index, double x, double y)
 {
     if (index < 0 || index >= static_cast<int>(m_colliders.size()))
     {
@@ -69,7 +69,7 @@ void MultiCollider::setPositions(const Vector2D<double>& basePosition, const std
     }
 }
 
-void MultiCollider::setDimensions(int index, int w, int h)
+void MultiCollider::setDimensions(int index, double w, double h)
 {
     if (index < 0 || index >= static_cast<int>(m_colliders.size()))
     {

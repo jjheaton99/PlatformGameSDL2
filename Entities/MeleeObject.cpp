@@ -1,6 +1,6 @@
 #include "MeleeObject.h"
 
-MeleeObject::MeleeObject(const char* fileName, double xBase, double yBase, int colliderWidth, int colliderHeight, double attackDuration)
+MeleeObject::MeleeObject(const char* fileName, double xBase, double yBase, double colliderWidth, double colliderHeight, double attackDuration)
     : GameObject(fileName, xBase, yBase, colliderWidth, colliderHeight), m_attackDuration{attackDuration}
 {}
 

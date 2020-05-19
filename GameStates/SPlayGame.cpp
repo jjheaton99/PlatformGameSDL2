@@ -10,10 +10,11 @@ SPlayGame::SPlayGame(const char* mapFile)
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
-    for (int i{ 0 }; i < m_camera.getxBoundary() / 50; ++i)
+    for (int i{ 1 }; i < m_camera.getxBoundary() / 50; ++i)
     {
         m_objectManager->newEnemy(GameObjectManager::Enemy::GROUNDED, 50.0 * i, 2000);
     }
+    //m_objectManager->newEnemy(GameObjectManager::Enemy::GROUNDED, 200, 2000);
 }
 
 SPlayGame::~SPlayGame()
@@ -153,7 +154,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                     }
                     else
                     {
-                        m_player->addVel(-20.0, 0);
+                        m_player->addVel(-40.0, 0);
                     }
 
                     m_player->dodgeLeft();
@@ -179,7 +180,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                     }
                     else
                     {
-                        m_player->addVel(20.0, 0);
+                        m_player->addVel(40.0, 0);
                     }
 
                     m_player->dodgeRight();
@@ -193,13 +194,9 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                         {
                                 m_player->addVel(-12.5, 0);
                         }
-                        else if (m_player->getMovement() == Player::STOP)
-                        {
-                            m_player->addVel(-40.0, 0);
-                        }
                         else
                         {
-                            m_player->addVel(-25.0, 0);
+                            m_player->addVel(-40.0, 0);
                         }
 
                         m_player->dodgeLeft();
@@ -211,13 +208,9 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                         {
                             m_player->addVel(12.5, 0);
                         }
-                        else if (m_player->getMovement() == Player::STOP)
-                        {
-                            m_player->addVel(40.0, 0);
-                        }
                         else
                         {
-                            m_player->addVel(25.0, 0);
+                            m_player->addVel(40.0, 0);
                         }
 
                         m_player->dodgeRight();
@@ -326,7 +319,7 @@ GameState::State SPlayGame::update()
         double frameRate{ averageFPS(timeStep) };
         if (frameRate > 0)
         {
-            std::cout << frameRate << '\n';
+            //std::cout << frameRate << '\n';
         }
 
         return STATE_NULL;

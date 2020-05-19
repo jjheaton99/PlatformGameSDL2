@@ -24,6 +24,6 @@ public:
     virtual void destroy();
 
     const Vector2D<double>& getPos() const { return m_position; }
-    virtual void setPos(double xPos, double yPos) { m_position = Vector2D{ xPos, yPos }; }
+    virtual void setPos(double xPos, double yPos) { m_position = Vector2D<double>{ xPos, yPos }; }
 };
 
