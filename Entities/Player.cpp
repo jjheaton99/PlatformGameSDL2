@@ -15,7 +15,7 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
     m_yMaxSpeed = 100.0;
     m_xMaxSpeed = 12.0;
     m_walkAcceleration = 0.8;
-    m_climbSpeed = 10.0;
+    m_climbSpeed = 12.0;
     
     m_spriteIndex = 0;
 

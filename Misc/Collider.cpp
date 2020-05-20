@@ -75,11 +75,14 @@ Collider::CollisionType Collider::tileCollideCheck(const Vector2D<double>& veloc
     double yStartTime;
     double yEndTime;
 
+    double xOverlap{ axisBoxOverlap(m_hitBox.x, tileCollider.getHitBox().x, m_hitBox.w, tileCollider.getHitBox().w) };
+    double yOverlap{ axisBoxOverlap(m_hitBox.y, tileCollider.getHitBox().y, m_hitBox.h, tileCollider.getHitBox().h) };
+
     //no divide by zero
     if (velocity.getx() == 0.0)
     {
         //if velocity is zero in x direction, want it to be the minimum start time
-        if (axisBoxOverlap(m_hitBox.x, tileCollider.getHitBox().x, m_hitBox.w, tileCollider.getHitBox().w) > 0.0)
+        if ( xOverlap > 0.0)
         {
             xStartTime = -std::numeric_limits<double>::infinity();
         }
@@ -97,7 +100,7 @@ Collider::CollisionType Collider::tileCollideCheck(const Vector2D<double>& veloc
 
     if (velocity.gety() == 0.0)
     {
-        if (axisBoxOverlap(m_hitBox.y, tileCollider.getHitBox().y, m_hitBox.h, tileCollider.getHitBox().h) > 0.0)
+        if ( yOverlap > 0.0)
         {
             yStartTime = -std::numeric_limits<double>::infinity();
         }
@@ -124,19 +127,19 @@ Collider::CollisionType Collider::tileCollideCheck(const Vector2D<double>& veloc
     {
         return NONE;
     }
-    else if (xStartTime < yStartTime && velocity.gety() > 0.0 /*&& std::abs(xCloseDist) > 0.1 && std::abs(xFarDist) > 0.1*/)
+    else if (xStartTime < yStartTime && velocity.gety() > 0.0)
     {
         return TOP;
     }
-    else if (xStartTime < yStartTime && velocity.gety() < 0.0 /*&& std::abs(xCloseDist) > 0.1 && std::abs(xFarDist) > 0.1*/)
+    else if (xStartTime < yStartTime && velocity.gety() < 0.0)
     {
         return BOTTOM;
     }
-    else if (yStartTime < xStartTime && velocity.getx() > 0.0 /*&& std::abs(yCloseDist) > 0.1 && std::abs(yFarDist) > 0.1*/)
+    else if (yStartTime < xStartTime && velocity.getx() > 0.0)
     {
         return LEFT;
     }
-    else if (yStartTime < xStartTime && velocity.getx() < 0.0 /*&& std::abs(yCloseDist) > 0.1 && std::abs(yFarDist) > 0.1*/)
+    else if (yStartTime < xStartTime && velocity.getx() < 0.0)
     {
         return RIGHT;
     }

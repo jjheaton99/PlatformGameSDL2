@@ -10,7 +10,7 @@ SPlayGame::SPlayGame(const char* mapFile)
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
-    for (int i{ 1 }; i < m_camera.getxBoundary() / 50; ++i)
+    for (int i{ 2 }; i < m_camera.getxBoundary() / 50; ++i)
     {
         m_objectManager->newEnemy(GameObjectManager::Enemy::GROUNDED, 50.0 * i, 2000);
     }

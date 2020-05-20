@@ -28,7 +28,7 @@ protected:
     //tilemap collision handlers
     virtual bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) override;
     virtual bool checkForGround(const std::vector<std::vector<Tile>>& map, int characterRow,
-        int characterColumn, int tileSize, const Collider::DoubleRect& characterColliderBox);
+        int characterColumn, const Collider::DoubleRect& characterColliderBox);
     virtual bool edgeCheck(const Camera& camera) override;
 
 public:

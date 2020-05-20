@@ -43,7 +43,7 @@ bool GroundedCharacter::edgeCheck(const Camera& camera)
 
 //checks if character is standing on a solid map tile
 bool GroundedCharacter::checkForGround(const std::vector<std::vector<Tile>>& map, int characterRow,
-    int characterColumn, int tileSize, const Collider::DoubleRect& characterColliderBox)
+    int characterColumn, const Collider::DoubleRect& characterColliderBox)
 {
     //allows characters to continue climbing when in contact with ladders
     if (m_collidingWithLadder)
@@ -51,9 +51,9 @@ bool GroundedCharacter::checkForGround(const std::vector<std::vector<Tile>>& map
         return true;
     }
 
-    for (int row{ characterRow }; 1.0 * row * tileSize <= characterColliderBox.y + characterColliderBox.h && row < static_cast<int>(map.size()); ++row)
+    for (int row{ characterRow }; 1.0 * row * Constants::tileSize <= characterColliderBox.y + characterColliderBox.h && row < static_cast<int>(map.size()); ++row)
     {
-        for (int column{ characterColumn }; 1.0 * column * tileSize <= characterColliderBox.x + characterColliderBox.w && column < static_cast<int>(map[0].size()); ++column)
+        for (int column{ characterColumn }; 1.0 * column * Constants::tileSize <= characterColliderBox.x + characterColliderBox.w && column < static_cast<int>(map[0].size()); ++column)
         {
             if ((map[row][column].getType() == Tile::SOLID && !m_crouched) || map[row][column].getType() == Tile::PLATFORM)
             {
@@ -79,6 +79,15 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
 
     getCollideTiles(map, characterRow, characterColumn);
 
+    std::sort(m_solidColliders.begin(), m_solidColliders.end(), [&](const Collider& a, const Collider& b) {
+        double axOverlap{ Collider::axisBoxOverlap(m_collider.getHitBox().x, a.getHitBox().x, m_collider.getHitBox().w, a.getHitBox().w) };
+        double bxOverlap{ Collider::axisBoxOverlap(m_collider.getHitBox().x, b.getHitBox().x, m_collider.getHitBox().w, b.getHitBox().w) };
+        double ayOverlap{ Collider::axisBoxOverlap(m_collider.getHitBox().y, a.getHitBox().y, m_collider.getHitBox().h, a.getHitBox().h) };
+        double byOverlap{ Collider::axisBoxOverlap(m_collider.getHitBox().y, b.getHitBox().y, m_collider.getHitBox().h, b.getHitBox().h) };
+        return ((axOverlap > bxOverlap && axOverlap > byOverlap) || (ayOverlap > bxOverlap && ayOverlap > byOverlap));
+        }
+    );
+
     int collideCount{ 0 };
     for (const auto& collider : m_solidColliders)
     {
@@ -89,28 +98,28 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
             m_velocity.yScale(0);
             m_movement = STOP;
             ++collideCount;
-            //std::cout << "top" << '\n';
+            std::cout << "top" << '\n';
             break;
 
         case Collider::BOTTOM:
             m_position.add(Vector2D<double>{ 0, 1.0 * collider.getHitBox().y + collider.getHitBox().h - m_collider.getHitBox().y });
             m_velocity.yScale(0);
             ++collideCount;
-            //std::cout << "bottom" << '\n';
+            std::cout << "bottom" << '\n';
             break;
 
         case Collider::LEFT:
             m_position.add(Vector2D<double>{ 1.0 * collider.getHitBox().x - m_collider.getHitBox().x - m_collider.getHitBox().w, 0 });
             m_velocity.xScale(0);
             ++collideCount;
-            //std::cout << "left" << '\n';
+            std::cout << "left" << '\n';
             break;
 
         case Collider::RIGHT:
             m_position.add(Vector2D<double>{ 1.0 * collider.getHitBox().x + collider.getHitBox().w - m_collider.getHitBox().x, 0 });
             m_velocity.xScale(0);
             ++collideCount;
-            //std::cout << "right" << '\n';
+            std::cout << "right" << '\n';
             break;
 
         case Collider::NONE:
@@ -127,12 +136,12 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
             m_velocity.yScale(0);
             m_movement = STOP;
             ++collideCount;
-            //std::cout << "platform" << '\n';
+            std::cout << "platform" << '\n';
         }
     }
 
     //causes character to fall when stepping off platform or solid tile
-    if (!checkForGround(map, characterRow, characterColumn, Constants::tileSize, m_collider.getHitBox()))
+    if (!checkForGround(map, characterRow, characterColumn, m_collider.getHitBox()))
     {
         m_movement = AIRBORNE;
     }
