@@ -91,35 +91,44 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
     int collideCount{ 0 };
     for (const auto& collider : m_solidColliders)
     {
-        switch (m_collider.tileCollideCheck(m_velocity, collider))
+        auto collideResult{ m_collider.tileCollideCheck(m_velocity, collider) };
+        switch (collideResult.first)
         {
         case Collider::TOP:
-            m_position.add(Vector2D<double>{ 0, 1.0 * collider.getHitBox().y - m_collider.getHitBox().y - m_collider.getHitBox().h });
+            m_velocity.yScale(collideResult.second);
+            m_position.add(m_velocity);
             m_velocity.yScale(0);
             m_movement = STOP;
             ++collideCount;
-            std::cout << "top" << '\n';
+            //std::cout << "top" << '\n';
+            //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
             break;
 
         case Collider::BOTTOM:
-            m_position.add(Vector2D<double>{ 0, 1.0 * collider.getHitBox().y + collider.getHitBox().h - m_collider.getHitBox().y });
+            m_velocity.yScale(collideResult.second);
+            m_position.add(m_velocity);
             m_velocity.yScale(0);
             ++collideCount;
-            std::cout << "bottom" << '\n';
+            //std::cout << "bottom" << '\n';
+            //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
             break;
 
         case Collider::LEFT:
-            m_position.add(Vector2D<double>{ 1.0 * collider.getHitBox().x - m_collider.getHitBox().x - m_collider.getHitBox().w, 0 });
+            m_velocity.xScale(collideResult.second);
+            m_position.add(m_velocity);
             m_velocity.xScale(0);
             ++collideCount;
-            std::cout << "left" << '\n';
+            //std::cout << "left" << '\n';
+            //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
             break;
 
         case Collider::RIGHT:
-            m_position.add(Vector2D<double>{ 1.0 * collider.getHitBox().x + collider.getHitBox().w - m_collider.getHitBox().x, 0 });
+            m_velocity.xScale(collideResult.second);
+            m_position.add(m_velocity);
             m_velocity.xScale(0);
             ++collideCount;
-            std::cout << "right" << '\n';
+            //std::cout << "right" << '\n';
+            //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
             break;
 
         case Collider::NONE:
@@ -130,13 +139,16 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
 
     for (const auto& collider : m_platformColliders)
     {
-        if (m_collider.tileCollideCheck(m_velocity, collider) == Collider::TOP && !m_crouched && !m_hasCrouched)
+        auto collideResult{ m_collider.tileCollideCheck(m_velocity, collider) };
+        if (collideResult.first == Collider::TOP && !m_crouched && !m_hasCrouched)
         {
-            m_position.add(Vector2D<double>{ 0, 1.0 * collider.getHitBox().y - m_collider.getHitBox().y - m_collider.getHitBox().h });
+            m_velocity.yScale(collideResult.second);
+            m_position.add(m_velocity);
             m_velocity.yScale(0);
             m_movement = STOP;
             ++collideCount;
-            std::cout << "platform" << '\n';
+            //std::cout << "platform" << '\n';
+            //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
         }
     }
 

@@ -12,7 +12,7 @@ SPlayGame::SPlayGame(const char* mapFile)
 
     for (int i{ 2 }; i < m_camera.getxBoundary() / 50; ++i)
     {
-        m_objectManager->newEnemy(GameObjectManager::Enemy::GROUNDED, 50.0 * i, 2000);
+        //m_objectManager->newEnemy(GameObjectManager::Enemy::GROUNDED, 50.0 * i, 2000);
     }
     //m_objectManager->newEnemy(GameObjectManager::Enemy::GROUNDED, 200, 2000);
 }

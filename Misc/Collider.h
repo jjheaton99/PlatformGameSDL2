@@ -6,6 +6,7 @@
 #include <limits>
 #include <algorithm>
 #include <cmath>
+#include <utility>
 
 //class for managing hitboxes and checking collisions between hitboxes
 class Collider
@@ -41,7 +42,7 @@ public:
     const DoubleRect& getHitBox() const { return m_hitBox; }
 
     bool collideCheck(const Collider& collider) const;
-    CollisionType tileCollideCheck(const Vector2D<double>& velocity, const Collider& tileCollider) const;
+    std::pair<CollisionType, double> tileCollideCheck(const Vector2D<double>& velocity, const Collider& tileCollider) const;
     static double axisBoxOverlap(double pos1, double pos2, double size1, double size2);
 };
 

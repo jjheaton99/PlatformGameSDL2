@@ -39,7 +39,7 @@ bool Collider::collideCheck(const Collider& collider) const
 }
 
 //swept AABB collisions with map tiles to prevent high speed going through
-Collider::CollisionType Collider::tileCollideCheck(const Vector2D<double>& velocity, const Collider& tileCollider) const
+std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vector2D<double>& velocity, const Collider& tileCollider) const
 {
     //closest and furthest distances between colliders in x and y directions
     double xCloseDist;
@@ -121,31 +121,30 @@ Collider::CollisionType Collider::tileCollideCheck(const Vector2D<double>& veloc
     //collision end time is shorter of x and y times
     double endTime{ std::min(xEndTime, yEndTime) };
 
-    //check collision occured in this frame]
+    //check collision occured in this frame
     if (startTime > endTime || xStartTime < 0.0 && yStartTime < 0.0 || xStartTime > 1.0 || yStartTime > 1.0)
-    //if (startTime > endTime || startTime < 0.0 || startTime >= 1.0)
     {
-        return NONE;
+        return {NONE, startTime};
     }
     else if (xStartTime < yStartTime && velocity.gety() > 0.0)
     {
-        return TOP;
+        return {TOP, startTime};
     }
     else if (xStartTime < yStartTime && velocity.gety() < 0.0)
     {
-        return BOTTOM;
+        return {BOTTOM, startTime};
     }
     else if (yStartTime < xStartTime && velocity.getx() > 0.0)
     {
-        return LEFT;
+        return {LEFT, startTime};
     }
     else if (yStartTime < xStartTime && velocity.getx() < 0.0)
     {
-        return RIGHT;
+        return {RIGHT, startTime};
     }
     else
     {
-        return NONE;
+        return {NONE, startTime};
     }
 }
 

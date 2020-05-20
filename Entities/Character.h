@@ -6,6 +6,7 @@
 #include <cmath>
 #include <cstdint>
 #include <algorithm>
+#include <utility>
 
 //base class for characters e.g. players, enemies, npcs
 class Character : public GameObject
