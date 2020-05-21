@@ -139,8 +139,14 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
     //collision end time is shorter of x and y times
     double endTime{ std::min(xEndTime, yEndTime) };
 
+
+    //check collision occured in this frame
+    if (startTime > endTime || xStartTime < 0.0 && yStartTime < 0.0 || xStartTime > 1.0 || yStartTime > 1.0)
+    {
+        return { NONE, startTime };
+    }
     //if colliders are overlapping
-    if (colliding)
+    else if (colliding)
     {
         //for situations where character is forced into colliding with block
         if (yOverlap < xOverlap)
@@ -165,11 +171,6 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
                 return { OVERLAP_RIGHT, startTime };
             }
         }
-    }
-    //check collision occured in this frame
-    else if (startTime > endTime || xStartTime < 0.0 && yStartTime < 0.0 || xStartTime > 1.0 || yStartTime > 1.0)
-    {
-        return { NONE, startTime };
     }
     //sort collision directions using start times and velocity
     else if (xStartTime < yStartTime)
