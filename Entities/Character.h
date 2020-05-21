@@ -43,7 +43,7 @@ public:
     void kill() { m_dead = true; }
 
     //for player
-    virtual void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<Character*>& enemies) {};
+    virtual void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::unique_ptr<Character>>& enemies) {};
     //for enemies
     virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, const Vector2D<double>& playerPos) {};
 

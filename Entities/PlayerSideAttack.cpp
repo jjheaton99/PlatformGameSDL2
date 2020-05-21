@@ -41,7 +41,7 @@ void PlayerSideAttack::resetColliders()
     };
 }
 
-void PlayerSideAttack::update(std::vector<Character*>& enemies)
+void PlayerSideAttack::update(std::vector<std::unique_ptr<Character>>& enemies)
 {
     if (m_attacking)
     {
@@ -91,7 +91,7 @@ void PlayerSideAttack::update(std::vector<Character*>& enemies)
     }
 }
 
-void PlayerSideAttack::collideCheck(std::vector<Character*>& enemies)
+void PlayerSideAttack::collideCheck(std::vector<std::unique_ptr<Character>>& enemies)
 {
     for (auto& enemy : enemies)
     {

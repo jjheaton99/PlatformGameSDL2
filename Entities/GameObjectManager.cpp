@@ -4,16 +4,7 @@ GameObjectManager::GameObjectManager()
 {}
 
 GameObjectManager::~GameObjectManager()
-{
-    for (auto& enemy : m_enemies)
-    {
-        if (enemy)
-        {
-            delete enemy;
-            enemy = nullptr;
-        }
-    }
-}
+{}
 
 void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, const Vector2D<double>& playerPos)
 {
@@ -22,8 +13,7 @@ void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const 
         //if enemy is dead and hasnt been deleted yet
         if (enemy && enemy->isDead())
         {
-            delete enemy;
-            enemy = nullptr;
+            enemy.reset(nullptr);
         }
         if (enemy)
         {
@@ -49,7 +39,7 @@ void GameObjectManager::newEnemy(Enemy type, double xPos, double yPos)
     switch (type)
     {
     case GameObjectManager::Enemy::GROUNDED:
-        m_enemies.push_back(new GroundedEnemy{"Assets/Enemies/redSlime.png", xPos, yPos });
+        m_enemies.push_back(std::make_unique<GroundedEnemy>("Assets/Enemies/redSlime.png", xPos, yPos));
         break;
     default:
         break;

@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "GroundedEnemy.h"
 #include <vector>
+#include <memory>
 
 //manages the creation, drawing, updating and destruction of objects other than tiles or the player
 class GameObjectManager
@@ -20,7 +21,7 @@ public:
     };
 
 private:
-    std::vector<Character*> m_enemies{};
+    std::vector<std::unique_ptr<Character>> m_enemies{};
 
 public:
     GameObjectManager();
@@ -30,6 +31,6 @@ public:
     void cameraDraw(const Camera& camera) const;
 
     void newEnemy(Enemy type, double xPos, double yPos);
-    std::vector<Character*>& getEnemies() { return m_enemies; }
+    std::vector<std::unique_ptr<Character>>& getEnemies() { return m_enemies; }
 };
 

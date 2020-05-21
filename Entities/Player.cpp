@@ -23,7 +23,7 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
     m_dstRect.h = 100;
 }
 
-void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<Character*>& enemies)
+void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::unique_ptr<Character>>& enemies)
 {
     motion();
 

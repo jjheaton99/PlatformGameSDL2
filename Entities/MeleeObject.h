@@ -24,7 +24,7 @@ public:
     MeleeObject(const char* fileName, double xBase, double yBase, double colliderWidth, double colliderHeight, double attackDuration = 0);
     virtual ~MeleeObject();
 
-    virtual void collideCheck(std::vector<Character*>& enemies) = 0;
+    virtual void collideCheck(std::vector<std::unique_ptr<Character>>& enemies) = 0;
 
     virtual void cameraDraw(const Camera& camera) const override;
     void faceLeft() { m_facingLeft = true; }
