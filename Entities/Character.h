@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <utility>
+#include <tuple>
 
 //base class for characters e.g. players, enemies, npcs
 class Character : public GameObject
@@ -19,8 +20,8 @@ protected:
     double m_yMaxSpeed{ 0 };
     double m_xMaxSpeed{ 0 };
 
-    std::vector<Collider> m_solidColliders;
-    std::vector<Collider> m_platformColliders;
+    std::vector<std::tuple<Collider, double, double>> m_solidColliders;
+    std::vector<std::tuple<Collider, double, double>> m_platformColliders;
     bool m_collidingWithLadder{ false };
     double m_ladderxPos{ 0.0 };
 

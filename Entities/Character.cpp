@@ -18,10 +18,10 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
     //in case no ladder collisions are found
     m_collidingWithLadder = false;
 
-    int startRow{ characterRow - static_cast<int>(m_velocity.magnitude() / Constants::tileSize) - 1 };
+    int startRow{ characterRow - static_cast<int>(m_velocity.magnitude() / Constants::tileSize) - 2 };
     int endRow{ characterRow + static_cast<int>(m_velocity.magnitude() / Constants::tileSize) + static_cast<int>(m_collider.getHitBox().h / Constants::tileSize) + 2 };
-    int startColumn{characterColumn - static_cast<int>(m_velocity.magnitude() / Constants::tileSize) - 1 };
-    int endColumn{ characterColumn + static_cast<int>(m_velocity.magnitude() / Constants::tileSize) + static_cast<int>(m_collider.getHitBox().w / Constants::tileSize) + 2 };
+    int startColumn{characterColumn - static_cast<int>(m_velocity.magnitude() / Constants::tileSize) - 2 };
+    int endColumn{ characterColumn + static_cast<int>(m_velocity.magnitude() / Constants::tileSize) + static_cast<int>(m_collider.getHitBox().w / Constants::tileSize) + 2 };    
 
     //check rows and cols within map
     if (startRow < 0)
@@ -60,10 +60,20 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
             switch (map[row][column].getType())
             {
             case Tile::SOLID:
-                m_solidColliders.push_back(map[row][column].getCollider());
+                m_solidColliders.push_back({ 
+                    map[row][column].getCollider(),
+                    //x overlap
+                    Collider::axisBoxOverlap(m_collider.getHitBox().x, map[row][column].getCollider().getHitBox().x, m_collider.getHitBox().w, map[row][column].getCollider().getHitBox().w),
+                    //y overlap
+                    Collider::axisBoxOverlap(m_collider.getHitBox().y, map[row][column].getCollider().getHitBox().y, m_collider.getHitBox().h, map[row][column].getCollider().getHitBox().h) 
+                    });
                 break;
             case Tile::PLATFORM:
-                m_platformColliders.push_back(map[row][column].getCollider());
+                m_platformColliders.push_back({
+                    map[row][column].getCollider(),
+                    Collider::axisBoxOverlap(m_collider.getHitBox().x, map[row][column].getCollider().getHitBox().x, m_collider.getHitBox().w, map[row][column].getCollider().getHitBox().w),
+                    Collider::axisBoxOverlap(m_collider.getHitBox().y, map[row][column].getCollider().getHitBox().y, m_collider.getHitBox().h, map[row][column].getCollider().getHitBox().h)
+                    });
                 break;
             case Tile::BACKGROUND:
             default:

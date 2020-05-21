@@ -35,10 +35,10 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     }
 
     bool collided{ sweepMapCollideCheck(map) };
-    if (collided)
+    /*if (collided)
     { 
         setCollider(); 
-    }
+    }*/
 
     //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
     //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';

@@ -74,21 +74,25 @@ bool GroundedCharacter::checkForGround(const std::vector<std::vector<Tile>>& map
 bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
 {
     //character column and row variables are the position of the character in terms of map tiles
-    int characterColumn{ static_cast<int>(m_collider.getHitBox().x  / Constants::tileSize) };
+    int characterColumn{ static_cast<int>(m_collider.getHitBox().x / Constants::tileSize) };
     int characterRow{ static_cast<int>(m_collider.getHitBox().y / Constants::tileSize) };
+
+    //causes character to fall when stepping off platform or solid tile
+    if (!checkForGround(map, characterRow, characterColumn, m_collider.getHitBox()))
+    {
+        m_movement = AIRBORNE;
+    }
 
     getCollideTiles(map, characterRow, characterColumn);
 
-    std::sort(m_solidColliders.begin(), m_solidColliders.end(), [&](const Collider& a, const Collider& b) {
-        double axOverlap{ Collider::axisBoxOverlap(m_collider.getHitBox().x, a.getHitBox().x, m_collider.getHitBox().w, a.getHitBox().w) };
-        double bxOverlap{ Collider::axisBoxOverlap(m_collider.getHitBox().x, b.getHitBox().x, m_collider.getHitBox().w, b.getHitBox().w) };
-        double ayOverlap{ Collider::axisBoxOverlap(m_collider.getHitBox().y, a.getHitBox().y, m_collider.getHitBox().h, a.getHitBox().h) };
-        double byOverlap{ Collider::axisBoxOverlap(m_collider.getHitBox().y, b.getHitBox().y, m_collider.getHitBox().h, b.getHitBox().h) };
-        return ((axOverlap > bxOverlap && axOverlap > byOverlap) || (ayOverlap > bxOverlap && ayOverlap > byOverlap));
+    //sort by greatest overlaps
+    std::sort(m_solidColliders.begin(), m_solidColliders.end(), [&](const auto& a, const auto& b) {
+        return ((std::get<1>(a) > std::get<1>(b) && std::get<1>(a) > std::get<2>(b)) || (std::get<2>(a) > std::get<1>(b) && std::get<2>(a) > std::get<2>(b)));
         }
     );
 
     int collideCount{ 0 };
+
     for (const auto& collider : m_solidColliders)
     {
         auto collideResult{ m_collider.tileCollideCheck(m_velocity, collider) };
@@ -98,6 +102,7 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
             m_velocity.yScale(collideResult.second);
             m_position.add(m_velocity);
             m_velocity.yScale(0);
+            setCollider();
             m_movement = STOP;
             ++collideCount;
             //std::cout << "top" << '\n';
@@ -108,6 +113,7 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
             m_velocity.yScale(collideResult.second);
             m_position.add(m_velocity);
             m_velocity.yScale(0);
+            setCollider();
             ++collideCount;
             //std::cout << "bottom" << '\n';
             //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
@@ -117,6 +123,7 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
             m_velocity.xScale(collideResult.second);
             m_position.add(m_velocity);
             m_velocity.xScale(0);
+            setCollider();
             ++collideCount;
             //std::cout << "left" << '\n';
             //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
@@ -126,9 +133,48 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
             m_velocity.xScale(collideResult.second);
             m_position.add(m_velocity);
             m_velocity.xScale(0);
+            setCollider();
             ++collideCount;
             //std::cout << "right" << '\n';
             //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
+            break;
+
+            //for overlap collisions we subtract velocity to move character out of block
+        case Collider::OVERLAP_TOP:
+            m_velocity.yScale(collideResult.second);
+            m_position.subtract(m_velocity);
+            m_velocity.yScale(0);
+            setCollider();
+            m_movement = STOP;
+            ++collideCount;
+            //std::cout << "otop" << '\n';
+            break;
+
+        case Collider::OVERLAP_BOTTOM:
+            m_velocity.yScale(collideResult.second);
+            m_position.subtract(m_velocity);
+            m_velocity.yScale(0);
+            setCollider();
+            ++collideCount;
+            //std::cout << "obottom" << '\n';
+            break;
+
+        case Collider::OVERLAP_LEFT:
+            m_velocity.xScale(collideResult.second);
+            m_position.subtract(m_velocity);
+            m_velocity.xScale(0);
+            setCollider();
+            ++collideCount;
+            //std::cout << "oleft" << '\n';
+            break;
+
+        case Collider::OVERLAP_RIGHT:
+            m_velocity.xScale(collideResult.second);
+            m_position.subtract(m_velocity);
+            m_velocity.xScale(0);
+            setCollider();
+            ++collideCount;
+            //std::cout << "oright" << '\n';
             break;
 
         case Collider::NONE:
@@ -145,17 +191,12 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
             m_velocity.yScale(collideResult.second);
             m_position.add(m_velocity);
             m_velocity.yScale(0);
+            setCollider();
             m_movement = STOP;
             ++collideCount;
             //std::cout << "platform" << '\n';
             //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
         }
-    }
-
-    //causes character to fall when stepping off platform or solid tile
-    if (!checkForGround(map, characterRow, characterColumn, m_collider.getHitBox()))
-    {
-        m_movement = AIRBORNE;
     }
 
     return collideCount > 0;

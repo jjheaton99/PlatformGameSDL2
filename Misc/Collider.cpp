@@ -39,7 +39,7 @@ bool Collider::collideCheck(const Collider& collider) const
 }
 
 //swept AABB collisions with map tiles to prevent high speed going through
-std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vector2D<double>& velocity, const Collider& tileCollider) const
+std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vector2D<double>& velocity, const std::tuple<Collider, double, double>& tileCollider) const
 {
     //closest and furthest distances between colliders in x and y directions
     double xCloseDist;
@@ -47,26 +47,29 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
     double yCloseDist;
     double yFarDist;
 
+    DoubleRect tileHitBox{ std::get<0>(tileCollider).getHitBox() };
+
+    //sets distances based on direction of motion
     if (velocity.getx() > 0.0)
     {
-        xCloseDist = 1.0 * tileCollider.getHitBox().x - m_hitBox.x - m_hitBox.w;
-        xFarDist = 1.0 * tileCollider.getHitBox().x + tileCollider.getHitBox().w - m_hitBox.x;
+        xCloseDist = 1.0 * tileHitBox.x - m_hitBox.x - m_hitBox.w;
+        xFarDist = 1.0 * tileHitBox.x + tileHitBox.w - m_hitBox.x;
     }
     else
     {
-        xCloseDist = 1.0 * tileCollider.getHitBox().x + tileCollider.getHitBox().w - m_hitBox.x;
-        xFarDist = 1.0 * tileCollider.getHitBox().x - m_hitBox.x - m_hitBox.w;
+        xCloseDist = 1.0 * tileHitBox.x + tileHitBox.w - m_hitBox.x;
+        xFarDist = 1.0 * tileHitBox.x - m_hitBox.x - m_hitBox.w;
     }
 
     if (velocity.gety() > 0.0)
     {
-        yCloseDist = 1.0 * tileCollider.getHitBox().y - m_hitBox.y - m_hitBox.h;
-        yFarDist = 1.0 * tileCollider.getHitBox().y + tileCollider.getHitBox().h - m_hitBox.y;
+        yCloseDist = 1.0 * tileHitBox.y - m_hitBox.y - m_hitBox.h;
+        yFarDist = 1.0 * tileHitBox.y + tileHitBox.h - m_hitBox.y;
     }
     else
     {
-        yCloseDist = 1.0 * tileCollider.getHitBox().y + tileCollider.getHitBox().h - m_hitBox.y;
-        yFarDist = 1.0 * tileCollider.getHitBox().y - m_hitBox.y - m_hitBox.h;
+        yCloseDist = 1.0 * tileHitBox.y + tileHitBox.h - m_hitBox.y;
+        yFarDist = 1.0 * tileHitBox.y - m_hitBox.y - m_hitBox.h;
     }
 
     //relative collision start and end times
@@ -75,13 +78,14 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
     double yStartTime;
     double yEndTime;
 
-    double xOverlap{ axisBoxOverlap(m_hitBox.x, tileCollider.getHitBox().x, m_hitBox.w, tileCollider.getHitBox().w) };
-    double yOverlap{ axisBoxOverlap(m_hitBox.y, tileCollider.getHitBox().y, m_hitBox.h, tileCollider.getHitBox().h) };
+    double xOverlap{ std::get<1>(tileCollider) };
+    double yOverlap{ std::get<2>(tileCollider) };
+    //colliding if overlaps are both positive
+    bool colliding{ xOverlap > 0.0 && yOverlap > 0.0 };
 
     //no divide by zero
     if (velocity.getx() == 0.0)
     {
-        //if velocity is zero in x direction, want it to be the minimum start time
         if ( xOverlap > 0.0)
         {
             xStartTime = -std::numeric_limits<double>::infinity();
@@ -94,13 +98,20 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
     }
     else
     {
-        xStartTime = xCloseDist / velocity.getx();
+        if (colliding)
+        {
+            xStartTime = - xCloseDist / velocity.getx();
+        }
+        else
+        {
+            xStartTime = xCloseDist / velocity.getx();
+        }
         xEndTime = xFarDist / velocity.getx();
     }
 
     if (velocity.gety() == 0.0)
     {
-        if ( yOverlap > 0.0)
+        if (yOverlap > 0.0)
         {
             yStartTime = -std::numeric_limits<double>::infinity();
         }
@@ -112,7 +123,14 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
     }
     else
     {
-        yStartTime = yCloseDist / velocity.gety();
+        if (colliding)
+        {
+            yStartTime = - yCloseDist / velocity.gety();
+        }
+        else
+        {
+            yStartTime = yCloseDist / velocity.gety();
+        }
         yEndTime = yFarDist / velocity.gety();
     }
 
@@ -121,30 +139,60 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
     //collision end time is shorter of x and y times
     double endTime{ std::min(xEndTime, yEndTime) };
 
+    //if colliders are overlapping
+    if (colliding)
+    {
+        //for situations where character is forced into colliding with block
+        if (yOverlap < xOverlap)
+        {
+            if (velocity.gety() > 0.0)
+            {
+                return { OVERLAP_TOP, startTime };
+            }
+            else
+            {
+                return { OVERLAP_BOTTOM, startTime };
+            }
+        }
+        else
+        {
+            if (velocity.getx() > 0.0)
+            {
+                return { OVERLAP_LEFT, startTime };
+            }
+            else
+            {
+                return { OVERLAP_RIGHT, startTime };
+            }
+        }
+    }
     //check collision occured in this frame
-    if (startTime > endTime || xStartTime < 0.0 && yStartTime < 0.0 || xStartTime > 1.0 || yStartTime > 1.0)
+    else if (startTime > endTime || xStartTime < 0.0 && yStartTime < 0.0 || xStartTime > 1.0 || yStartTime > 1.0)
     {
-        return {NONE, startTime};
+        return { NONE, startTime };
     }
-    else if (xStartTime < yStartTime && velocity.gety() > 0.0)
+    //sort collision directions using start times and velocity
+    else if (xStartTime < yStartTime)
     {
-        return {TOP, startTime};
-    }
-    else if (xStartTime < yStartTime && velocity.gety() < 0.0)
-    {
-        return {BOTTOM, startTime};
-    }
-    else if (yStartTime < xStartTime && velocity.getx() > 0.0)
-    {
-        return {LEFT, startTime};
-    }
-    else if (yStartTime < xStartTime && velocity.getx() < 0.0)
-    {
-        return {RIGHT, startTime};
+        if (velocity.gety() > 0.0)
+        {
+            return { TOP, startTime };
+        }
+        else
+        {
+            return { BOTTOM, startTime };
+        }
     }
     else
     {
-        return {NONE, startTime};
+        if (velocity.getx() > 0.0)
+        {
+            return { LEFT, startTime };
+        }
+        else
+        {
+            return { RIGHT, startTime };
+        }
     }
 }
 
