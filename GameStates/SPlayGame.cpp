@@ -10,11 +10,11 @@ SPlayGame::SPlayGame(const char* mapFile)
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
-    for (int i{ 2 }; i < m_camera.getxBoundary() / 200; ++i)
-    {
-        m_objectManager->newEnemy(GameObjectManager::Enemy::GROUNDED, 200.0 * i, 2000);
-    }
-    //m_objectManager->newEnemy(GameObjectManager::Enemy::GROUNDED, 200, 2000);
+    //for (int i{ 2 }; i < m_camera.getxBoundary() / 200; ++i)
+    //{
+    //    m_objectManager->newEnemy(GameObjectManager::Enemy::GROUNDED, 200.0 * i, 2000);
+    //}
+    m_objectManager->newEnemy(GameObjectManager::Enemy::GROUNDED, 200, 2000);
 }
 
 SPlayGame::~SPlayGame()
@@ -309,7 +309,7 @@ GameState::State SPlayGame::update()
         {
             m_timeAccumulator -= Constants::updateStep;
             m_player->update(m_map->getMap(), m_camera, m_objectManager->getEnemies());
-            m_objectManager->update(m_map->getMap(), m_camera, m_player->getPos());
+            m_objectManager->update(m_map->getMap(), m_camera, *m_player);
         }
 
         m_stepTimer.start();

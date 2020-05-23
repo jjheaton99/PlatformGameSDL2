@@ -1,7 +1,7 @@
 #include "PlayerSideAttack.h"
 
-PlayerSideAttack::PlayerSideAttack(double xBase, double yBase)
-    : MeleeObject("Assets/Attacks/Weapons-4.png", xBase, yBase, 50, 50, 0.3)
+PlayerSideAttack::PlayerSideAttack(int damage, double xBase, double yBase)
+    : MeleeObject("Assets/Attacks/Weapons-4.png", damage, xBase, yBase, 50, 50, 0.3)
 {
     m_srcRect = { 0, 0, 32, 50 };
 
@@ -41,8 +41,10 @@ void PlayerSideAttack::resetColliders()
     };
 }
 
-void PlayerSideAttack::update(std::vector<std::unique_ptr<Character>>& enemies)
+void PlayerSideAttack::update(std::vector<std::unique_ptr<GroundedEnemy>>& enemies)
 {
+    updateHitEnemies(enemies);
+
     if (m_attacking)
     {
         if (m_counter == 0)
@@ -87,19 +89,30 @@ void PlayerSideAttack::update(std::vector<std::unique_ptr<Character>>& enemies)
         {
             m_attacking = false;
             m_counter = 0;
+            resetHitEnemies();
         }
     }
 }
 
-void PlayerSideAttack::collideCheck(std::vector<std::unique_ptr<Character>>& enemies)
+void PlayerSideAttack::collideCheck(std::vector<std::unique_ptr<GroundedEnemy>>& enemies)
 {
-    for (auto& enemy : enemies)
+    for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
     {
-        if (enemy && (enemy->getPos() - m_position).magnitude() < 300)
+        //if enemy is alive, hasnt been hit by attack and near weapon attack
+        if (enemies[i] && !m_hitEnemies[i] && (enemies[i]->getPos() - m_position).magnitude() < 300)
         {
-            if (m_multiCollider.collideCheck(enemy->getCollider()))
+            if (m_multiCollider.collideCheck(enemies[i]->getCollider()))
             {
-                enemy->kill();
+                enemies[i]->removeHP(m_damage);
+                if (m_facingLeft)
+                {
+                    enemies[i]->addVel(-30.0, -5.0);
+                }
+                else
+                {
+                    enemies[i]->addVel(30.0, -5.0);
+                }
+                m_hitEnemies[i] = true;
             }
         }
     }

@@ -1,7 +1,8 @@
 #include "GroundedEnemy.h"
+#include "Player.h"
 
-GroundedEnemy::GroundedEnemy(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel)
-    : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, 50, 50)
+GroundedEnemy::GroundedEnemy(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int hitPoints)
+    : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, 50, 50, hitPoints)
 {
     m_srcRect = { 0, 0, 32, 32 };
 
@@ -13,14 +14,19 @@ GroundedEnemy::GroundedEnemy(const char* fileName, double xStartPos, double ySta
     m_dstRect.h = 50;
 }
 
-void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, const Vector2D<double>& playerPos)
+void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Player& player)
 { 
+    if (m_hitPoints <= 0)
+    {
+        kill();
+    }
+
     //only update when within certain distance from camera for performance
     if (m_position.getx() > 1.0*camera.getx() - 1000.0 && m_position.getx() < 1.0*camera.getx() + 1.0*camera.getw() + 1000.0
         && m_position.gety() > 1.0*camera.gety() - 1000.0 && m_position.gety() < 1.0*camera.gety() + 1.0*camera.geth() + 1000.0)
     {
         motion();
-        enemyControls(playerPos);
+        enemyControls(player);
 
         //edge check goes before map collision check to prevent vector subcript error when going off the edge
         if (edgeCheck(camera))
@@ -47,22 +53,20 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
 
         m_dstRect.x = static_cast<int>(m_position.getx());
         m_dstRect.y = static_cast<int>(m_position.gety());
+
+        attackPlayer(player);
     }
 }
 
-void GroundedEnemy::enemyControls(const Vector2D<double>& playerPos)
+void GroundedEnemy::enemyControls(Player& player)
 {
-    if (m_position.getx() < playerPos.getx() - m_collider.getHitBox().w)
+    if (m_position.getx() < player.getPos().getx() + 50 - m_collider.getHitBox().w)
     {
         m_movement = RIGHT;
     }
-    else if (m_position.getx() > playerPos.getx() + 78)
+    else if (m_position.getx() > player.getPos().getx() + 50)
     {
         m_movement = LEFT;
-    }
-    else
-    {
-        m_movement = STOP;
     }
 }
 
@@ -134,5 +138,16 @@ void GroundedEnemy::motion()
 
     default:
         break;
+    }
+}
+
+void GroundedEnemy::attackPlayer(Player& player)
+{
+    if (m_collider.collideCheck(player.getCollider()) && !player.isInvincible())
+    {
+        player.removeHP(m_damage);
+        player.startiFrames();
+        m_velocity.scale(-2.0);
+        player.scaleVel(-1.5);
     }
 }

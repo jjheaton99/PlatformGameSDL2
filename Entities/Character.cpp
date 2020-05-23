@@ -1,7 +1,7 @@
 #include "Character.h"
 
-Character::Character(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight)
-    : GameObject(fileName, xStartPos, yStartPos, colliderWidth, colliderHeight), m_velocity{ xVel, yVel }
+Character::Character(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints)
+    : GameObject(fileName, xStartPos, yStartPos, colliderWidth, colliderHeight), m_hitPoints{hitPoints}, m_velocity{ xVel, yVel }
 {}
 
 Character::~Character()

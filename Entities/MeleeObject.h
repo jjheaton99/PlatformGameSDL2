@@ -4,12 +4,15 @@
 #include "MultiCollider.h"
 #include "Tile.h"
 #include "Character.h"
+#include "GroundedEnemy.h"
 
 //a base class for directional melee attacks
 class MeleeObject : public GameObject
 {
 protected:
     const double m_attackDuration;
+
+    int m_damage;
 
     bool m_facingLeft{ false };
     bool m_attacking{ false };
@@ -20,11 +23,13 @@ protected:
     Vector2D<double> m_totalPosition{ 0, 0 };
     Vector2D<double> m_offset{ 0, 0 };
 
+    std::vector<bool> m_hitEnemies;
+
 public:
-    MeleeObject(const char* fileName, double xBase, double yBase, double colliderWidth, double colliderHeight, double attackDuration = 0);
+    MeleeObject(const char* fileName, int damage, double xBase, double yBase, double colliderWidth, double colliderHeight, double attackDuration = 0);
     virtual ~MeleeObject();
 
-    virtual void collideCheck(std::vector<std::unique_ptr<Character>>& enemies) = 0;
+    virtual void collideCheck(std::vector<std::unique_ptr<GroundedEnemy>>& enemies) = 0;
 
     virtual void cameraDraw(const Camera& camera) const override;
     void faceLeft() { m_facingLeft = true; }
@@ -32,5 +37,8 @@ public:
     void attack() { m_attacking = true; }
     void cancel() { m_counter = static_cast<int>(m_attackDuration / Constants::updateStep) + 1; }
     bool isAttacking() const { return m_attacking; }
+
+    void updateHitEnemies(const std::vector<std::unique_ptr<GroundedEnemy>>& enemies);
+    void resetHitEnemies();
 };
 

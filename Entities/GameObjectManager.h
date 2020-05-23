@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "Character.h"
 #include "GroundedEnemy.h"
+#include "Player.h"
 #include <vector>
 #include <memory>
 
@@ -21,16 +22,16 @@ public:
     };
 
 private:
-    std::vector<std::unique_ptr<Character>> m_enemies{};
+    std::vector<std::unique_ptr<GroundedEnemy>> m_groundedEnemies{};
 
 public:
     GameObjectManager();
     ~GameObjectManager();
 
-    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, const Vector2D<double>& playerPos);
+    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Player& player);
     void cameraDraw(const Camera& camera) const;
 
     void newEnemy(Enemy type, double xPos, double yPos);
-    std::vector<std::unique_ptr<Character>>& getEnemies() { return m_enemies; }
+    std::vector<std::unique_ptr<GroundedEnemy>>& getEnemies() { return m_groundedEnemies; }
 };
 

@@ -32,7 +32,7 @@ protected:
     virtual bool edgeCheck(const Camera& camera) override;
 
 public:
-    GroundedCharacter(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
+    GroundedCharacter(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0, int hitPoints = 0);
     virtual ~GroundedCharacter();
 
     Movement getMovement() const { return m_movement; }
@@ -49,8 +49,5 @@ public:
 
     void crouch();
     void uncrouch() { m_crouched = false; }
-
-    void addVel(const Vector2D<double>& vel) { m_velocity.add(vel); }
-    void addVel(double x, double y) { m_velocity.add(x, y); }
 };
 

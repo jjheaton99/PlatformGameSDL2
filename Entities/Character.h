@@ -20,6 +20,8 @@ protected:
     double m_yMaxSpeed{ 0 };
     double m_xMaxSpeed{ 0 };
 
+    int m_hitPoints;
+
     std::vector<std::tuple<Collider, double, double>> m_solidColliders;
     std::vector<std::tuple<Collider, double, double>> m_platformColliders;
     bool m_collidingWithLadder{ false };
@@ -36,21 +38,23 @@ protected:
     virtual void setCollider() { m_collider.setPosition(m_position.getx(), m_position.gety()); }
 
 public:
-    Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0);
+    Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0, int hitPoints = 0);
     virtual ~Character();
+
+    void addHP(int HP) { m_hitPoints += HP; }
+    void removeHP(int HP) { m_hitPoints -= HP; }
 
     bool isDead() const { return m_dead; }
     void kill() { m_dead = true; }
-
-    //for player
-    virtual void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::unique_ptr<Character>>& enemies) {};
-    //for enemies
-    virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, const Vector2D<double>& playerPos) {};
 
     const Vector2D<double>& getVel() const { return m_velocity; }
     void setVel(double xVel, double yVel) { m_velocity = Vector2D<double>{ xVel, yVel }; }
     void setDirection(double angle) { m_velocity.rotate(angle); }
     double getLadderxPos() const { return m_ladderxPos; }
     bool collidingWithLadder() const { return m_collidingWithLadder; }
+
+    void addVel(const Vector2D<double>& vel) { m_velocity.add(vel); }
+    void addVel(double x, double y) { m_velocity.add(x, y); }
+    void scaleVel(double factor) { m_velocity.scale(factor); }
 };
 

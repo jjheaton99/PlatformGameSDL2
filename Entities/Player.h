@@ -7,6 +7,8 @@
 #include <cmath>
 #include <cstdint>
 
+class GroundedEnemy;
+
 //player character class
 class Player : public GroundedCharacter
 {
@@ -27,9 +29,15 @@ private:
     bool m_dodgingLeft{ false };
     bool m_dodgingRight{ false };
     int m_dodgeStepCount{ 0 };
+
     double m_angle{ 0.0 };
 
     int m_crouchStepCount{ 0 };
+
+    const double m_iDuration{ 0.1 };
+    int m_iFrames{ static_cast<int>(m_iDuration / Constants::updateStep) };
+    bool m_invincible{ false };
+    int m_iFrameCount{ 0 };
 
     int m_animationStep{ 0 };
     void cycleWalkAnimation();
@@ -41,15 +49,15 @@ private:
     void setCollider() override { m_collider.setPosition(m_position.getx() + 22.0, m_position.gety()); }
 
 public:
-    Player(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0);
+    Player(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/MrPix.png", int hitPoints = 10);
 
-    void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::unique_ptr<Character>>& enemies) override;
+    void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::unique_ptr<GroundedEnemy>>& enemies);
     void cameraDraw(const Camera& camera) const override;
 
     bool dodgeCooling() const { return m_dodgeCooling; }
     bool isDodging() const { return m_dodgingLeft || m_dodgingRight; }
-    void dodgeLeft() { m_dodgingLeft = true; }
-    void dodgeRight() { m_dodgingRight = true; }
+    void dodgeLeft();
+    void dodgeRight();
     void dodgeCancel();
 
     void attackLeft();
@@ -58,4 +66,7 @@ public:
     bool isAttacking() const { return m_sideAttack.isAttacking(); }
 
     bool isFacingLeft() const { return m_facingLeft; }
+    
+    bool isInvincible() const { return m_invincible; }
+    void startiFrames();
 };

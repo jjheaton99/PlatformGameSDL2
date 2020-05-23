@@ -2,15 +2,20 @@
 
 #include "GroundedCharacter.h"
 
+class Player;
+
 class GroundedEnemy : public GroundedCharacter
 {
 protected:
-    void enemyControls(const Vector2D<double>& playerPos);
+    int m_damage{ 1 };
+
+    void enemyControls(Player& player);
     void motion() override;
+    void attackPlayer(Player& player);
 
 public:
-    GroundedEnemy(const char* fileName = "Assets/Enemies/redSlime.png", double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0);
+    GroundedEnemy(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/Enemies/redSlime.png", int hitPoints = 5);
 
-    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, const Vector2D<double>& playerPos) override;
+    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Player& player);
 };
 

@@ -1,8 +1,9 @@
 #include "Player.h"
+#include "GroundedEnemy.h"
 
 //Player collision hitBox width = 0.56 * collision hitBox height
-Player::Player(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel)
-    : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, 56, 100)
+Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int hitPoints)
+    : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, 56, 100, hitPoints)
 {
     for (int i{ 0 }; i < m_spriteSheetCount; ++i)
     {
@@ -23,8 +24,14 @@ Player::Player(const char* fileName, double xStartPos, double yStartPos, double 
     m_dstRect.h = 100;
 }
 
-void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::unique_ptr<Character>>& enemies)
+void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::unique_ptr<GroundedEnemy>>& enemies)
 {
+    std::cout << m_hitPoints << '\n';
+    if (m_hitPoints <= 0)
+    {
+        kill();
+    }
+
     motion();
 
     //edge check goes before map collision check to prevent vector subcript error when going off the edge
@@ -35,10 +42,6 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     }
 
     bool collided{ sweepMapCollideCheck(map) };
-    /*if (collided)
-    { 
-        setCollider(); 
-    }*/
 
     //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
     //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
@@ -55,6 +58,15 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
 
     spriteAnimate();
     moveCamera(camera);
+
+    if (!isDodging() && m_invincible)
+    {
+        ++m_iFrameCount;
+        if (m_iFrameCount > m_iFrames)
+        {
+            m_invincible = false;
+        }
+    }
 
     if (m_dodgingLeft || m_dodgingRight)
     {
@@ -86,6 +98,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         {
             m_dodgeStepCount = 0;
             m_dodgeCooling = false;
+            m_invincible = false;
         }
     }
 
@@ -379,6 +392,18 @@ void Player::attackRight()
     }
 }
 
+void Player::dodgeLeft()
+{
+    m_dodgingLeft = true;
+    m_invincible = true;
+}
+
+void Player::dodgeRight()
+{ 
+    m_dodgingRight = true;
+    m_invincible = true;
+}
+
 void Player::dodgeCancel()
 { 
     if (isDodging())
@@ -392,5 +417,13 @@ void Player::attackCancel()
     if (isAttacking())
     {
         m_sideAttack.cancel();
+    }
+}
+
+void Player::startiFrames()
+{ 
+    if (!m_invincible)
+    {
+        m_invincible = true;
     }
 }
