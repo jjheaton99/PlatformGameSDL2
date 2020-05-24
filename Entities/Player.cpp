@@ -26,7 +26,7 @@ Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, con
 
 void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::unique_ptr<GroundedEnemy>>& enemies)
 {
-    std::cout << m_hitPoints << '\n';
+    //std::cout << m_hitPoints << '\n';
     if (m_hitPoints <= 0)
     {
         kill();
@@ -65,6 +65,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         if (m_iFrameCount > m_iFrames)
         {
             m_invincible = false;
+            m_iFrameCount = 0;
         }
     }
 
@@ -73,10 +74,18 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         if (m_dodgingLeft)
         {
             m_angle -= (360.0 / m_dodgeFrames);
+            if (m_movement != AIRBORNE && m_velocity.getx() > -m_minDodgeVel)
+            {
+                setVel(-m_minDodgeVel, m_velocity.gety());
+            }
         }
         else if (m_dodgingRight)
         {
             m_angle += (360.0 / m_dodgeFrames);
+            if (m_movement != AIRBORNE && m_velocity.getx() < m_minDodgeVel)
+            {
+                setVel(m_minDodgeVel, m_velocity.gety());
+            }
         }
 
         ++m_dodgeStepCount;
@@ -115,6 +124,8 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     //attack texture position set with an offset from player position 
     m_sideAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
     m_sideAttack.update(enemies);
+
+    std::cout << static_cast<int>(m_invincible) << '\n';
 }
 
 //adjusts velocity of player depending on state of motion
@@ -396,12 +407,14 @@ void Player::dodgeLeft()
 {
     m_dodgingLeft = true;
     m_invincible = true;
+    m_iFrameCount = m_iFrames + 1;
 }
 
 void Player::dodgeRight()
 { 
     m_dodgingRight = true;
     m_invincible = true;
+    m_iFrameCount = m_iFrames + 1;
 }
 
 void Player::dodgeCancel()

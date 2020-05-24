@@ -106,11 +106,11 @@ void PlayerSideAttack::collideCheck(std::vector<std::unique_ptr<GroundedEnemy>>&
                 enemies[i]->removeHP(m_damage);
                 if (m_facingLeft)
                 {
-                    enemies[i]->addVel(-30.0, -5.0);
+                    enemies[i]->addVel(-20.0, -5.0);
                 }
                 else
                 {
-                    enemies[i]->addVel(30.0, -5.0);
+                    enemies[i]->addVel(20.0, -5.0);
                 }
                 m_hitEnemies[i] = true;
             }

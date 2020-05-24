@@ -46,7 +46,7 @@ bool GroundedCharacter::checkForGround(const std::vector<std::vector<Tile>>& map
     int characterColumn, const Collider::DoubleRect& characterColliderBox)
 {
     //allows characters to continue climbing when in contact with ladders
-    if (m_collidingWithLadder)
+    if (m_collidingWithLadder && isClimbing())
     {
         return true;
     }

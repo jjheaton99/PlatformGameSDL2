@@ -7,7 +7,7 @@ GroundedEnemy::GroundedEnemy(double xStartPos, double yStartPos, double xVel, do
     m_srcRect = { 0, 0, 32, 32 };
 
     m_yMaxSpeed = 30.0;
-    m_xMaxSpeed = 12.0;
+    m_xMaxSpeed = 9.0;
     m_walkAcceleration = 0.8;
 
     m_dstRect.w = 50;
@@ -60,13 +60,17 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
 
 void GroundedEnemy::enemyControls(Player& player)
 {
-    if (m_position.getx() < player.getPos().getx() + 50 - m_collider.getHitBox().w)
+    if (m_position.getx() < player.getPos().getx() + 20 - m_collider.getHitBox().w)
     {
         m_movement = RIGHT;
     }
-    else if (m_position.getx() > player.getPos().getx() + 50)
+    else if (m_position.getx() > player.getPos().getx() + 80)
     {
         m_movement = LEFT;
+    }
+    else
+    {
+        m_movement = STOP;
     }
 }
 
@@ -147,7 +151,14 @@ void GroundedEnemy::attackPlayer(Player& player)
     {
         player.removeHP(m_damage);
         player.startiFrames();
-        m_velocity.scale(-2.0);
-        player.scaleVel(-1.5);
+        m_velocity.scale(0);
+        if (m_position.getx() < player.getPos().getx() + 50)
+        {
+            player.setVel(15.0, -5.0);
+        }
+        else if (m_position.getx() > player.getPos().getx() + 50)
+        {
+            player.setVel(-15.0, -5.0);
+        }
     }
 }

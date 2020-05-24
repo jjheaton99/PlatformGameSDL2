@@ -24,18 +24,19 @@ private:
     //member variables for controlling dodge timing and animation
     const double m_dodgeDuration{ 0.25 };
     const double m_dodgeCooldown{ 0.6 };
-    int m_dodgeFrames = static_cast<int>(m_dodgeDuration / Constants::updateStep);
+    const int m_dodgeFrames = static_cast<int>(m_dodgeDuration / Constants::updateStep);
     bool m_dodgeCooling{ false };
     bool m_dodgingLeft{ false };
     bool m_dodgingRight{ false };
+    const double m_minDodgeVel{ 25.0 };
     int m_dodgeStepCount{ 0 };
 
     double m_angle{ 0.0 };
 
     int m_crouchStepCount{ 0 };
 
-    const double m_iDuration{ 0.1 };
-    int m_iFrames{ static_cast<int>(m_iDuration / Constants::updateStep) };
+    const double m_iDuration{ 0.25 };
+    const int m_iFrames{ static_cast<int>(m_iDuration / Constants::updateStep) };
     bool m_invincible{ false };
     int m_iFrameCount{ 0 };
 
