@@ -27,6 +27,7 @@
     <ClCompile Include="Entities\MeleeObject.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Entities\PlayerSideAttack.cpp" />
+    <ClCompile Include="Entities\Slime.cpp" />
     <ClCompile Include="Entities\TextureObject.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameStates\SMainMenu.cpp" />
@@ -56,6 +57,7 @@
     <ClInclude Include="Entities\MeleeObject.h" />
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="Entities\PlayerSideAttack.h" />
+    <ClInclude Include="Entities\Slime.h" />
     <ClInclude Include="Entities\TextureObject.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameStates\GameState.h" />

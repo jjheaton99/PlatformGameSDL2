@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "GroundedEnemy.h"
 #include "Player.h"
+#include "Slime.h"
 #include <vector>
 #include <memory>
 
@@ -13,7 +14,7 @@ class GameObjectManager
 public:
     enum class Enemy
     {
-        GROUNDED
+        SLIME
     };
 
     enum class Projectile

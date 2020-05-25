@@ -38,8 +38,8 @@ void GameObjectManager::newEnemy(Enemy type, double xPos, double yPos)
 {
     switch (type)
     {
-    case GameObjectManager::Enemy::GROUNDED:
-        m_groundedEnemies.push_back(std::make_unique<GroundedEnemy>(xPos, yPos));
+    case GameObjectManager::Enemy::SLIME:
+        m_groundedEnemies.push_back(std::make_unique<Slime>(xPos, yPos));
         break;
     default:
         break;

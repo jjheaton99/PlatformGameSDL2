@@ -7,15 +7,15 @@ class Player;
 class GroundedEnemy : public GroundedCharacter
 {
 protected:
-    int m_damage{ 1 };
+    int m_damage;
 
-    void enemyControls(Player& player);
-    void motion() override;
-    void attackPlayer(Player& player);
+    virtual void enemyControls(Player& player) = 0;
+    virtual void motion() override;
+    virtual void attackPlayer(Player& player);
 
 public:
-    GroundedEnemy(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/Enemies/redSlime.png", int hitPoints = 5);
+    GroundedEnemy(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0,  int hitPoints = 5, int damage = 1);
 
-    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Player& player);
+    virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Player& player);
 };
 
