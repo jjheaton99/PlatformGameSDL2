@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL2_Engine", "SDL2_Engine.vcxproj", "{E85CD10C-9F96-4DEB-B80C-F8E8E012F571}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SDLGameSetup", "..\SDLGameSetup\SDLGameSetup.vdproj", "{9EEC93AA-CE24-4C2F-9895-C9819DA48A81}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,11 @@ Global
 		{E85CD10C-9F96-4DEB-B80C-F8E8E012F571}.Release|x64.Build.0 = Release|x64
 		{E85CD10C-9F96-4DEB-B80C-F8E8E012F571}.Release|x86.ActiveCfg = Release|Win32
 		{E85CD10C-9F96-4DEB-B80C-F8E8E012F571}.Release|x86.Build.0 = Release|Win32
+		{9EEC93AA-CE24-4C2F-9895-C9819DA48A81}.Debug|x64.ActiveCfg = Debug
+		{9EEC93AA-CE24-4C2F-9895-C9819DA48A81}.Debug|x86.ActiveCfg = Debug
+		{9EEC93AA-CE24-4C2F-9895-C9819DA48A81}.Release|x64.ActiveCfg = Release
+		{9EEC93AA-CE24-4C2F-9895-C9819DA48A81}.Release|x86.ActiveCfg = Release
+		{9EEC93AA-CE24-4C2F-9895-C9819DA48A81}.Release|x86.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

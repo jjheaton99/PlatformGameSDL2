@@ -125,7 +125,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     m_sideAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
     m_sideAttack.update(enemies);
 
-    std::cout << static_cast<int>(m_invincible) << '\n';
+    //std::cout << static_cast<int>(m_invincible) << '\n';
 }
 
 //adjusts velocity of player depending on state of motion
