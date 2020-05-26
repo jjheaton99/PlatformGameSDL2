@@ -35,6 +35,10 @@ public:
     }
 
     void scale(T factor);
+    friend Vector2D<T> operator* (T factor, const Vector2D<T>& v)
+    {
+        return Vector2D<T>{factor * v.m_x, factor * v.m_y};
+    }
     void xScale(T factor);
     void yScale(T factor);
 

@@ -1,11 +1,11 @@
 #include "GroundedEnemy.h"
 #include "Player.h"
 
-GroundedEnemy::GroundedEnemy(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int hitPoints, int damage)
-    : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, 50, 50, hitPoints), m_damage{ damage }
+GroundedEnemy::GroundedEnemy(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints, int damage)
+    : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints), m_damage{ damage }
 {}
 
-void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Player& player)
+void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player)
 { 
     if (m_hitPoints <= 0)
     {
@@ -120,12 +120,12 @@ void GroundedEnemy::motion()
     }
 }
 
-void GroundedEnemy::attackPlayer(Player& player)
+void GroundedEnemy::attackPlayer(Character& player)
 {
-    if (m_collider.collideCheck(player.getCollider()) && !player.isInvincible())
+    if (m_collider.collideCheck(dynamic_cast<Player&>(player).getCollider()) && !dynamic_cast<Player&>(player).isInvincible())
     {
         player.removeHP(m_damage);
-        player.startiFrames();
+        dynamic_cast<Player&>(player).startiFrames();
         m_velocity.scale(0);
         if (m_position.getx() < player.getPos().getx() + 50)
         {

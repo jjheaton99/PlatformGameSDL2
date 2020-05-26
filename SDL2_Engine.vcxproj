@@ -19,7 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Entities\Bat.cpp" />
     <ClCompile Include="Entities\Character.cpp" />
+    <ClCompile Include="Entities\FlyingCharacter.cpp" />
+    <ClCompile Include="Entities\FlyingEnemy.cpp" />
     <ClCompile Include="Entities\GameObject.cpp" />
     <ClCompile Include="Entities\GameObjectManager.cpp" />
     <ClCompile Include="Entities\GroundedCharacter.cpp" />
@@ -49,7 +52,10 @@
     <ClCompile Include="Wrappers\WWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Entities\Bat.h" />
     <ClInclude Include="Entities\Character.h" />
+    <ClInclude Include="Entities\FlyingCharacter.h" />
+    <ClInclude Include="Entities\FlyingEnemy.h" />
     <ClInclude Include="Entities\GameObject.h" />
     <ClInclude Include="Entities\GameObjectManager.h" />
     <ClInclude Include="Entities\GroundedCharacter.h" />

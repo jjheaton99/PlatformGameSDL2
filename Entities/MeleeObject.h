@@ -29,7 +29,7 @@ public:
     MeleeObject(const char* fileName, int damage, double xBase, double yBase, double colliderWidth, double colliderHeight, double attackDuration = 0);
     virtual ~MeleeObject();
 
-    virtual void collideCheck(std::vector<std::unique_ptr<GroundedEnemy>>& enemies) = 0;
+    virtual void collideCheck(std::vector<std::unique_ptr<Character>>& enemies) = 0;
 
     virtual void cameraDraw(const Camera& camera) const override;
     void faceLeft() { m_facingLeft = true; }
@@ -38,7 +38,7 @@ public:
     void cancel() { m_counter = static_cast<int>(m_attackDuration / Constants::updateStep) + 1; }
     bool isAttacking() const { return m_attacking; }
 
-    void updateHitEnemies(const std::vector<std::unique_ptr<GroundedEnemy>>& enemies);
+    void updateHitEnemies(const std::vector<std::unique_ptr<Character>>& enemies);
     void resetHitEnemies();
 };
 

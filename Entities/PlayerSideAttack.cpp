@@ -41,7 +41,7 @@ void PlayerSideAttack::resetColliders()
     };
 }
 
-void PlayerSideAttack::update(std::vector<std::unique_ptr<GroundedEnemy>>& enemies)
+void PlayerSideAttack::update(std::vector<std::unique_ptr<Character>>& enemies)
 {
     updateHitEnemies(enemies);
 
@@ -94,7 +94,7 @@ void PlayerSideAttack::update(std::vector<std::unique_ptr<GroundedEnemy>>& enemi
     }
 }
 
-void PlayerSideAttack::collideCheck(std::vector<std::unique_ptr<GroundedEnemy>>& enemies)
+void PlayerSideAttack::collideCheck(std::vector<std::unique_ptr<Character>>& enemies)
 {
     for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
     {

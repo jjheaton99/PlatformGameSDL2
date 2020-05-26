@@ -8,7 +8,7 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Player& player)
 {
-    for (auto& enemy : m_groundedEnemies)
+    for (auto& enemy : m_enemies)
     {
         //if enemy is dead and hasnt been deleted yet
         if (enemy && enemy->isDead())
@@ -24,7 +24,7 @@ void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const 
 
 void GameObjectManager::cameraDraw(const Camera& camera) const
 {
-    for (auto& enemy : m_groundedEnemies)
+    for (auto& enemy : m_enemies)
     {
         if (enemy)
         {
@@ -39,7 +39,10 @@ void GameObjectManager::newEnemy(Enemy type, double xPos, double yPos)
     switch (type)
     {
     case GameObjectManager::Enemy::SLIME:
-        m_groundedEnemies.push_back(std::make_unique<Slime>(xPos, yPos));
+        m_enemies.push_back(std::make_unique<Slime>(xPos, yPos));
+        break;
+    case GameObjectManager::Enemy::BAT:
+        m_enemies.push_back(std::make_unique<Bat>(xPos, yPos));
         break;
     default:
         break;

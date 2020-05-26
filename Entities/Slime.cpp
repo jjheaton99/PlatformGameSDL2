@@ -1,8 +1,8 @@
 #include "Slime.h"
 #include "Player.h"
 
-Slime::Slime(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int hitPoints, int damage)
-    : GroundedEnemy(fileName, xStartPos, yStartPos, xVel, yVel, hitPoints, damage)
+Slime::Slime(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int colliderWidth, int colliderHeight, int hitPoints, int damage)
+    : GroundedEnemy(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, damage)
 {
     m_srcRect = { 0, 0, 32, 32 };
 
@@ -14,7 +14,7 @@ Slime::Slime(double xStartPos, double yStartPos, double xVel, double yVel, const
     m_dstRect.h = 50;
 }
 
-void Slime::enemyControls(Player& player)
+void Slime::enemyControls(Character& player)
 {
     if (m_position.getx() < player.getPos().getx() + 20 - m_collider.getHitBox().w)
     {

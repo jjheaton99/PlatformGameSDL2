@@ -3,8 +3,10 @@
 #include "SDL.h"
 #include "Character.h"
 #include "GroundedEnemy.h"
+#include "FlyingEnemy.h"
 #include "Player.h"
 #include "Slime.h"
+#include "Bat.h"
 #include <vector>
 #include <memory>
 
@@ -14,7 +16,8 @@ class GameObjectManager
 public:
     enum class Enemy
     {
-        SLIME
+        SLIME,
+        BAT
     };
 
     enum class Projectile
@@ -23,7 +26,7 @@ public:
     };
 
 private:
-    std::vector<std::unique_ptr<GroundedEnemy>> m_groundedEnemies{};
+    std::vector<std::unique_ptr<Character>> m_enemies{};
 
 public:
     GameObjectManager();
@@ -33,6 +36,6 @@ public:
     void cameraDraw(const Camera& camera) const;
 
     void newEnemy(Enemy type, double xPos, double yPos);
-    std::vector<std::unique_ptr<GroundedEnemy>>& getEnemies() { return m_groundedEnemies; }
+    std::vector<std::unique_ptr<Character>>& getEnemies() { return m_enemies; }
 };
 

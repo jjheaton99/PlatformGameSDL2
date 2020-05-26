@@ -41,6 +41,9 @@ public:
     Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0, int hitPoints = 0);
     virtual ~Character();
 
+    //for enemies
+    virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player) = 0;
+
     void addHP(int HP) { m_hitPoints += HP; }
     void removeHP(int HP) { m_hitPoints -= HP; }
 
