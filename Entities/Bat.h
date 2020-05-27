@@ -7,7 +7,9 @@ class Player;
 class Bat : public FlyingEnemy
 {
 protected:
-    double m_speed{ 7.0 };
+    double m_acceleration{ 0.5 };
+    double m_maxSpeed{ 10.0 };
+    double m_rotateAccel{ 20.0 };
 
     void motion() override {};
     void enemyControls(Character& player) override;

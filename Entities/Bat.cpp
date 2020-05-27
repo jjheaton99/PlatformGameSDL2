@@ -13,6 +13,14 @@ Bat::Bat(double xStartPos, double yStartPos, double xVel, double yVel, const cha
 void Bat::enemyControls(Character& player)
 {
     Vector2D<double> relPos{ player.getPos() + Vector2D<double>{25, 25} - m_position };
-    double scaleFactor{m_speed / relPos.magnitude()};
-    setVel(scaleFactor * relPos);
+    double scaleFactor{m_acceleration / relPos.magnitude()};
+    m_velocity.add(scaleFactor * relPos);
+    double velMag{ m_velocity.magnitude() };
+    if (velMag > m_maxSpeed)
+    {
+        scaleFactor = (velMag - m_maxSpeed)/ velMag;
+        m_velocity.subtract(scaleFactor * m_velocity);
+    }
+    //std::cout << relPos.direction() << "   " << m_velocity.direction() << '\n';
+    //setDirection(relPos.direction());
 }

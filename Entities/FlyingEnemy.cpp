@@ -54,14 +54,7 @@ void FlyingEnemy::attackPlayer(Character& player)
     {
         player.removeHP(m_damage);
         dynamic_cast<Player&>(player).startiFrames();
-        m_velocity.scale(-2);
-        /*if (m_position.getx() < player.getPos().getx() + 50)
-        {
-            player.setVel(15.0, -5.0);
-        }
-        else if (m_position.getx() > player.getPos().getx() + 50)
-        {
-            player.setVel(-15.0, -5.0);
-        }*/
+        //m_velocity.scale(-1.0);
+        //setVel((-5.0 / m_velocity.magnitude()) * m_velocity);
     }
 }

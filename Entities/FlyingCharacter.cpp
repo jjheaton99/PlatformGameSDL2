@@ -53,6 +53,7 @@ bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
     );
 
     int collideCount{ 0 };
+    double deflectionFactor{ -1.0 };
 
     for (const auto& collider : m_solidColliders)
     {
@@ -62,7 +63,7 @@ bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
         case Collider::TOP:
             m_velocity.yScale(collideResult.second);
             m_position.add(m_velocity);
-            m_velocity.yScale(-3);
+            m_velocity.yScale(deflectionFactor);
             setCollider();
             ++collideCount;
             //std::cout << "top" << '\n';
@@ -72,7 +73,7 @@ bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
         case Collider::BOTTOM:
             m_velocity.yScale(collideResult.second);
             m_position.add(m_velocity);
-            m_velocity.yScale(-3);
+            m_velocity.yScale(deflectionFactor);
             setCollider();
             ++collideCount;
             //std::cout << "bottom" << '\n';
@@ -82,7 +83,7 @@ bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
         case Collider::LEFT:
             m_velocity.xScale(collideResult.second);
             m_position.add(m_velocity);
-            m_velocity.xScale(-3);
+            m_velocity.xScale(deflectionFactor);
             setCollider();
             ++collideCount;
             //std::cout << "left" << '\n';
@@ -92,7 +93,7 @@ bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
         case Collider::RIGHT:
             m_velocity.xScale(collideResult.second);
             m_position.add(m_velocity);
-            m_velocity.xScale(-3);
+            m_velocity.xScale(deflectionFactor);
             setCollider();
             ++collideCount;
             //std::cout << "right" << '\n';
@@ -103,7 +104,7 @@ bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
         case Collider::OVERLAP_TOP:
             m_velocity.yScale(collideResult.second);
             m_position.subtract(m_velocity);
-            m_velocity.yScale(-3);
+            m_velocity.yScale(deflectionFactor);
             setCollider();
             ++collideCount;
             //std::cout << "otop" << '\n';
@@ -112,7 +113,7 @@ bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
         case Collider::OVERLAP_BOTTOM:
             m_velocity.yScale(collideResult.second);
             m_position.subtract(m_velocity);
-            m_velocity.yScale(-3);
+            m_velocity.yScale(deflectionFactor);
             setCollider();
             ++collideCount;
             //std::cout << "obottom" << '\n';
@@ -121,7 +122,7 @@ bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
         case Collider::OVERLAP_LEFT:
             m_velocity.xScale(collideResult.second);
             m_position.subtract(m_velocity);
-            m_velocity.xScale(-3);
+            m_velocity.xScale(deflectionFactor);
             setCollider();
             ++collideCount;
             //std::cout << "oleft" << '\n';
@@ -130,7 +131,7 @@ bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
         case Collider::OVERLAP_RIGHT:
             m_velocity.xScale(collideResult.second);
             m_position.subtract(m_velocity);
-            m_velocity.xScale(-3);
+            m_velocity.xScale(deflectionFactor);
             setCollider();
             ++collideCount;
             //std::cout << "oright" << '\n';

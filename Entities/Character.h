@@ -53,7 +53,7 @@ public:
     const Vector2D<double>& getVel() const { return m_velocity; }
     void setVel(double xVel, double yVel) { m_velocity = Vector2D<double>{ xVel, yVel }; }
     void setVel(Vector2D<double> vel) { m_velocity = vel; }
-    void setDirection(double angle) { m_velocity.rotate(angle); }
+    void setDirection(double angle);
     void addVel(const Vector2D<double>& vel) { m_velocity.add(vel); }
     void addVel(double x, double y) { m_velocity.add(x, y); }
     void scaleVel(double factor) { m_velocity.scale(factor); }

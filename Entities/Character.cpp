@@ -82,3 +82,8 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
         }
     }
 }
+
+void Character::setDirection(double direction)
+{
+    m_velocity.rotate(direction - m_velocity.direction());
+}
