@@ -38,8 +38,8 @@ bool Collider::collideCheck(const Collider& collider) const
         && m_hitBox.y >(collider.getHitBox().y - m_hitBox.h));
 }
 
-//swept AABB collisions with map tiles to prevent high speed going through
-std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vector2D<double>& velocity, const std::tuple<Collider, double, double>& tileCollider) const
+//swept AABB collisions to prevent high speed going through
+Collider::sweptAABBresult_type Collider::sweptAABBCheck(const Vector2D<double>& colliderVel, const Vector2D<double>& obstacleVel, sweptObstacleTuple& obstacleTuple) const
 {
     //closest and furthest distances between colliders in x and y directions
     double xCloseDist;
@@ -47,29 +47,31 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
     double yCloseDist;
     double yFarDist;
 
-    DoubleRect tileHitBox{ std::get<0>(tileCollider).getHitBox() };
+    DoubleRect obstacleHitBox{ std::get<0>(obstacleTuple).getHitBox() };
+    obstacleHitBox.x += obstacleVel.getx();
+    obstacleHitBox.y += obstacleVel.gety();
 
     //sets distances based on direction of motion
-    if (velocity.getx() > 0.0)
+    if (colliderVel.getx() > 0.0)
     {
-        xCloseDist = 1.0 * tileHitBox.x - m_hitBox.x - m_hitBox.w;
-        xFarDist = 1.0 * tileHitBox.x + tileHitBox.w - m_hitBox.x;
+        xCloseDist = 1.0 * obstacleHitBox.x - m_hitBox.x - m_hitBox.w;
+        xFarDist = 1.0 * obstacleHitBox.x + obstacleHitBox.w - m_hitBox.x;
     }
     else
     {
-        xCloseDist = 1.0 * tileHitBox.x + tileHitBox.w - m_hitBox.x;
-        xFarDist = 1.0 * tileHitBox.x - m_hitBox.x - m_hitBox.w;
+        xCloseDist = 1.0 * obstacleHitBox.x + obstacleHitBox.w - m_hitBox.x;
+        xFarDist = 1.0 * obstacleHitBox.x - m_hitBox.x - m_hitBox.w;
     }
 
-    if (velocity.gety() > 0.0)
+    if (colliderVel.gety() > 0.0)
     {
-        yCloseDist = 1.0 * tileHitBox.y - m_hitBox.y - m_hitBox.h;
-        yFarDist = 1.0 * tileHitBox.y + tileHitBox.h - m_hitBox.y;
+        yCloseDist = 1.0 * obstacleHitBox.y - m_hitBox.y - m_hitBox.h;
+        yFarDist = 1.0 * obstacleHitBox.y + obstacleHitBox.h - m_hitBox.y;
     }
     else
     {
-        yCloseDist = 1.0 * tileHitBox.y + tileHitBox.h - m_hitBox.y;
-        yFarDist = 1.0 * tileHitBox.y - m_hitBox.y - m_hitBox.h;
+        yCloseDist = 1.0 * obstacleHitBox.y + obstacleHitBox.h - m_hitBox.y;
+        yFarDist = 1.0 * obstacleHitBox.y - m_hitBox.y - m_hitBox.h;
     }
 
     //relative collision start and end times
@@ -78,13 +80,21 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
     double yStartTime;
     double yEndTime;
 
-    double xOverlap{ std::get<1>(tileCollider) };
-    double yOverlap{ std::get<2>(tileCollider) };
+    double xOverlap{ std::get<1>(obstacleTuple) };
+    double yOverlap{ std::get<2>(obstacleTuple) };
     //colliding if overlaps are both positive
     bool colliding{ xOverlap > 0.0 && yOverlap > 0.0 };
 
+    if (colliding)
+    {
+        std::get<1>(obstacleTuple) = std::abs(xCloseDist);
+        std::get<2>(obstacleTuple) = std::abs(yCloseDist);
+        xOverlap = std::abs(xCloseDist);
+        yOverlap = std::abs(yCloseDist);
+    }
+
     //no divide by zero
-    if (velocity.getx() == 0.0)
+    if (colliderVel.getx() == 0.0)
     {
         if ( xOverlap > 0.0)
         {
@@ -100,16 +110,16 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
     {
         if (colliding)
         {
-            xStartTime = - xCloseDist / velocity.getx();
+            xStartTime = - xCloseDist / colliderVel.getx();
         }
         else
         {
-            xStartTime = xCloseDist / velocity.getx();
+            xStartTime = xCloseDist / colliderVel.getx();
         }
-        xEndTime = xFarDist / velocity.getx();
+        xEndTime = xFarDist / colliderVel.getx();
     }
 
-    if (velocity.gety() == 0.0)
+    if (colliderVel.gety() == 0.0)
     {
         if (yOverlap > 0.0)
         {
@@ -125,13 +135,13 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
     {
         if (colliding)
         {
-            yStartTime = - yCloseDist / velocity.gety();
+            yStartTime = - yCloseDist / colliderVel.gety();
         }
         else
         {
-            yStartTime = yCloseDist / velocity.gety();
+            yStartTime = yCloseDist / colliderVel.gety();
         }
-        yEndTime = yFarDist / velocity.gety();
+        yEndTime = yFarDist / colliderVel.gety();
     }
 
     //collision start time is the longer of the x and y times
@@ -139,19 +149,13 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
     //collision end time is shorter of x and y times
     double endTime{ std::min(xEndTime, yEndTime) };
 
-
-    //check collision occured in this frame
-    if (startTime > endTime || xStartTime < 0.0 && yStartTime < 0.0 || xStartTime > 1.0 || yStartTime > 1.0)
-    {
-        return { NONE, startTime };
-    }
     //if colliders are overlapping
-    else if (colliding)
+    if (colliding)
     {
         //for situations where character is forced into colliding with block
         if (yOverlap < xOverlap)
         {
-            if (velocity.gety() > 0.0)
+            if (colliderVel.gety() > 0.0)
             {
                 return { OVERLAP_TOP, startTime };
             }
@@ -162,7 +166,7 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
         }
         else
         {
-            if (velocity.getx() > 0.0)
+            if (colliderVel.getx() > 0.0)
             {
                 return { OVERLAP_LEFT, startTime };
             }
@@ -172,10 +176,15 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
             }
         }
     }
+    //check collision occured in this frame
+    else if (startTime > endTime || xStartTime < 0.0 && yStartTime < 0.0 || xStartTime > 1.0 || yStartTime > 1.0)
+    {
+        return { NONE, startTime };
+    }
     //sort collision directions using start times and velocity
     else if (xStartTime < yStartTime)
     {
-        if (velocity.gety() > 0.0)
+        if (colliderVel.gety() > 0.0)
         {
             return { TOP, startTime };
         }
@@ -186,7 +195,7 @@ std::pair<Collider::CollisionType, double> Collider::tileCollideCheck(const Vect
     }
     else
     {
-        if (velocity.getx() > 0.0)
+        if (colliderVel.getx() > 0.0)
         {
             return { LEFT, startTime };
         }
@@ -222,5 +231,86 @@ double Collider::axisBoxOverlap(double pos1, double pos2, double size1, double s
     else
     {
         return -1.0;
+    }
+}
+
+bool Collider::sweptAABBdeflect(double deflectionFactor, Collider::sweptObstacleTuple& obstacleTuple, Vector2D<double>& position, Vector2D<double>& velocity, const Vector2D<double>& obstacleVel) const
+{
+    auto collideResult{ sweptAABBCheck(velocity, obstacleVel, obstacleTuple) };
+    Vector2D<double> tempVel{ velocity };
+    switch (collideResult.first)
+    {
+    case Collider::TOP:
+        //velocity.yScale(collideResult.second);
+        //velocity = tempVel;
+        velocity.yScale(-deflectionFactor);
+        velocity.add(obstacleVel);
+        position.add(velocity);
+        //std::cout << "t" << '\n';
+        return true;
+
+    case Collider::BOTTOM:
+        //velocity.yScale(collideResult.second);
+        //velocity = tempVel;
+        velocity.yScale(-deflectionFactor);
+        velocity.add(obstacleVel);
+        position.add(velocity);
+        //std::cout << "b" << '\n';
+        return true;
+
+    case Collider::LEFT:
+        //velocity.xScale(collideResult.second);
+        //velocity = tempVel;
+        velocity.xScale(-deflectionFactor);
+        velocity.add(obstacleVel);
+        position.add(velocity);
+        //std::cout << "l" << '\n';
+        return true;
+
+    case Collider::RIGHT:
+        //velocity.xScale(collideResult.second);
+        //velocity = tempVel;
+        velocity.xScale(-deflectionFactor);
+        velocity.add(obstacleVel);
+        position.add(velocity);
+        //std::cout << "r" << '\n';
+        return true;
+
+        //for overlap collisions we subtract velocity to move character out of block
+    case Collider::OVERLAP_TOP:
+        //position.subtract(0.0, std::get<2>(obstacleTuple));
+        velocity.yScale(-deflectionFactor);
+        velocity.add(obstacleVel);
+        position.add(velocity);
+        //std::cout << "ot" << '\n';
+        return true;
+
+    case Collider::OVERLAP_BOTTOM:
+        //position.add(0.0, std::get<2>(obstacleTuple));
+        velocity.yScale(-deflectionFactor);
+        velocity.add(obstacleVel);
+        position.add(velocity);
+        //std::cout << "ob" << '\n';
+        return true;
+
+    case Collider::OVERLAP_LEFT:
+        //position.subtract(std::get<1>(obstacleTuple), 0.0);
+        velocity.xScale(-deflectionFactor);
+        velocity.add(obstacleVel);
+        position.add(velocity);
+        //std::cout << "ol" << '\n';
+        return true;
+
+    case Collider::OVERLAP_RIGHT:
+        //position.add(std::get<1>(obstacleTuple), 0.0);
+        velocity.xScale(-deflectionFactor);
+        velocity.add(obstacleVel);
+        position.add(velocity);
+        //std::cout << "or" << '\n';
+        return true;
+
+    case Collider::NONE:
+    default:
+        return false;
     }
 }

@@ -93,9 +93,9 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
 
     int collideCount{ 0 };
 
-    for (const auto& collider : m_solidColliders)
+    for (auto& collider : m_solidColliders)
     {
-        auto collideResult{ m_collider.tileCollideCheck(m_velocity, collider) };
+        auto collideResult{ m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, collider) };
         switch (collideResult.first)
         {
         case Collider::TOP:
@@ -141,8 +141,7 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
 
             //for overlap collisions we subtract velocity to move character out of block
         case Collider::OVERLAP_TOP:
-            m_velocity.yScale(collideResult.second);
-            m_position.subtract(m_velocity);
+            m_position.subtract(0.0, std::get<2>(collider));
             m_velocity.yScale(0);
             setCollider();
             m_movement = STOP;
@@ -151,8 +150,7 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
             break;
 
         case Collider::OVERLAP_BOTTOM:
-            m_velocity.yScale(collideResult.second);
-            m_position.subtract(m_velocity);
+            m_position.add(0.0, std::get<2>(collider));
             m_velocity.yScale(0);
             setCollider();
             ++collideCount;
@@ -160,8 +158,7 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
             break;
 
         case Collider::OVERLAP_LEFT:
-            m_velocity.xScale(collideResult.second);
-            m_position.subtract(m_velocity);
+            m_position.subtract(std::get<1>(collider), 0.0);
             m_velocity.xScale(0);
             setCollider();
             ++collideCount;
@@ -169,8 +166,7 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
             break;
 
         case Collider::OVERLAP_RIGHT:
-            m_velocity.xScale(collideResult.second);
-            m_position.subtract(m_velocity);
+            m_position.add(std::get<1>(collider), 0.0);
             m_velocity.xScale(0);
             setCollider();
             ++collideCount;
@@ -183,9 +179,9 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
         }
     }
 
-    for (const auto& collider : m_platformColliders)
+    for (auto& collider : m_platformColliders)
     {
-        auto collideResult{ m_collider.tileCollideCheck(m_velocity, collider) };
+        auto collideResult{ m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, collider) };
         if (collideResult.first == Collider::TOP && !m_crouched && !m_hasCrouched)
         {
             m_velocity.yScale(collideResult.second);

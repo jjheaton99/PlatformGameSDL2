@@ -47,7 +47,7 @@ private:
 
     void motion() override;
     void moveCamera(Camera& camera);
-    void setCollider() override { m_collider.setPosition(m_position.getx() + 22.0, m_position.gety()); }
+    void setCollider() override;
 
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player) override {};
 
@@ -56,6 +56,8 @@ public:
 
     void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::unique_ptr<Character>>& enemies);
     void cameraDraw(const Camera& camera) const override;
+
+    void makeAirborne() override;
 
     bool dodgeCooling() const { return m_dodgeCooling; }
     bool isDodging() const { return m_dodgingLeft || m_dodgingRight; }

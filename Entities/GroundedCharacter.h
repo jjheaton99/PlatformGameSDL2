@@ -37,7 +37,7 @@ public:
 
     Movement getMovement() const { return m_movement; }
     //functions for changing state of motion
-    void makeAirborne() { m_movement = AIRBORNE; }
+    virtual void makeAirborne() { m_movement = AIRBORNE; }
     void moveLeft() { m_movement = LEFT; }
     void moveRight() { m_movement = RIGHT; }
     void stop() { m_movement = STOP; }

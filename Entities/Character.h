@@ -22,8 +22,8 @@ protected:
 
     int m_hitPoints;
 
-    std::vector<std::tuple<Collider, double, double>> m_solidColliders;
-    std::vector<std::tuple<Collider, double, double>> m_platformColliders;
+    std::vector<Collider::sweptObstacleTuple> m_solidColliders;
+    std::vector<Collider::sweptObstacleTuple> m_platformColliders;
     bool m_collidingWithLadder{ false };
     double m_ladderxPos{ 0.0 };
 

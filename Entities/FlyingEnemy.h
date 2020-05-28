@@ -10,7 +10,7 @@ protected:
     int m_damage;
 
     virtual void enemyControls(Character& player) = 0;
-    virtual void attackPlayer(Character& player);
+    virtual bool attackPlayer(Character& player);
 
 public:
     FlyingEnemy(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0, int hitPoints = 5, int damage = 1);

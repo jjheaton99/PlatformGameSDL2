@@ -18,7 +18,7 @@ void Bat::enemyControls(Character& player)
     double velMag{ m_velocity.magnitude() };
     if (velMag > m_maxSpeed)
     {
-        scaleFactor = (velMag - m_maxSpeed)/ velMag;
+        scaleFactor = m_acceleration / velMag;
         m_velocity.subtract(scaleFactor * m_velocity);
     }
     //std::cout << relPos.direction() << "   " << m_velocity.direction() << '\n';

@@ -62,17 +62,15 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
             case Tile::SOLID:
                 m_solidColliders.push_back({ 
                     map[row][column].getCollider(),
-                    //x overlap
-                    Collider::axisBoxOverlap(m_collider.getHitBox().x, map[row][column].getCollider().getHitBox().x, m_collider.getHitBox().w, map[row][column].getCollider().getHitBox().w),
-                    //y overlap
-                    Collider::axisBoxOverlap(m_collider.getHitBox().y, map[row][column].getCollider().getHitBox().y, m_collider.getHitBox().h, map[row][column].getCollider().getHitBox().h) 
+                    Collider::xOverlap(m_collider, map[row][column].getCollider()),
+                    Collider::yOverlap(m_collider, map[row][column].getCollider()),
                     });
                 break;
             case Tile::PLATFORM:
                 m_platformColliders.push_back({
-                    map[row][column].getCollider(),
-                    Collider::axisBoxOverlap(m_collider.getHitBox().x, map[row][column].getCollider().getHitBox().x, m_collider.getHitBox().w, map[row][column].getCollider().getHitBox().w),
-                    Collider::axisBoxOverlap(m_collider.getHitBox().y, map[row][column].getCollider().getHitBox().y, m_collider.getHitBox().h, map[row][column].getCollider().getHitBox().h)
+                    map[row][column].getCollider(), 
+                    Collider::xOverlap(m_collider, map[row][column].getCollider()), 
+                    Collider::yOverlap(m_collider, map[row][column].getCollider()),
                     });
                 break;
             case Tile::BACKGROUND:

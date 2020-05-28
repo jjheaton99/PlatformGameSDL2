@@ -3,7 +3,7 @@
 
 //Player collision hitBox width = 0.56 * collision hitBox height
 Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int hitPoints)
-    : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, 56, 100, hitPoints)
+    : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, 56, 82, hitPoints)
 {
     for (int i{ 0 }; i < m_spriteSheetCount; ++i)
     {
@@ -438,5 +438,25 @@ void Player::startiFrames()
     if (!m_invincible)
     {
         m_invincible = true;
+    }
+}
+
+void Player::makeAirborne()
+{
+    m_movement = AIRBORNE;
+    setCollider();
+}
+
+void Player::setCollider()
+{
+    if (m_movement == AIRBORNE)
+    {
+        m_collider.setDimensions(56, 100);
+        m_collider.setPosition(m_position.getx() + 22.0, m_position.gety());
+    }
+    else
+    {
+        m_collider.setDimensions(56, 82);
+        m_collider.setPosition(m_position.getx() + 22.0, m_position.gety() + 18.0);
     }
 }

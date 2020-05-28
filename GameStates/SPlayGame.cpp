@@ -10,9 +10,9 @@ SPlayGame::SPlayGame(const char* mapFile)
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
-    for (int i{ 2 }; i < m_camera.getxBoundary() /400; ++i)
+    for (int i{ 2 }; i < m_camera.getxBoundary() /100.0; ++i)
     {
-        m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 400.0 * i, 2000);
+        m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 100.0 * i, 2000);
     }
     //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 200, 2000);
     m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 500, 2200);
