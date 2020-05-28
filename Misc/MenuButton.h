@@ -20,7 +20,6 @@ public:
     void deselect() { m_isSelected = false; }
 
     void setPos(int xPos, int yPos);
-    void setDstRect(int xPos, int yPos, int width, int height);
     const SDL_Rect& getDstRect() const { return m_dstRect; }
 
     bool mouseIsOnButton() const;

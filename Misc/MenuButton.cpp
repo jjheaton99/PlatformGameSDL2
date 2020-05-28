@@ -32,11 +32,6 @@ void MenuButton::setPos(int xPos, int yPos)
     m_dstRect.y = yPos;
 }
 
-void MenuButton::setDstRect(int xPos, int yPos, int width, int height)
-{
-    m_dstRect = { xPos, yPos, width, height };
-}
-
 bool MenuButton::mouseIsOnButton() const
 {
     int x;

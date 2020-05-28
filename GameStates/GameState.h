@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "WTimer.h"
 #include "GlobalObjects.h"
+#include "TextureObject.h"
 #include <vector>
 
 //base class for any state of the game
@@ -21,6 +22,7 @@ public:
         PLAY_GAME,
         PAUSED,
         SETTINGS,
+        GAME_OVER,
         PREVIOUS,
         EXIT
     };

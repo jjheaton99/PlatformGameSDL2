@@ -14,7 +14,7 @@ SPlayGame::SPlayGame(const char* mapFile)
     {
         m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 100.0 * i, 2000);
     }
-    //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 200, 2000);
+    m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 200, 2000);
     m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 500, 2200);
 }
 
@@ -311,6 +311,10 @@ GameState::State SPlayGame::update()
             m_timeAccumulator -= Constants::updateStep;
             m_player->update(m_map->getMap(), m_camera, m_objectManager->getEnemies());
             m_objectManager->update(m_map->getMap(), m_camera, *m_player);
+            if (m_player->isDead())
+            {
+                return GAME_OVER;
+            }
         }
 
         m_stepTimer.start();

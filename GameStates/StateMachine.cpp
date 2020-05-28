@@ -47,6 +47,16 @@ void StateMachine::changeStateSwitch(GameState::State state)
         SDL_ShowCursor(SDL_ENABLE);
         break;
 
+    case GameState::GAME_OVER:
+        if (m_gameStarted)
+        {
+            m_playGame.reset();
+            m_gameStarted = false;
+        }
+        m_currentState.reset(new SGameOver{});
+        SDL_ShowCursor(SDL_ENABLE);
+        break;
+
     default:
         break;
     }

@@ -15,6 +15,10 @@ class Player : public GroundedCharacter
 private:
     static const int m_spriteSheetCount{ 26 };
 
+    const int m_maxHP{ 20 };
+    TextureObject m_hearts{ "Assets/MiscTextures/hearts.png" };
+    void updateHearts();
+
     std::array<SDL_Rect, m_spriteSheetCount> m_spriteRects;
     std::array<SDL_Rect, m_spriteSheetCount>::size_type m_spriteIndex;
     bool m_facingLeft{ false };
@@ -53,6 +57,7 @@ private:
 
 public:
     Player(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/MrPix.png", int hitPoints = 10);
+    ~Player();
 
     void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::unique_ptr<Character>>& enemies);
     void cameraDraw(const Camera& camera) const override;

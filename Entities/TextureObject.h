@@ -25,5 +25,7 @@ public:
 
     const Vector2D<double>& getPos() const { return m_position; }
     virtual void setPos(double xPos, double yPos) { m_position = Vector2D<double>{ xPos, yPos }; }
+    void setSrcRect(int xPos, int yPos, int width, int height) { m_srcRect = { xPos, yPos, width, height }; }
+    void setDstRect(int xPos, int yPos, int width, int height) { m_dstRect = { xPos, yPos, width, height }; }
 };
 

@@ -5,6 +5,7 @@
 #include "SPlayGame.h"
 #include "SPaused.h"
 #include "SSettings.h"
+#include "SGameOver.h"
 #include "WWindow.h"
 #include <memory>
 

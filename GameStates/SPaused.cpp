@@ -5,8 +5,6 @@ SPaused::SPaused()
     m_settings{ "Assets/MenuButtons/settings.png", "Assets/MenuButtons/settingsS.png", 60, 14 },
     m_quit{ "Assets/MenuButtons/quit.png", "Assets/MenuButtons/quitS.png", 60, 14 }
 {
-    m_pausedTexture.load("Assets/MiscTextures/paused.png");
-
     m_buttonWidth = 240;
     m_buttonHeight = 56;
 
@@ -16,11 +14,14 @@ SPaused::SPaused()
         m_buttonWidth, m_buttonHeight);
     m_quit.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100,
         m_buttonWidth, m_buttonHeight);
+
+    m_pausedTexture.setSrcRect(0, 0, 40, 8);
+    m_pausedTexture.setDstRect((g_screenWidth / 2) - 300, ((g_screenHeight * 3) / 4) - 300, 600, 120);
 }
 
 SPaused::~SPaused()
 {
-    m_pausedTexture.free();
+    m_pausedTexture.destroy();
 }
 
 bool SPaused::pausedControls(SDL_Event& event)
@@ -149,7 +150,7 @@ GameState::State SPaused::handleEvents()
 
 GameState::State SPaused::update()
 {
-    m_pausedDstRect = { (g_screenWidth / 2) - 300, ((g_screenHeight * 3) / 4) - 300, 600, 120 };
+    m_pausedTexture.setDstRect((g_screenWidth / 2) - 300, ((g_screenHeight * 3) / 4) - 300, 600, 120);
     m_resume.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100);
     m_settings.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4));
     m_quit.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100);
@@ -180,7 +181,7 @@ GameState::State SPaused::update()
 
 void SPaused::render()
 {
-    m_pausedTexture.draw(m_pausedSrcRect, m_pausedDstRect, 0, nullptr, SDL_FLIP_NONE);
+    m_pausedTexture.draw();
     m_resume.draw();
     m_settings.draw();
     m_quit.draw();
