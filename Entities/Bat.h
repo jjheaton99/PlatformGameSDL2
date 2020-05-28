@@ -13,9 +13,9 @@ protected:
 
     void motion() override {};
     void enemyControls(Character& player) override;
-    void setCollider() override { m_collider.setPosition(m_position.getx() + 10.0, m_position.gety() + 10.0); }
+    void setCollider() override { m_collider.setPosition(m_position.getx() + 5.0, m_position.gety() + 5.0); }
 
 public:
     Bat(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/Enemies/bat.png", 
-        int colliderWidth = 30, int colliderHeight = 30, int hitPoints = 5, int damage = 1);
+        int colliderWidth = 40, int colliderHeight = 40, int hitPoints = 5, int damage = 1);
 };

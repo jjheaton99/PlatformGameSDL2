@@ -87,6 +87,7 @@ Collider::sweptAABBresult_type Collider::sweptAABBCheck(const Vector2D<double>& 
 
     if (colliding)
     {
+        //ensures correct overlaps are used
         std::get<1>(obstacleTuple) = std::abs(xCloseDist);
         std::get<2>(obstacleTuple) = std::abs(yCloseDist);
         xOverlap = std::abs(xCloseDist);
@@ -231,86 +232,5 @@ double Collider::axisBoxOverlap(double pos1, double pos2, double size1, double s
     else
     {
         return -1.0;
-    }
-}
-
-bool Collider::sweptAABBdeflect(double deflectionFactor, Collider::sweptObstacleTuple& obstacleTuple, Vector2D<double>& position, Vector2D<double>& velocity, const Vector2D<double>& obstacleVel) const
-{
-    auto collideResult{ sweptAABBCheck(velocity, obstacleVel, obstacleTuple) };
-    Vector2D<double> tempVel{ velocity };
-    switch (collideResult.first)
-    {
-    case Collider::TOP:
-        //velocity.yScale(collideResult.second);
-        //velocity = tempVel;
-        velocity.yScale(-deflectionFactor);
-        velocity.add(obstacleVel);
-        position.add(velocity);
-        //std::cout << "t" << '\n';
-        return true;
-
-    case Collider::BOTTOM:
-        //velocity.yScale(collideResult.second);
-        //velocity = tempVel;
-        velocity.yScale(-deflectionFactor);
-        velocity.add(obstacleVel);
-        position.add(velocity);
-        //std::cout << "b" << '\n';
-        return true;
-
-    case Collider::LEFT:
-        //velocity.xScale(collideResult.second);
-        //velocity = tempVel;
-        velocity.xScale(-deflectionFactor);
-        velocity.add(obstacleVel);
-        position.add(velocity);
-        //std::cout << "l" << '\n';
-        return true;
-
-    case Collider::RIGHT:
-        //velocity.xScale(collideResult.second);
-        //velocity = tempVel;
-        velocity.xScale(-deflectionFactor);
-        velocity.add(obstacleVel);
-        position.add(velocity);
-        //std::cout << "r" << '\n';
-        return true;
-
-        //for overlap collisions we subtract velocity to move character out of block
-    case Collider::OVERLAP_TOP:
-        //position.subtract(0.0, std::get<2>(obstacleTuple));
-        velocity.yScale(-deflectionFactor);
-        velocity.add(obstacleVel);
-        position.add(velocity);
-        //std::cout << "ot" << '\n';
-        return true;
-
-    case Collider::OVERLAP_BOTTOM:
-        //position.add(0.0, std::get<2>(obstacleTuple));
-        velocity.yScale(-deflectionFactor);
-        velocity.add(obstacleVel);
-        position.add(velocity);
-        //std::cout << "ob" << '\n';
-        return true;
-
-    case Collider::OVERLAP_LEFT:
-        //position.subtract(std::get<1>(obstacleTuple), 0.0);
-        velocity.xScale(-deflectionFactor);
-        velocity.add(obstacleVel);
-        position.add(velocity);
-        //std::cout << "ol" << '\n';
-        return true;
-
-    case Collider::OVERLAP_RIGHT:
-        //position.add(std::get<1>(obstacleTuple), 0.0);
-        velocity.xScale(-deflectionFactor);
-        velocity.add(obstacleVel);
-        position.add(velocity);
-        //std::cout << "or" << '\n';
-        return true;
-
-    case Collider::NONE:
-    default:
-        return false;
     }
 }
