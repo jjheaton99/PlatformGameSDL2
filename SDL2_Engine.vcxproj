@@ -29,7 +29,9 @@
     <ClCompile Include="Entities\GroundedEnemy.cpp" />
     <ClCompile Include="Entities\MeleeObject.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
+    <ClCompile Include="Entities\PlayerBoomerang.cpp" />
     <ClCompile Include="Entities\PlayerSideAttack.cpp" />
+    <ClCompile Include="Entities\Projectile.cpp" />
     <ClCompile Include="Entities\Slime.cpp" />
     <ClCompile Include="Entities\TextureObject.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -63,7 +65,9 @@
     <ClInclude Include="Entities\GroundedEnemy.h" />
     <ClInclude Include="Entities\MeleeObject.h" />
     <ClInclude Include="Entities\Player.h" />
+    <ClInclude Include="Entities\PlayerBoomerang.h" />
     <ClInclude Include="Entities\PlayerSideAttack.h" />
+    <ClInclude Include="Entities\Projectile.h" />
     <ClInclude Include="Entities\Slime.h" />
     <ClInclude Include="Entities\TextureObject.h" />
     <ClInclude Include="Game.h" />

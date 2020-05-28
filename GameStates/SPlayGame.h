@@ -13,7 +13,7 @@ class SPlayGame : public GameState
 {
 private:
     std::unique_ptr<Map> m_map{ std::make_unique<Map>() };
-    std::unique_ptr<Player> m_player{ std::make_unique<Player>(200, 200) };
+    std::unique_ptr<Player> m_player{ std::make_unique<Player>(200, 2800) };
     std::unique_ptr<GameObjectManager> m_objectManager{ std::make_unique<GameObjectManager>() };
     Camera m_camera{};
     WTimer m_stepTimer;

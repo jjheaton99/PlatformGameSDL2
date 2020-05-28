@@ -8,6 +8,7 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Player& player)
 {
+    int enemyCount{ 0 };
     for (auto& enemy : m_enemies)
     {
         //if enemy is dead and hasnt been deleted yet
@@ -18,7 +19,13 @@ void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const 
         if (enemy)
         {
             enemy->update(map, camera, player);
+            ++enemyCount;
         }
+    }
+    if (enemyCount < 3)
+    {
+        newEnemy(Enemy::SLIME, 500, 2000);
+        newEnemy(Enemy::BAT, 500, 2200);
     }
 }
 

@@ -1,7 +1,7 @@
 #include "Character.h"
 
 Character::Character(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints)
-    : GameObject(fileName, xStartPos, yStartPos, colliderWidth, colliderHeight), m_hitPoints{hitPoints}, m_velocity{ xVel, yVel }
+    : GameObject(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight), m_hitPoints{hitPoints}
 {}
 
 Character::~Character()
@@ -64,14 +64,14 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
                     map[row][column].getCollider(),
                     Collider::xOverlap(m_collider, map[row][column].getCollider()),
                     Collider::yOverlap(m_collider, map[row][column].getCollider()),
-                    });
+                });
                 break;
             case Tile::PLATFORM:
                 m_platformColliders.push_back({
                     map[row][column].getCollider(),
                     Collider::xOverlap(m_collider, map[row][column].getCollider()),
                     Collider::yOverlap(m_collider, map[row][column].getCollider()),
-                    });
+                });
                 break;
             case Tile::BACKGROUND:
             default:
@@ -79,10 +79,4 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
             }
         }
     }
-
-}
-
-void Character::setDirection(double direction)
-{
-    m_velocity.rotate(direction - m_velocity.direction());
 }

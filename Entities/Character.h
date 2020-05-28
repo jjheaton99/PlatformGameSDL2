@@ -15,8 +15,6 @@ class Character : public GameObject
 protected:
     bool m_dead{ false };
 
-    Vector2D<double> m_velocity;
-
     double m_yMaxSpeed{ 0 };
     double m_xMaxSpeed{ 0 };
 
@@ -28,8 +26,8 @@ protected:
     double m_ladderxPos{ 0.0 };
 
     //for checking collisions with map tiles
-    virtual bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) = 0;
     void getCollideTiles(const std::vector<std::vector<Tile>>& map, int characterRow, int characterColumn);
+    virtual bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) = 0;
     //for checking collisions with the edge of the map
     virtual bool edgeCheck(const Camera& camera) = 0;
 
@@ -49,14 +47,6 @@ public:
 
     bool isDead() const { return m_dead; }
     void kill() { m_dead = true; }
-
-    const Vector2D<double>& getVel() const { return m_velocity; }
-    void setVel(double xVel, double yVel) { m_velocity = Vector2D<double>{ xVel, yVel }; }
-    void setVel(Vector2D<double> vel) { m_velocity = vel; }
-    void setDirection(double angle);
-    void addVel(const Vector2D<double>& vel) { m_velocity.add(vel); }
-    void addVel(double x, double y) { m_velocity.add(x, y); }
-    void scaleVel(double factor) { m_velocity.scale(factor); }
 
     double getLadderxPos() const { return m_ladderxPos; }
     bool collidingWithLadder() const { return m_collidingWithLadder; }
