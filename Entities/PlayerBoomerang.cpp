@@ -51,6 +51,7 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
             {
                 m_flying = false;
                 m_returningToPlayer = false;
+                m_isCooling = true;
                 m_target.reset();
             }
         }
@@ -64,6 +65,15 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
     else
     {
         setPos(player->getPos().getx() + 20.0, player->getPos().gety() + 20.0);
+        if (m_isCooling)
+        {
+            ++m_coolDownCount;
+            if (m_coolDownCount > static_cast<int>(m_coolDown / Constants::updateStep))
+            {
+                m_isCooling = false;
+                m_coolDownCount = 0;
+            }
+        }
     }
 }
 
@@ -196,32 +206,38 @@ void PlayerBoomerang::cameraDraw(const Camera& camera) const
 
 void PlayerBoomerang::throwLeft(const std::vector<std::shared_ptr<Character>>& enemies)
 {
-    m_distanceTravelled = 0.0;
-    m_flying = true;
-    if (aquireTargetEnemy(enemies))
+    if (!m_isCooling)
     {
-        Vector2D<double> relPos{ m_target.lock()->getPos() + Vector2D<double>{m_target.lock()->getCollider().getHitBox().w / 2.0, m_target.lock()->getCollider().getHitBox().h / 2.0} - m_position };
-        double scaleFactor = m_maxSpeed / relPos.magnitude();
-        m_velocity = scaleFactor * relPos;
-    }
-    else
-    {
-        m_velocity = Vector2D<double>{ -m_maxSpeed, 0.0 };
+        m_distanceTravelled = 0.0;
+        m_flying = true;
+        if (aquireTargetEnemy(enemies))
+        {
+            Vector2D<double> relPos{ m_target.lock()->getPos() + Vector2D<double>{m_target.lock()->getCollider().getHitBox().w / 2.0, m_target.lock()->getCollider().getHitBox().h / 2.0} - m_position };
+            double scaleFactor = m_maxSpeed / relPos.magnitude();
+            m_velocity = scaleFactor * relPos;
+        }
+        else
+        {
+            m_velocity = Vector2D<double>{ -m_maxSpeed, 0.0 };
+        }
     }
 }
 
 void PlayerBoomerang::throwRight(const std::vector<std::shared_ptr<Character>>& enemies)
 {
-    m_distanceTravelled = 0.0;
-    m_flying = true;
-    if (aquireTargetEnemy(enemies))
+    if (!m_isCooling)
     {
-        Vector2D<double> relPos{ m_target.lock()->getPos() + Vector2D<double>{m_target.lock()->getCollider().getHitBox().w / 2.0, m_target.lock()->getCollider().getHitBox().h / 2.0} - m_position };
-        double scaleFactor = m_maxSpeed / relPos.magnitude();
-        m_velocity = scaleFactor * relPos;
-    }
-    else
-    {
-        m_velocity = Vector2D<double>{ m_maxSpeed, 0.0 };
+        m_distanceTravelled = 0.0;
+        m_flying = true;
+        if (aquireTargetEnemy(enemies))
+        {
+            Vector2D<double> relPos{ m_target.lock()->getPos() + Vector2D<double>{m_target.lock()->getCollider().getHitBox().w / 2.0, m_target.lock()->getCollider().getHitBox().h / 2.0} - m_position };
+            double scaleFactor = m_maxSpeed / relPos.magnitude();
+            m_velocity = scaleFactor * relPos;
+        }
+        else
+        {
+            m_velocity = Vector2D<double>{ m_maxSpeed, 0.0 };
+        }
     }
 }

@@ -45,6 +45,7 @@ public:
 
     void addHP(int HP) { m_hitPoints += HP; }
     void removeHP(int HP) { m_hitPoints -= HP; }
+    int getHP() const { return m_hitPoints; }
 
     bool isDead() const { return m_dead; }
     void kill() { m_dead = true; }

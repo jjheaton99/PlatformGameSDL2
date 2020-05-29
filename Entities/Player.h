@@ -17,8 +17,6 @@ private:
     static const int m_spriteSheetCount{ 26 };
 
     const int m_maxHP{ 20 };
-    TextureObject m_hearts{ "Assets/MiscTextures/hearts.png" };
-    void updateHearts();
 
     std::array<SDL_Rect, m_spriteSheetCount> m_spriteRects;
     std::array<SDL_Rect, m_spriteSheetCount>::size_type m_spriteIndex;

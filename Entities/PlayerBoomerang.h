@@ -15,6 +15,9 @@ private:
 
     bool m_flying{ false };
     bool m_returningToPlayer{ false };
+    double m_coolDown{ 0.5 };
+    int m_coolDownCount{ 0 };
+    bool m_isCooling{ false };
 
     std::weak_ptr<Character> m_target;
 

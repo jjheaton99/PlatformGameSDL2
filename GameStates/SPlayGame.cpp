@@ -323,6 +323,7 @@ GameState::State SPlayGame::update()
             m_timeAccumulator -= Constants::updateStep;
             m_player->update(m_map->getMap(), m_camera, m_objectManager->getEnemies());
             m_objectManager->update(m_map->getMap(), m_camera, *m_player);
+            m_UI.update();
             if (m_player->isDead())
             {
                 return GAME_OVER;
@@ -353,6 +354,7 @@ void SPlayGame::render()
     m_map->drawMap(m_camera);
     m_objectManager->cameraDraw(m_camera);
     m_player->cameraDraw(m_camera);
+    m_UI.draw();
 }
 
 double SPlayGame::averageFPS(double timeStep)

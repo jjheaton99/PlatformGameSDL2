@@ -93,17 +93,47 @@ void Character::cameraDraw(const Camera& camera) const
 
         if (m_hitPoints < m_maxHitPoints)
         {
-            int healthBarWidth{ static_cast<int>((static_cast<double>(m_hitPoints) / m_maxHitPoints) * 50.0) };
+            double healthFraction{ (static_cast<double>(m_hitPoints) / m_maxHitPoints) };
             SDL_Rect healthBar{ m_dstRect.x - camera.getx() + (m_dstRect.w / 2) - 25,
-                m_dstRect.y - camera.gety() + m_dstRect.h + 10, healthBarWidth, 10 };
+                m_dstRect.y - camera.gety() + m_dstRect.h + 10, static_cast<int>(healthFraction * 50.0), 10 };
             SDL_Rect healthBarOutline{ m_dstRect.x - camera.getx() + (m_dstRect.w / 2) - 25,
                 m_dstRect.y - camera.gety() + m_dstRect.h + 10, 50, 10 };
 
-            SDL_SetRenderDrawColor(g_renderer, 180, 0, 0, 255);
-            SDL_RenderFillRect(g_renderer, &healthBar);
+            if (healthFraction > 0.75)
+            {
+                SDL_SetRenderDrawColor(g_renderer, 0, 70, 0, 255);
+            }
+            else if (healthFraction > 0.5)
+            {
+                SDL_SetRenderDrawColor(g_renderer, 60, 70, 0, 255);
+            }
+            else if (healthFraction > 0.25)
+            {
+                SDL_SetRenderDrawColor(g_renderer, 70, 43, 0, 255);
+            }
+            else
+            {
+                SDL_SetRenderDrawColor(g_renderer, 70, 0, 0, 255);
+            }
+            SDL_RenderFillRect(g_renderer, &healthBarOutline);
 
-            SDL_SetRenderDrawColor(g_renderer, 255, 128, 128, 255);
-            SDL_RenderDrawRect(g_renderer, &healthBarOutline);
+            if (healthFraction > 0.75)
+            {
+                SDL_SetRenderDrawColor(g_renderer, 0, 230, 0, 255);
+            }
+            else if (healthFraction > 0.5)
+            {
+                SDL_SetRenderDrawColor(g_renderer, 200, 230, 0, 255);
+            }
+            else if (healthFraction > 0.25)
+            {
+                SDL_SetRenderDrawColor(g_renderer, 230, 140, 0, 255);
+            }
+            else
+            {
+                SDL_SetRenderDrawColor(g_renderer, 230, 0, 0, 255);
+            }
+            SDL_RenderFillRect(g_renderer, &healthBar);
         }
     }
 }

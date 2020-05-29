@@ -22,14 +22,10 @@ Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, con
 
     m_dstRect.w = 100;
     m_dstRect.h = 100;
-
-    updateHearts();
 }
 
 Player::~Player()
-{
-    m_hearts.destroy();
-}
+{}
 
 void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::shared_ptr<Character>>& enemies)
 {
@@ -145,9 +141,6 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         m_throwBoomerang = false;
     }
     m_boomerang.update(map, camera, enemies, shared_from_this());
-
-    updateHearts();
-    //std::cout << static_cast<int>(m_invincible) << '\n';
 }
 
 //adjusts velocity of player depending on state of motion
@@ -346,7 +339,6 @@ void Player::cameraDraw(const Camera& camera) const
 
     m_sideAttack.cameraDraw(camera);
     m_boomerang.cameraDraw(camera);
-    m_hearts.draw();
 }
 
 void Player::moveCamera(Camera& camera)
@@ -488,20 +480,6 @@ void Player::setCollider()
     {
         m_collider.setDimensions(56, 82);
         m_collider.setPosition(m_position.getx() + 22.0, m_position.gety() + 18.0);
-    }
-}
-
-void Player::updateHearts()
-{
-    if (m_hitPoints <= 0)
-    {
-        m_hearts.setSrcRect( 0, 0, 0, 0 );
-        m_hearts.setDstRect( 20, 20, 0, 0 );
-    }
-    else
-    {
-        m_hearts.setSrcRect( 0, 0, 32 * m_hitPoints, 32 );
-        m_hearts.setDstRect( 20, 20, 35 * m_hitPoints, 35 );
     }
 }
 

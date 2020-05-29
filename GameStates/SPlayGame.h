@@ -6,6 +6,7 @@
 #include "GameObjectManager.h"
 #include "Camera.h"
 #include "WTimer.h"
+#include "UserInterface.h"
 #include <vector>
 
 //main gameplay state
@@ -17,6 +18,7 @@ private:
     std::unique_ptr<GameObjectManager> m_objectManager{ std::make_unique<GameObjectManager>() };
     Camera m_camera{};
     WTimer m_stepTimer;
+    UserInterface m_UI{ m_player };
     double m_timeAccumulator{ 0.0 };
 
     double m_FPSTime{ 0.0 };
