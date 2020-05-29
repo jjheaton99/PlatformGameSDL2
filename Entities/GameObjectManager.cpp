@@ -14,7 +14,7 @@ void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const 
         //if enemy is dead and hasnt been deleted yet
         if (enemy && enemy->isDead())
         {
-            enemy.reset(nullptr);
+            enemy.reset();
         }
         if (enemy)
         {
@@ -22,7 +22,7 @@ void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const 
             ++enemyCount;
         }
     }
-    if (enemyCount < 3)
+    if (enemyCount < 1)
     {
         newEnemy(Enemy::SLIME, 500, 2000);
         newEnemy(Enemy::BAT, 500, 2200);
@@ -46,10 +46,10 @@ void GameObjectManager::newEnemy(Enemy type, double xPos, double yPos)
     switch (type)
     {
     case GameObjectManager::Enemy::SLIME:
-        m_enemies.push_back(std::make_unique<Slime>(xPos, yPos));
+        m_enemies.push_back(std::make_shared<Slime>(xPos, yPos));
         break;
     case GameObjectManager::Enemy::BAT:
-        m_enemies.push_back(std::make_unique<Bat>(xPos, yPos));
+        m_enemies.push_back(std::make_shared<Bat>(xPos, yPos));
         break;
     default:
         break;

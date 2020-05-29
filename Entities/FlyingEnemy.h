@@ -9,7 +9,7 @@ class FlyingEnemy : public FlyingCharacter
 protected:
     int m_damage;
 
-    virtual void enemyControls(Character& player) = 0;
+    virtual void enemyControls(const Character& player) = 0;
     virtual bool attackPlayer(Character& player);
 
 public:

@@ -10,12 +10,13 @@ Bat::Bat(double xStartPos, double yStartPos, double xVel, double yVel, const cha
     m_dstRect.h = 50;
 }
 
-void Bat::enemyControls(Character& player)
+void Bat::enemyControls(const Character& player)
 {
     Vector2D<double> relPos{ player.getPos() + Vector2D<double>{25, 25} - m_position };
     double scaleFactor{m_acceleration / relPos.magnitude()};
     m_velocity.add(scaleFactor * relPos);
     double velMag{ m_velocity.magnitude() };
+
     if (velMag > m_maxSpeed)
     {
         scaleFactor = m_acceleration / velMag;

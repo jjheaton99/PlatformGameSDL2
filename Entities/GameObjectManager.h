@@ -26,7 +26,7 @@ public:
     };
 
 private:
-    std::vector<std::unique_ptr<Character>> m_enemies{};
+    std::vector<std::shared_ptr<Character>> m_enemies{};
 
 public:
     GameObjectManager();
@@ -36,6 +36,6 @@ public:
     void cameraDraw(const Camera& camera) const;
 
     void newEnemy(Enemy type, double xPos, double yPos);
-    std::vector<std::unique_ptr<Character>>& getEnemies() { return m_enemies; }
+    std::vector<std::shared_ptr<Character>>& getEnemies() { return m_enemies; }
 };
 

@@ -22,7 +22,7 @@ void MeleeObject::cameraDraw(const Camera& camera) const
     }
 }
 
-void MeleeObject::updateHitEnemies(const std::vector<std::unique_ptr<Character>>& enemies)
+void MeleeObject::updateHitEnemies(const std::vector<std::shared_ptr<Character>>& enemies)
 {
     if (m_hitEnemies.size() != enemies.size())
     {

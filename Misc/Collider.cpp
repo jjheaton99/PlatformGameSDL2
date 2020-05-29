@@ -234,3 +234,62 @@ double Collider::axisBoxOverlap(double pos1, double pos2, double size1, double s
         return -1.0;
     }
 }
+
+bool Collider::sweptAABBDeflect(double deflectionFactor, Collider::sweptObstacleTuple& obstacleTuple, Vector2D<double>& position, Vector2D<double>& velocity, const Vector2D<double>& obstacleVel) const
+{
+    auto collideResult{ sweptAABBCheck(velocity, obstacleVel, obstacleTuple) };
+    switch (collideResult.first)
+    {
+    case Collider::TOP:
+        velocity.yScale(-deflectionFactor);
+        position.add(velocity);
+        //std::cout << "t" << '\n';
+        return true;
+
+    case Collider::BOTTOM:
+        velocity.yScale(-deflectionFactor);
+        position.add(velocity);
+        //std::cout << "b" << '\n';
+        return true;
+
+    case Collider::LEFT:
+        velocity.xScale(-deflectionFactor);
+        position.add(velocity);
+        //std::cout << "l" << '\n';
+        return true;
+
+    case Collider::RIGHT:
+        velocity.xScale(-deflectionFactor);
+        position.add(velocity);
+        //std::cout << "r" << '\n';
+        return true;
+
+    case Collider::OVERLAP_TOP:
+        velocity.yScale(-deflectionFactor);
+        position.add(velocity);
+        //std::cout << "ot" << '\n';
+        return true;
+
+    case Collider::OVERLAP_BOTTOM:
+        velocity.yScale(-deflectionFactor);
+        position.add(velocity);
+        //std::cout << "ob" << '\n';
+        return true;
+
+    case Collider::OVERLAP_LEFT:
+        velocity.xScale(-deflectionFactor);
+        position.add(velocity);
+        //std::cout << "ol" << '\n';
+        return true;
+
+    case Collider::OVERLAP_RIGHT:
+        velocity.xScale(-deflectionFactor);
+        position.add(velocity);
+        //std::cout << "or" << '\n';
+        return true;
+
+    case Collider::NONE:
+    default:
+        return false;
+    }
+}

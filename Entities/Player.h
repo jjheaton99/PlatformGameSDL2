@@ -3,6 +3,7 @@
 #include "GroundedCharacter.h"
 #include "Constants.h"
 #include "PlayerSideAttack.h"
+#include "PlayerBoomerang.h"
 #include <array>
 #include <cmath>
 #include <cstdint>
@@ -10,7 +11,7 @@
 class GroundedEnemy;
 
 //player character class
-class Player : public GroundedCharacter
+class Player : public std::enable_shared_from_this<Character>, public GroundedCharacter
 {
 private:
     static const int m_spriteSheetCount{ 26 };
@@ -24,6 +25,8 @@ private:
     bool m_facingLeft{ false };
 
     PlayerSideAttack m_sideAttack{};
+    PlayerBoomerang m_boomerang{};
+    bool m_throwBoomerang{ false };
 
     //member variables for controlling dodge timing and animation
     const double m_dodgeDuration{ 0.25 };
@@ -59,7 +62,7 @@ public:
     Player(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/MrPix.png", int hitPoints = 15);
     ~Player();
 
-    void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::unique_ptr<Character>>& enemies);
+    void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::shared_ptr<Character>>& enemies);
     void cameraDraw(const Camera& camera) const override;
 
     void makeAirborne() override;
@@ -74,6 +77,8 @@ public:
     void attackRight();
     void attackCancel();
     bool isAttacking() const { return m_sideAttack.isAttacking(); }
+    void throwBoomerang() { m_throwBoomerang = true; }
+    bool boomerangIsFlying() const { return m_boomerang.isFlying(); }
 
     bool isFacingLeft() const { return m_facingLeft; }
     

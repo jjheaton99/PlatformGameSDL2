@@ -18,8 +18,8 @@ private:
 public:
     PlayerSideAttack(int damage = 1, double xBase = 0, double yBase = 0);
 
-    void update(std::vector<std::unique_ptr<Character>>& enemies);
-    void collideCheck(std::vector<std::unique_ptr<Character>>& enemies);
+    void update(std::vector<std::shared_ptr<Character>>& enemies);
+    void collideCheck(std::vector<std::shared_ptr<Character>>& enemies);
     //void cameraDraw(const Camera& camera) const override;
 };
 

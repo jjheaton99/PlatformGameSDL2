@@ -14,7 +14,7 @@ SPlayGame::SPlayGame(const char* mapFile)
     {
         //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 100.0 * i, 2000);
     }
-    m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 500, 2000);
+    //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 500, 2000);
     //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 600, 2000);
     //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 700, 2000);
     m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 500, 2200);
@@ -260,6 +260,14 @@ void SPlayGame::playerControlsMouseClick(SDL_Event& event)
                 }
             }
             break;
+
+        case SDL_BUTTON_RIGHT:
+            if (!m_player->boomerangIsFlying())
+            {
+                m_player->throwBoomerang();
+            }
+            break;
+
         default:
             break;
         }

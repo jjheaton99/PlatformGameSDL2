@@ -51,75 +51,7 @@ bool FlyingEnemy::attackPlayer(Character& player)
     if (!dynamic_cast<Player&>(player).isInvincible() && (m_velocity.magnitude() < (m_position - player.getPos()).magnitude()))
     {
         Collider::sweptObstacleTuple sweptCollider{ player.getCollider(), Collider::xOverlap(m_collider, player.getCollider()), Collider::yOverlap(m_collider, player.getCollider()) };
-        auto collideResult{ m_collider.sweptAABBCheck(m_velocity, player.getVel(), sweptCollider) };
-        double deflectionFactor{ 1.0 };
-        bool collided{ false };
-        //double recoil{ 10.0 };
-
-        switch (collideResult.first)
-        {
-        case Collider::TOP:
-            m_velocity.yScale(-deflectionFactor);
-            //m_velocity.add(Vector2D<double>{0.0, -recoil});
-            m_position.add(m_velocity);
-            collided = true;
-            break;
-
-        case Collider::BOTTOM:
-            m_velocity.yScale(-deflectionFactor);
-            //m_velocity.add(Vector2D<double>{0.0, recoil});
-            m_position.add(m_velocity);
-            collided = true;
-            break;
-
-        case Collider::LEFT:
-            m_velocity.xScale(-deflectionFactor);
-            //m_velocity.add(Vector2D<double>{-recoil, 0.0});
-            m_position.add(m_velocity);
-            collided = true;
-            break;
-
-        case Collider::RIGHT:
-            m_velocity.xScale(-deflectionFactor);
-            //m_velocity.add(Vector2D<double>{recoil, 0.0});
-            m_position.add(m_velocity);
-            collided = true;
-            break;
-
-        case Collider::OVERLAP_TOP:
-            m_velocity.yScale(-deflectionFactor);
-            //m_velocity.add(Vector2D<double>{0.0, -recoil});
-            m_position.add(m_velocity);
-            collided = true;
-            break;
-
-        case Collider::OVERLAP_BOTTOM:
-            m_velocity.yScale(-deflectionFactor);
-            //m_velocity.add(Vector2D<double>{0.0, recoil});
-            m_position.add(m_velocity);
-            collided = true;
-            break;
-
-        case Collider::OVERLAP_LEFT:
-            m_velocity.xScale(-deflectionFactor);
-            //m_velocity.add(Vector2D<double>{-recoil, 0.0});
-            m_position.add(m_velocity);
-            collided = true;
-            break;
-
-        case Collider::OVERLAP_RIGHT:
-            m_velocity.xScale(-deflectionFactor);
-            //m_velocity.add(Vector2D<double>{recoil, 0.0});
-            m_position.add(m_velocity);
-            collided = true;
-            break;
-
-        case Collider::NONE:
-        default:
-            break;
-        }
-
-        if (collided)
+        if (m_collider.sweptAABBDeflect(1.0, sweptCollider, m_position, m_velocity, player.getVel()))
         {
             player.removeHP(m_damage);
             dynamic_cast<Player&>(player).startiFrames();

@@ -33,7 +33,6 @@ protected:
 
     //for adjusting character velocity
     virtual void motion() = 0;
-    virtual void setCollider() { m_collider.setPosition(m_position.getx(), m_position.gety()); }
 
 public:
     Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0, int hitPoints = 0);

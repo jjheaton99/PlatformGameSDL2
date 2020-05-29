@@ -31,12 +31,12 @@ Player::~Player()
     m_hearts.destroy();
 }
 
-void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::unique_ptr<Character>>& enemies)
+void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::shared_ptr<Character>>& enemies)
 {
     //std::cout << m_hitPoints << '\n';
     if (m_hitPoints <= 0)
     {
-        kill();
+        //kill();
     }
 
     motion();
@@ -131,6 +131,23 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     //attack texture position set with an offset from player position 
     m_sideAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
     m_sideAttack.update(enemies);
+
+    if (m_throwBoomerang)
+    {
+        if (m_facingLeft && !m_boomerang.isFlying())
+        {
+            m_boomerang.setPos(m_position.getx() + 30.0, m_position.gety() + 30.0);
+            m_boomerang.throwLeft(enemies);
+        }
+        else if (!m_facingLeft && !m_boomerang.isFlying())
+        {
+            m_boomerang.setPos(m_position.getx() + 30.0, m_position.gety() + 30.0);
+            m_boomerang.throwRight(enemies);
+        }
+        m_throwBoomerang = false;
+    }
+    m_boomerang.update(map, camera, enemies, shared_from_this());
+
     updateHearts();
     //std::cout << static_cast<int>(m_invincible) << '\n';
 }
@@ -330,6 +347,7 @@ void Player::cameraDraw(const Camera& camera) const
     }
 
     m_sideAttack.cameraDraw(camera);
+    m_boomerang.cameraDraw(camera);
     m_hearts.draw();
 }
 

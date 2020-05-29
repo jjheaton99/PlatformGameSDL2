@@ -12,7 +12,7 @@ protected:
     double m_rotateAccel{ 20.0 };
 
     void motion() override {};
-    void enemyControls(Character& player) override;
+    void enemyControls(const Character& player) override;
     void setCollider() override { m_collider.setPosition(m_position.getx() + 5.0, m_position.gety() + 5.0); }
 
 public:

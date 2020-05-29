@@ -53,6 +53,7 @@ public:
 
     bool collideCheck(const Collider& collider) const;
     sweptAABBresult_type sweptAABBCheck(const Vector2D<double>& velocity, const Vector2D<double>& obstacleVel, sweptObstacleTuple& obstacleTuple) const;
+    bool sweptAABBDeflect(double deflectionFactor, Collider::sweptObstacleTuple& obstacleTuple, Vector2D<double>& position, Vector2D<double>& velocity, const Vector2D<double>& obstacleVel) const;
 
     static double xOverlap(const Collider& c1, const Collider& c2) { return axisBoxOverlap(c1.getHitBox().x, c2.getHitBox().x, c1.getHitBox().w, c2.getHitBox().w); }
     static double yOverlap(const Collider& c1, const Collider& c2) { return axisBoxOverlap(c1.getHitBox().y, c2.getHitBox().y, c1.getHitBox().h, c2.getHitBox().h); }
