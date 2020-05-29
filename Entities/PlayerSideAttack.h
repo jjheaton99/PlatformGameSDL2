@@ -16,7 +16,7 @@ private:
     void resetColliders();
 
 public:
-    PlayerSideAttack(int damage = 1, double xBase = 0, double yBase = 0);
+    PlayerSideAttack(int damage = 30, double xBase = 0, double yBase = 0);
 
     void update(std::vector<std::shared_ptr<Character>>& enemies);
     void collideCheck(std::vector<std::shared_ptr<Character>>& enemies);

@@ -77,7 +77,7 @@ public:
     void attackRight();
     void attackCancel();
     bool isAttacking() const { return m_sideAttack.isAttacking(); }
-    void throwBoomerang() { m_throwBoomerang = true; }
+    void throwBoomerang();
     bool boomerangIsFlying() const { return m_boomerang.isFlying(); }
 
     bool isFacingLeft() const { return m_facingLeft; }

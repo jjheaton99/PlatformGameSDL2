@@ -36,7 +36,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     //std::cout << m_hitPoints << '\n';
     if (m_hitPoints <= 0)
     {
-        //kill();
+        kill();
     }
 
     motion();
@@ -136,12 +136,10 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     {
         if (m_facingLeft && !m_boomerang.isFlying())
         {
-            m_boomerang.setPos(m_position.getx() + 30.0, m_position.gety() + 30.0);
             m_boomerang.throwLeft(enemies);
         }
         else if (!m_facingLeft && !m_boomerang.isFlying())
         {
-            m_boomerang.setPos(m_position.getx() + 30.0, m_position.gety() + 30.0);
             m_boomerang.throwRight(enemies);
         }
         m_throwBoomerang = false;
@@ -312,7 +310,7 @@ void Player::spriteAnimate()
         break;
     }
 
-    if (m_sideAttack.isAttacking())
+    if (m_sideAttack.isAttacking() || m_boomerang.isFlying())
     {
         m_spriteIndex = 24;
     }
@@ -409,23 +407,29 @@ void Player::moveCamera(Camera& camera)
 
 void Player::attackLeft()
 {
-    m_facingLeft = true;
-    m_sideAttack.faceLeft();
-    m_sideAttack.attack();
-    if (m_movement == AIRBORNE)
+    if (!boomerangIsFlying())
     {
-        m_velocity.add(-5.0, -5.0);
+        m_facingLeft = true;
+        m_sideAttack.faceLeft();
+        m_sideAttack.attack();
+        if (m_movement == AIRBORNE)
+        {
+            m_velocity.add(-5.0, -5.0);
+        }
     }
 }
 
 void Player::attackRight()
 {
-    m_facingLeft = false;
-    m_sideAttack.faceRight();
-    m_sideAttack.attack();
-    if (m_movement == AIRBORNE)
+    if (!boomerangIsFlying())
     {
-        m_velocity.add(5.0, -5.0);
+        m_facingLeft = false;
+        m_sideAttack.faceRight();
+        m_sideAttack.attack();
+        if (m_movement == AIRBORNE)
+        {
+            m_velocity.add(5.0, -5.0);
+        }
     }
 }
 
@@ -498,5 +502,13 @@ void Player::updateHearts()
     {
         m_hearts.setSrcRect( 0, 0, 32 * m_hitPoints, 32 );
         m_hearts.setDstRect( 20, 20, 35 * m_hitPoints, 35 );
+    }
+}
+
+void Player::throwBoomerang() 
+{ 
+    if (!isAttacking())
+    {
+        m_throwBoomerang = true;
     }
 }

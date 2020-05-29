@@ -16,7 +16,7 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
         motion();
         m_distanceTravelled += m_velocity.magnitude();
 
-        m_angle += 10.0;
+        m_angle += 20.0;
 
         //put enemy collide check before map to ensure it hits
         if (enemyCollideCheck(enemies))
@@ -61,6 +61,10 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
         m_dstRect.x = static_cast<int>(m_position.getx());
         m_dstRect.y = static_cast<int>(m_position.gety());
     }
+    else
+    {
+        setPos(player->getPos().getx() + 20.0, player->getPos().gety() + 20.0);
+    }
 }
 
 bool PlayerBoomerang::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
@@ -91,6 +95,7 @@ bool PlayerBoomerang::aquireTargetEnemy(const std::vector<std::shared_ptr<Charac
 {
     if (!m_target.lock())
     {
+        double enemyDistance;
         double closestEnemyDistance;
         closestEnemyDistance = std::numeric_limits<double>::max();
         int closestEnemyIndex{ -1 };
@@ -99,9 +104,11 @@ bool PlayerBoomerang::aquireTargetEnemy(const std::vector<std::shared_ptr<Charac
         {
             if (enemies[i])
             {
-                if ((enemies[i]->getPos() - m_position).magnitude() < closestEnemyDistance)
+                enemyDistance = (enemies[i]->getPos() - m_position).magnitude();
+                if (enemyDistance < closestEnemyDistance)
                 {
                     closestEnemyIndex = i;
+                    closestEnemyDistance = enemyDistance;
                 }
             }
         }
@@ -147,7 +154,8 @@ void PlayerBoomerang::motion()
     double velMag{};
     if (m_target.lock())
     {
-        Vector2D<double> relPos{ m_target.lock()->getPos() + Vector2D<double>{m_target.lock()->getCollider().getHitBox().w / 2.0, m_target.lock()->getCollider().getHitBox().h / 2.0} - m_position };
+        Vector2D<double> relPos{ m_target.lock()->getPos() + Vector2D<double>{m_target.lock()->getCollider().getHitBox().w / 2.0 - m_dstRect.w / 2.0, 
+            m_target.lock()->getCollider().getHitBox().h / 2.0 - m_dstRect.h / 2.0} - m_position };
         scaleFactor = m_acceleration / relPos.magnitude();
         m_velocity.add(scaleFactor * relPos);
         velMag = m_velocity.magnitude();

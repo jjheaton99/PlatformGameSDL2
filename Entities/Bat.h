@@ -17,5 +17,5 @@ protected:
 
 public:
     Bat(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/Enemies/bat.png", 
-        int colliderWidth = 40, int colliderHeight = 40, int hitPoints = 2, int damage = 1);
+        int colliderWidth = 40, int colliderHeight = 40, int hitPoints = 40, int damage = 1);
 };
