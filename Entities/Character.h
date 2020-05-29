@@ -18,6 +18,7 @@ protected:
     double m_yMaxSpeed{ 0 };
     double m_xMaxSpeed{ 0 };
 
+    int m_maxHitPoints;
     int m_hitPoints;
 
     std::vector<Collider::sweptObstacleTuple> m_solidColliders;
@@ -40,6 +41,7 @@ public:
 
     //for enemies
     virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player) = 0;
+    virtual void cameraDraw(const Camera& camera) const override;
 
     void addHP(int HP) { m_hitPoints += HP; }
     void removeHP(int HP) { m_hitPoints -= HP; }

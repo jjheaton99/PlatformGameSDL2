@@ -1,8 +1,10 @@
 #include "Character.h"
 
 Character::Character(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints)
-    : GameObject(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight), m_hitPoints{hitPoints}
-{}
+    : GameObject(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight), m_maxHitPoints{hitPoints}
+{
+    m_hitPoints = m_maxHitPoints;
+}
 
 Character::~Character()
 {
@@ -77,6 +79,31 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
             default:
                 break;
             }
+        }
+    }
+}
+
+void Character::cameraDraw(const Camera& camera) const
+{
+    //objects off the screen are not rendered
+    if (m_collider.collideCheck(camera.getCollider()))
+    {
+        SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
+        m_texture.draw(m_srcRect, relativeDstRect, 0, nullptr, SDL_FLIP_NONE);
+
+        if (m_hitPoints < m_maxHitPoints)
+        {
+            int healthBarWidth{ static_cast<int>((static_cast<double>(m_hitPoints) / m_maxHitPoints) * 50.0) };
+            SDL_Rect healthBar{ m_dstRect.x - camera.getx() + (m_dstRect.w / 2) - 25,
+                m_dstRect.y - camera.gety() + m_dstRect.h + 10, healthBarWidth, 10 };
+            SDL_Rect healthBarOutline{ m_dstRect.x - camera.getx() + (m_dstRect.w / 2) - 25,
+                m_dstRect.y - camera.gety() + m_dstRect.h + 10, 50, 10 };
+
+            SDL_SetRenderDrawColor(g_renderer, 180, 0, 0, 255);
+            SDL_RenderFillRect(g_renderer, &healthBar);
+
+            SDL_SetRenderDrawColor(g_renderer, 255, 128, 128, 255);
+            SDL_RenderDrawRect(g_renderer, &healthBarOutline);
         }
     }
 }
