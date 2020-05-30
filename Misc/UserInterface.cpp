@@ -46,13 +46,13 @@ void UserInterface::draw()
     m_hearts.draw();
 
     SDL_SetRenderDrawBlendMode(g_renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 180);
+    SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 200);
 
-    SDL_Rect boomerangCoolDownCover{ 20, g_screenHeight - 80, 60, static_cast<int>(m_player->getBoomerangCooldownFraction() * 60.0) };
+    SDL_Rect boomerangCoolDownCover{ 22, g_screenHeight - 78, 56, static_cast<int>(m_player->getBoomerangCooldownFraction() * 56.0) };
     m_boomerangCooldown.draw();
     SDL_RenderFillRect(g_renderer, &boomerangCoolDownCover);
 
-    SDL_Rect dodgeCoolDownCover{ 100, g_screenHeight - 80, 60, static_cast<int>(m_player->getDodgeCooldownFraction() * 60.0) };
+    SDL_Rect dodgeCoolDownCover{ 102, g_screenHeight - 78, 56, static_cast<int>(m_player->getDodgeCooldownFraction() * 56.0) };
     m_dodgeCooldown.draw();
     SDL_RenderFillRect(g_renderer, &dodgeCoolDownCover);
 

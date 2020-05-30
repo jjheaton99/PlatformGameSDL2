@@ -1,12 +1,7 @@
 #include "Map.h"
 
 Map::Map()
-    : m_background{ "Assets/blackGrey.png", Tile::BACKGROUND },
-    m_block{ "Assets/WhiteFadeBlocks/1.png", Tile::SOLID },
-    m_platform{ "Assets/platform.png", Tile::PLATFORM },
-    m_ladder{ "Assets/ladder.png.", Tile::LADDER }
-{
-}
+{}
 
 Map::~Map()
 {

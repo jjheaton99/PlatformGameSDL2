@@ -53,6 +53,7 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
                 m_returningToPlayer = false;
                 m_isCooling = true;
                 m_target.reset();
+                setPos(player->getPos().getx() + 20.0, player->getPos().gety() + 20.0);
             }
         }
 

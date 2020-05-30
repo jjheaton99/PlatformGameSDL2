@@ -16,10 +16,10 @@ public:
 
 private:
     map_type m_map;
-    Tile m_background;
-    Tile m_block;
-    Tile m_platform;
-    Tile m_ladder;
+    Tile m_background{ "Assets/MapTiles/blackGrey.png", Tile::BACKGROUND };
+    Tile m_block{ "Assets/MapTiles/WhiteFadeBlocks/1.png", Tile::SOLID };
+    Tile m_platform{ "Assets/MapTiles/platform.png", Tile::PLATFORM };
+    Tile m_ladder{ "Assets/MapTiles/ladder.png.", Tile::LADDER };
 
     int m_levelWidth;
     int m_levelHeight;
