@@ -27,5 +27,8 @@ public:
     virtual void setPos(double xPos, double yPos) { m_position = Vector2D<double>{ xPos, yPos }; }
     void setSrcRect(int xPos, int yPos, int width, int height) { m_srcRect = { xPos, yPos, width, height }; }
     void setDstRect(int xPos, int yPos, int width, int height) { m_dstRect = { xPos, yPos, width, height }; }
+
+    void alphaBlendOn() { m_texture.setBlendingMode(SDL_BLENDMODE_BLEND); }
+    void setAlpha(Uint8 alpha) { m_texture.setAlpha(alpha); }
 };
 

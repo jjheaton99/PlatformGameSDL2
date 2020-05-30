@@ -14,7 +14,7 @@ public:
 
     void load(const char* fileName);
     void draw(const SDL_Rect& srcRect, const SDL_Rect& dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip) const;
-    void free();
+    void destroy();
     void setColour(Uint8 R, Uint8 G, Uint8 B);
     void setBlendingMode(SDL_BlendMode mode);
     void setAlpha(Uint8 alpha);

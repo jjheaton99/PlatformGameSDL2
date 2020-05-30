@@ -490,3 +490,19 @@ void Player::throwBoomerang()
         m_throwBoomerang = true;
     }
 }
+
+double Player::getDodgeCooldownFraction() const
+{
+    if (isDodging())
+    {
+        return 1.0;
+    }
+    else if (!m_dodgeCooling)
+    {
+        return 0.0;
+    }
+    else
+    {
+        return 1.0 - (static_cast<double>(m_dodgeStepCount) / (m_dodgeCooldown / Constants::updateStep));
+    }
+}

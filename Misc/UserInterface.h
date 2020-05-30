@@ -10,8 +10,11 @@ class UserInterface
 private:
     std::shared_ptr<Player> m_player;
 
-    TextureObject m_hearts{ "Assets/MiscTextures/hearts.png" };
+    TextureObject m_hearts{ "Assets/UITextures/hearts.png" };
     void updateHearts();
+
+    TextureObject m_boomerangCooldown{ "Assets/UITextures/boomerang.png" };
+    TextureObject m_dodgeCooldown{ "Assets/UITextures/dodge.png" };
 
 public:
     UserInterface(std::shared_ptr<Player> player);

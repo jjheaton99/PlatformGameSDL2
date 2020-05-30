@@ -23,7 +23,7 @@ void WTexture::draw(const SDL_Rect& srcRect, const SDL_Rect& dstRect, double ang
     SDL_RenderCopyEx(g_renderer, m_texture, &srcRect, &dstRect, angle, centre, flip);
 }
 
-void WTexture::free()
+void WTexture::destroy()
 {
     SDL_DestroyTexture(m_texture);
 }

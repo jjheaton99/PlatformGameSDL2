@@ -70,6 +70,7 @@ public:
     void dodgeLeft();
     void dodgeRight();
     void dodgeCancel();
+    double getDodgeCooldownFraction() const;
 
     void attackLeft();
     void attackRight();
@@ -77,6 +78,7 @@ public:
     bool isAttacking() const { return m_sideAttack.isAttacking(); }
     void throwBoomerang();
     bool boomerangIsFlying() const { return m_boomerang.isFlying(); }
+    double getBoomerangCooldownFraction() const { return m_boomerang.getCooldownFraction(); }
 
     bool isFacingLeft() const { return m_facingLeft; }
     

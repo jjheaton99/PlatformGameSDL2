@@ -42,5 +42,7 @@ public:
 
     void throwLeft(const std::vector<std::shared_ptr<Character>>& enemies);
     void throwRight(const std::vector<std::shared_ptr<Character>>& enemies);
+
+    double getCooldownFraction() const;
 };
 

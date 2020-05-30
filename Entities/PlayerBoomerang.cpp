@@ -241,3 +241,19 @@ void PlayerBoomerang::throwRight(const std::vector<std::shared_ptr<Character>>& 
         }
     }
 }
+
+double PlayerBoomerang::getCooldownFraction() const
+{
+    if (m_flying)
+    {
+        return 1.0;
+    }
+    else if (!m_isCooling)
+    {
+        return 0.0;
+    }
+    else
+    {
+        return 1.0 - (static_cast<double>(m_coolDownCount) / (m_coolDown / Constants::updateStep));
+    }
+}

@@ -16,5 +16,5 @@ void TextureObject::draw() const
 
 void TextureObject::destroy()
 {
-    m_texture.free();
+    m_texture.destroy();
 }
