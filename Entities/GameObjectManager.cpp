@@ -22,11 +22,6 @@ void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const 
             ++enemyCount;
         }
     }
-    if (enemyCount < 1)
-    {
-        newEnemy(Enemy::SLIME, 500, 2000);
-        newEnemy(Enemy::BAT, 500, 2200);
-    }
 }
 
 void GameObjectManager::cameraDraw(const Camera& camera) const

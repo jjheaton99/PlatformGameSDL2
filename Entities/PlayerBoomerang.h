@@ -15,7 +15,7 @@ private:
 
     bool m_flying{ false };
     bool m_returningToPlayer{ false };
-    double m_coolDown{ 0.5 };
+    double m_coolDown{ 1.0 };
     int m_coolDownCount{ 0 };
     bool m_isCooling{ false };
 
@@ -32,7 +32,7 @@ private:
 
 public:
     PlayerBoomerang(double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 10.0, double colliderHeight = 10.0, 
-        const char* fileName = "Assets/Attacks/boomerang.png", int damage = 10);
+        const char* fileName = "Assets/Attacks/boomerang.png", int damage = 20);
 
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::vector<std::shared_ptr<Character>>& enemies, std::shared_ptr<Character> player);
     void cameraDraw(const Camera& camera) const override;
