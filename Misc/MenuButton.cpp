@@ -10,6 +10,7 @@ MenuButton::MenuButton(const char* fileName, const char* selectedTextureFileName
 MenuButton::~MenuButton()
 {
     destroy();
+    m_selectedTexture.destroy();
 }
 
 //draws a different texture if button is selected

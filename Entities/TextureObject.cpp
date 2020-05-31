@@ -6,6 +6,10 @@ TextureObject::TextureObject(const char* fileName, double xPos, double yPos)
     m_texture.load(fileName);
 }
 
+TextureObject::TextureObject(double xPos, double yPos)
+    : m_position{ xPos, yPos }
+{}
+
 TextureObject::~TextureObject()
 {}
 

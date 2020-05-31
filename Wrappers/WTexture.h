@@ -8,6 +8,9 @@
 //Texture wrapper class
 class WTexture
 {
+private:
+    SDL_Texture* m_texture;
+
 public:
     WTexture();
     ~WTexture();
@@ -18,10 +21,6 @@ public:
     void setColour(Uint8 R, Uint8 G, Uint8 B);
     void setBlendingMode(SDL_BlendMode mode);
     void setAlpha(Uint8 alpha);
-
-    //static SDL_Renderer* renderer;
-
-private:
-    SDL_Texture* m_texture;
+    bool textureIsLoaded() const { return m_texture != nullptr; }
 };
 

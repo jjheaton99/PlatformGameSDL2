@@ -54,13 +54,13 @@ private:
     void moveCamera(Camera& camera);
     void setCollider() override;
 
-    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player) override {};
+    void update(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, const Camera& camera, Character& player) override {};
 
 public:
     Player(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/MrPix.png", int hitPoints = 10);
     ~Player();
 
-    void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::shared_ptr<Character>>& enemies);
+    void update(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, Camera& camera, std::vector<std::shared_ptr<Character>>& enemies);
     void cameraDraw(const Camera& camera) const override;
 
     void makeAirborne() override;

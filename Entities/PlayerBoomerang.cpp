@@ -9,7 +9,7 @@ PlayerBoomerang::PlayerBoomerang(double xPos, double yPos, double xVel, double y
     m_dstRect.h = 60;
 }
 
-void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::vector<std::shared_ptr<Character>>& enemies, std::shared_ptr<Character> player)
+void PlayerBoomerang::update(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, const Camera& camera, std::vector<std::shared_ptr<Character>>& enemies, std::shared_ptr<Character> player)
 {
     if (m_flying)
     {
@@ -78,7 +78,7 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
     }
 }
 
-bool PlayerBoomerang::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
+bool PlayerBoomerang::sweepMapCollideCheck(const std::vector<std::vector<std::unique_ptr<Tile>>>& map)
 {
     int projectileColumn{ static_cast<int>(m_collider.getHitBox().x / Constants::tileSize) };
     int projectileRow{ static_cast<int>(m_collider.getHitBox().y / Constants::tileSize) };

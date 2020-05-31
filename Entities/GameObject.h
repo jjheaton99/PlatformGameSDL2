@@ -18,6 +18,7 @@ protected:
 
 public:
     GameObject(const char* fileName, double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 0, double colliderHeight = 0);
+    GameObject(double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 0, double colliderHeight = 0);
     virtual ~GameObject();
 
     const Vector2D<double>& getVel() const { return m_velocity; }

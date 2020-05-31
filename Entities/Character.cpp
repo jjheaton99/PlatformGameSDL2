@@ -11,7 +11,7 @@ Character::~Character()
     destroy();
 }
 
-void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int characterRow, int characterColumn)
+void Character::getCollideTiles(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, int characterRow, int characterColumn)
 {
     //delete any existing hitboxes 
     m_solidColliders.clear();
@@ -49,30 +49,30 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
     {
         for (int column{ startColumn }; column <= endColumn; ++column)
         {
-            if (map[row][column].getType() == Tile::LADDER)
+            if (map[row][column]->getType() == Tile::LADDER)
             {
                 //no && used because we dont want to collide check if we dont have to
-                if (m_collider.collideCheck(map[row][column].getCollider()))
+                if (m_collider.collideCheck(map[row][column]->getCollider()))
                 {
                     m_collidingWithLadder = true;
-                    m_ladderxPos = map[row][column].getCollider().getHitBox().x;
+                    m_ladderxPos = map[row][column]->getCollider().getHitBox().x;
                 }
             }
 
-            switch (map[row][column].getType())
+            switch (map[row][column]->getType())
             {
             case Tile::SOLID:
                 m_solidColliders.push_back({
-                    map[row][column].getCollider(),
-                    Collider::xOverlap(m_collider, map[row][column].getCollider()),
-                    Collider::yOverlap(m_collider, map[row][column].getCollider()),
+                    map[row][column]->getCollider(),
+                    Collider::xOverlap(m_collider, map[row][column]->getCollider()),
+                    Collider::yOverlap(m_collider, map[row][column]->getCollider()),
                 });
                 break;
             case Tile::PLATFORM:
                 m_platformColliders.push_back({
-                    map[row][column].getCollider(),
-                    Collider::xOverlap(m_collider, map[row][column].getCollider()),
-                    Collider::yOverlap(m_collider, map[row][column].getCollider()),
+                    map[row][column]->getCollider(),
+                    Collider::xOverlap(m_collider, map[row][column]->getCollider()),
+                    Collider::yOverlap(m_collider, map[row][column]->getCollider()),
                 });
                 break;
             case Tile::BACKGROUND:

@@ -23,7 +23,7 @@ private:
 
     double m_angle{ 0.0 };
 
-    bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) override;
+    bool sweepMapCollideCheck(const std::vector<std::vector<std::unique_ptr<Tile>>>& map) override;
     bool aquireTargetEnemy(const std::vector<std::shared_ptr<Character>>& enemies);
     bool enemyCollideCheck(std::vector<std::shared_ptr<Character>>& enemies);
 
@@ -34,7 +34,7 @@ public:
     PlayerBoomerang(double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 10.0, double colliderHeight = 10.0, 
         const char* fileName = "Assets/Attacks/boomerang.png", int damage = 20);
 
-    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::vector<std::shared_ptr<Character>>& enemies, std::shared_ptr<Character> player);
+    void update(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, const Camera& camera, std::vector<std::shared_ptr<Character>>& enemies, std::shared_ptr<Character> player);
     void cameraDraw(const Camera& camera) const override;
 
     bool isReturning() const { return m_returningToPlayer; }

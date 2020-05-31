@@ -9,7 +9,7 @@ Map::~Map()
     {
         for (auto& tile : row)
         {
-            tile.destroy();
+            tile->destroy();
         }
     }
 
@@ -17,9 +17,6 @@ Map::~Map()
     m_block.destroy();
     m_platform.destroy();
     m_ladder.destroy();
-
-    m_generatedChunks.clear();
-    m_map.clear();
 }
 
 void Map::generateChunks(int totalChunks)
@@ -34,20 +31,37 @@ void Map::generateChunks(int totalChunks)
 }
 
 //Selects tile based on number and pushes to temp vector
-Tile Map::addTile(int tileNumber)
+Tile::Type Map::getTileTypeFromNumber(int tileNumber) const
 {
     switch (tileNumber)
     {
     case 0:
-        return m_background;
+        return Tile::BACKGROUND;
     case 1:
-        return m_block;
+        return Tile::SOLID;
     case 2:
-        return m_platform;
+        return Tile::PLATFORM;
     case 3:
-        return m_ladder;
+        return Tile::LADDER;
     default:
-        return m_background;
+        return Tile::BACKGROUND;
+    }
+}
+
+std::string Map::getTileFileFromNumber(int tileNumber) const
+{
+    switch (tileNumber)
+    {
+    case 0:
+        return "Assets/MapTiles/blackGrey.png";
+    case 1:
+        return "Assets/MapTiles/WhiteFadeBlocks/1.png";
+    case 2:
+        return "Assets/MapTiles/platform.png";
+    case 3:
+        return "Assets/MapTiles/ladder.png.";
+    default:
+        return "Assets/MapTiles/blackGrey.png";
     }
 }
 
@@ -76,21 +90,23 @@ void Map::loadMap(int totalChunks)
             MapChunkLoader::intMap_type tileNumbers{ m_chunkLoader.loadAndGetChunk(m_generatedChunks[generatedChunksRow][generatedChunksColumn]) };
             for (int chunkRow{ 0 }; chunkRow < m_chunkHeight; ++chunkRow)
             {
+                int row{ (generatedChunksRow * m_chunkHeight) + chunkRow };
                 for (int chunkColumn{ 0 }; chunkColumn < m_chunkWidth; ++chunkColumn)
                 {
-                    m_map[(generatedChunksRow * m_chunkHeight) + chunkRow][(generatedChunksColumn * m_chunkWidth) + chunkColumn] = addTile(tileNumbers[chunkRow][chunkColumn]);
+                    int column{ (generatedChunksColumn * m_chunkWidth) + chunkColumn };
+                    m_map[row][column].reset(new Tile{ tileNumbers[chunkRow][chunkColumn] });
                 }
             }
         }
     }
 
     //level height and width used for determining camera boundary
-    m_levelHeight = static_cast<int>(m_map.size()) * m_map[0][0].getSize();
-    m_levelWidth = static_cast<int>(m_map[0].size()) * m_map[0][0].getSize();
+    m_levelHeight = static_cast<int>(m_map.size()) * m_map[0][0]->getSize();
+    m_levelWidth = static_cast<int>(m_map[0].size()) * m_map[0][0]->getSize();
 
     setTiles();
 
-    printMap();
+    //printMap();
 }
 
 //sets the positions of all the tiles
@@ -100,15 +116,15 @@ void Map::setTiles()
     {
         for (index_type column{ 0 }; column < m_map[0].size(); ++column)
         {
-            m_map[row][column].setPos(1.0 * column * m_map[row][column].getSize(),
-                1.0 * row * m_map[row][column].getSize());
+            m_map[row][column]->setPos(1.0 * column * Constants::tileSize,
+                1.0 * row * Constants::tileSize);
         }
     }
 }
 
 Map::index_type Map::cameraCoordToMapIndex(int coord) const
 {
-    return (coord - (coord % m_map[0][0].getSize())) / m_map[0][0].getSize();
+    return (coord - (coord % m_map[0][0]->getSize())) / m_map[0][0]->getSize();
 }
 
 void Map::drawMap(const Camera& camera) const
@@ -122,7 +138,7 @@ void Map::drawMap(const Camera& camera) const
         for (index_type column{ cameraCoordToMapIndex(camera.getx()) };
             column < (xmaxCameraIndex + 1 < m_map[0].size() ? xmaxCameraIndex + 1: m_map[0].size()); ++column)
         {
-            m_map[row][column].cameraDraw(camera);
+            m_map[row][column]->cameraDraw(camera);
         }
     }
 }
@@ -133,7 +149,7 @@ void Map::printMap() const
     {
         for (const auto& tile : row)
         {
-            switch (tile.getType())
+            switch (tile->getType())
             {
             case Tile::BACKGROUND:
                 std::cout << "0 ";

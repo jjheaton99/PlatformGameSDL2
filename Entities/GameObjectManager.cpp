@@ -6,7 +6,7 @@ GameObjectManager::GameObjectManager()
 GameObjectManager::~GameObjectManager()
 {}
 
-void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Player& player)
+void GameObjectManager::update(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, const Camera& camera, Player& player)
 {
     int enemyCount{ 0 };
     for (auto& enemy : m_enemies)

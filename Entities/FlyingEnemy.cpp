@@ -5,7 +5,7 @@ FlyingEnemy::FlyingEnemy(const char* fileName, double xStartPos, double yStartPo
     : FlyingCharacter(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints), m_damage{ damage }
 {}
 
-void FlyingEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player)
+void FlyingEnemy::update(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, const Camera& camera, Character& player)
 {
     if (m_hitPoints <= 0)
     {

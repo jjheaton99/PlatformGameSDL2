@@ -12,7 +12,7 @@
 class Map
 {
 public:
-    using map_type = std::vector<std::vector <Tile>>;
+    using map_type = std::vector<std::vector<std::unique_ptr<Tile>>>;
     using index_type = map_type::size_type;
 
 private:
@@ -33,7 +33,8 @@ private:
    
     void generateChunks(int totalChunks);
 
-    Tile addTile(int tileNumber);
+    Tile::Type getTileTypeFromNumber(int tileNumber) const;
+    std::string getTileFileFromNumber(int tileNumber) const;
     index_type cameraCoordToMapIndex(int coord) const;
     void setTiles();
 
@@ -44,7 +45,7 @@ public:
     void loadMap(int totalChunks);
     void drawMap(const Camera& camera) const;
 
-    const std::vector<std::vector <Tile>>& getMap() const { return m_map; }
+    const std::vector<std::vector<std::unique_ptr<Tile>>>& getMap() const { return m_map; }
     int getLevelWidth() const { return m_levelWidth; }
     int getLevelHeight() const { return m_levelHeight; }
 
