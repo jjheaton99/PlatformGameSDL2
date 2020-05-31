@@ -2,10 +2,7 @@
 
 SPlayGame::SPlayGame(const char* mapFile)
 {
-    if (!m_map->loadMap(mapFile))
-    {
-        std::cout << "Map not loaded!" << '\n';
-    }
+    m_map->loadMap(0);
 
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
@@ -17,7 +14,7 @@ SPlayGame::SPlayGame(const char* mapFile)
     //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 500, 2000);
     //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 600, 2000);
     //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 700, 2000);
-    m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 500, 2200);
+    //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 500, 2200);
     //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 600, 2200);
     //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 700, 2200);
 }

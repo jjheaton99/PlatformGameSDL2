@@ -5,29 +5,49 @@ Map::Map()
 
 Map::~Map()
 {
+    for (auto& row : m_map)
+    {
+        for (auto& tile : row)
+        {
+            tile.destroy();
+        }
+    }
+
     m_background.destroy();
     m_block.destroy();
+    m_platform.destroy();
+    m_ladder.destroy();
+
+    m_generatedChunks.clear();
+    m_map.clear();
+}
+
+void Map::generateChunks(int totalChunks)
+{
+    m_generatedChunks.resize(3);
+    for (auto& row : m_generatedChunks)
+    {
+        row.resize(3, MapChunkLoader::ChunkEntrances::TBLR);
+    }
+
+    //m_generatedChunks[0][0] = MapChunkLoader::ChunkEntrances::BR;
 }
 
 //Selects tile based on number and pushes to temp vector
-void Map::pushTile(int tileNumber, std::vector<Tile>& tileRow)
+Tile Map::addTile(int tileNumber)
 {
     switch (tileNumber)
     {
     case 0:
-        tileRow.push_back(m_background);
-        break;
+        return m_background;
     case 1:
-        tileRow.push_back(m_block);
-        break;
+        return m_block;
     case 2:
-        tileRow.push_back(m_platform);
-        break;
+        return m_platform;
     case 3:
-        tileRow.push_back(m_ladder);
-        break;
+        return m_ladder;
     default:
-        break;
+        return m_background;
     }
 }
 
@@ -37,63 +57,40 @@ void Map::pushTile(int tileNumber, std::vector<Tile>& tileRow)
 //00 01 00 00 00
 //02 02 03 04 05
 //05 04 03 02 01
-bool Map::loadMap(const char* fileName)
+void Map::loadMap(int totalChunks)
 {
-    //Erase any previous map
-    m_map.clear();
-
-    std::ifstream mapFile(fileName);
-    if (!mapFile.is_open())
+    //Resize map based on generated chunks and size of chunks
+    generateChunks(totalChunks);
+    m_map.resize(m_chunkHeight * m_generatedChunks.size());
+    for (auto& row : m_map)
     {
-        std::cout << "Unable to open file " << fileName << "!\n";
-        return false;
+        row.resize(m_chunkWidth * m_generatedChunks[0].size());
     }
 
-    else
+    //for loops to load tiles into map
+    //loops over the generated chunks and and loads a random chunk of that type into the map
+    for (int generatedChunksRow{ 0 }; generatedChunksRow < static_cast<int>(m_generatedChunks.size()); ++generatedChunksRow)
     {
-        std::string line;
-        std::vector<Tile> tileRow;
-
-        //reads in file line by line and constructs tilemap row vector
-        while (!mapFile.eof())
+        for (int generatedChunksColumn{ 0 }; generatedChunksColumn < static_cast<int>(m_generatedChunks[0].size()); ++generatedChunksColumn)
         {
-            std::getline(mapFile, line);
-            tileRow.resize(0);
-            
-            std::string tileNumberString{};
-            int tileNumber{ 0 };
-            index_type index{ 0 };
-            index_type spacePos{ line.find(' ', index) };
-
-            //finds all substrings sided by spaces and converts them integers to for pushing tiles
-            while (spacePos != std::string::npos)
+            MapChunkLoader::intMap_type tileNumbers{ m_chunkLoader.loadAndGetChunk(m_generatedChunks[generatedChunksRow][generatedChunksColumn]) };
+            for (int chunkRow{ 0 }; chunkRow < m_chunkHeight; ++chunkRow)
             {
-                tileNumberString = line.substr(index, spacePos - index);
-                index = spacePos + 1;
-                spacePos = line.find(' ', index);
-
-                tileNumber = std::stoi(tileNumberString);
-                pushTile(tileNumber, tileRow);
+                for (int chunkColumn{ 0 }; chunkColumn < m_chunkWidth; ++chunkColumn)
+                {
+                    m_map[(generatedChunksRow * m_chunkHeight) + chunkRow][(generatedChunksColumn * m_chunkWidth) + chunkColumn] = addTile(tileNumbers[chunkRow][chunkColumn]);
+                }
             }
-
-            //last number in the line
-            tileNumberString = line.substr(index, line.length() - index);
-            pushTile(tileNumber, tileRow);
-
-            //adds the row to the overall map
-            m_map.push_back(tileRow);
         }
-
-        mapFile.close();
-
-        //level height and width used for determining camera boundary
-        m_levelHeight = static_cast<int>(m_map.size()) * m_map[0][0].getSize();
-        m_levelWidth = static_cast<int>(m_map[0].size()) * m_map[0][0].getSize();
-
-        setTiles();
-
-        return true;
     }
+
+    //level height and width used for determining camera boundary
+    m_levelHeight = static_cast<int>(m_map.size()) * m_map[0][0].getSize();
+    m_levelWidth = static_cast<int>(m_map[0].size()) * m_map[0][0].getSize();
+
+    setTiles();
+
+    printMap();
 }
 
 //sets the positions of all the tiles
@@ -127,5 +124,34 @@ void Map::drawMap(const Camera& camera) const
         {
             m_map[row][column].cameraDraw(camera);
         }
+    }
+}
+
+void Map::printMap() const
+{
+    for (const auto& row : m_map)
+    {
+        for (const auto& tile : row)
+        {
+            switch (tile.getType())
+            {
+            case Tile::BACKGROUND:
+                std::cout << "0 ";
+                break;
+            case Tile::SOLID:
+                std::cout << "1 ";
+                break;
+            case Tile::PLATFORM:
+                std::cout << "2 ";
+                break;
+            case Tile::LADDER:
+                std::cout << "3 ";
+                break;
+            default:
+                std::cout << "x ";
+                break;
+            }
+        }
+        std::cout << '\n';
     }
 }

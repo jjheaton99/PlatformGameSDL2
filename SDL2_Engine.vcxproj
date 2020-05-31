@@ -44,6 +44,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mapping\Camera.cpp" />
     <ClCompile Include="Mapping\Map.cpp" />
+    <ClCompile Include="Mapping\MapChunkLoader.cpp" />
     <ClCompile Include="Mapping\Tile.cpp" />
     <ClCompile Include="Misc\Collider.cpp" />
     <ClCompile Include="Misc\Constants.cpp" />
@@ -81,6 +82,7 @@
     <ClInclude Include="GameStates\StateMachine.h" />
     <ClInclude Include="Mapping\Camera.h" />
     <ClInclude Include="Mapping\Map.h" />
+    <ClInclude Include="Mapping\MapChunkLoader.h" />
     <ClInclude Include="Mapping\Tile.h" />
     <ClInclude Include="Misc\Collider.h" />
     <ClInclude Include="Misc\Constants.h" />
