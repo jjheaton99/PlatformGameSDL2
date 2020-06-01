@@ -11,8 +11,8 @@ protected:
 
     std::vector<Collider::sweptObstacleTuple> m_solidColliders;
 
-    void getCollideTiles(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, int projectileRow, int projectileColumn);
-    virtual bool sweepMapCollideCheck(const std::vector<std::vector<std::unique_ptr<Tile>>>& map) = 0;
+    void getCollideTiles(const std::vector<std::vector<Tile>>& map, int projectileRow, int projectileColumn);
+    virtual bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) = 0;
     //virtual bool edgeCheck(const Camera& camera) = 0;
 
     virtual void motion() = 0;

@@ -26,8 +26,8 @@ protected:
     bool m_hasCrouched{ false };
 
     //tilemap collision handlers
-    virtual bool sweepMapCollideCheck(const std::vector<std::vector<std::unique_ptr<Tile>>>& map) override;
-    virtual bool checkForGround(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, int characterRow,
+    virtual bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) override;
+    virtual bool checkForGround(const std::vector<std::vector<Tile>>& map, int characterRow,
         int characterColumn, const Collider::DoubleRect& characterColliderBox);
     virtual bool edgeCheck(const Camera& camera) override;
 

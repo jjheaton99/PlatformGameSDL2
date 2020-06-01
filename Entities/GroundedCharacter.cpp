@@ -42,7 +42,7 @@ bool GroundedCharacter::edgeCheck(const Camera& camera)
 }
 
 //checks if character is standing on a solid map tile
-bool GroundedCharacter::checkForGround(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, int characterRow,
+bool GroundedCharacter::checkForGround(const std::vector<std::vector<Tile>>& map, int characterRow,
     int characterColumn, const Collider::DoubleRect& characterColliderBox)
 {
     //allows characters to continue climbing when in contact with ladders
@@ -55,12 +55,12 @@ bool GroundedCharacter::checkForGround(const std::vector<std::vector<std::unique
     {
         for (int column{ characterColumn }; 1.0 * column * Constants::tileSize <= characterColliderBox.x + characterColliderBox.w && column < static_cast<int>(map[0].size()); ++column)
         {
-            if ((map[row][column]->getType() == Tile::SOLID && !m_crouched) || map[row][column]->getType() == Tile::PLATFORM)
+            if ((map[row][column].getType() == Tile::SOLID && !m_crouched) || map[row][column].getType() == Tile::PLATFORM)
             {
                 //Checks for blocks directly below character whilst not colliding
                 if ((m_movement != AIRBORNE)
-                    && (map[row][column]->getCollider().getHitBox().x > (characterColliderBox.x - map[row][column]->getCollider().getHitBox().w))
-                    && (map[row][column]->getCollider().getHitBox().x < (characterColliderBox.x + characterColliderBox.w)))
+                    && (map[row][column].getCollider().getHitBox().x > (characterColliderBox.x - map[row][column].getCollider().getHitBox().w))
+                    && (map[row][column].getCollider().getHitBox().x < (characterColliderBox.x + characterColliderBox.w)))
                 {
                     return true;
                 }
@@ -71,7 +71,7 @@ bool GroundedCharacter::checkForGround(const std::vector<std::vector<std::unique
     return false;
 }
 
-bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<std::unique_ptr<Tile>>>& map)
+bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
 {
     //character column and row variables are the position of the character in terms of map tiles
     int characterColumn{ static_cast<int>(m_collider.getHitBox().x / Constants::tileSize) };

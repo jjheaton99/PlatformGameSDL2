@@ -2,9 +2,10 @@
 
 SPlayGame::SPlayGame(const char* mapFile)
 {
-    int pathLength{ 20 };
+    int pathLength{ 50 };
     m_map->loadMap(pathLength);
-    m_player->setPos(((pathLength - 1.0) * Constants::chunkWidth * Constants::tileSize) + 700.0, ((pathLength - 1.0) * Constants::chunkHeight * Constants::tileSize) + 700.0);
+    m_player->setPos(((1.0 * m_map->getPlayerSpawnChunk().getx()) * Constants::chunkWidth * Constants::tileSize) + 700.0,
+        ((1.0 * m_map->getPlayerSpawnChunk().gety()) * Constants::chunkHeight * Constants::tileSize) + 700.0);
 
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
@@ -13,8 +14,8 @@ SPlayGame::SPlayGame(const char* mapFile)
     {
         //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 200.0 * i, 200*i);
     }
-    m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 200, 700);
-    m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 200, 500);
+    //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 200, 700);
+    //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 200, 500);
 }
 
 SPlayGame::~SPlayGame()

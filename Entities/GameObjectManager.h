@@ -32,7 +32,7 @@ public:
     GameObjectManager();
     ~GameObjectManager();
 
-    void update(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, const Camera& camera, Player& player);
+    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Player& player);
     void cameraDraw(const Camera& camera) const;
 
     void newEnemy(Enemy type, double xPos, double yPos);

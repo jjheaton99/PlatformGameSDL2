@@ -1,155 +1,278 @@
 #include "Map.h"
 
 Map::Map()
-{}
+{
+    m_backgroundTexture->load("Assets/MapTiles/blackGrey.png");
+    m_solidTexture->load("Assets/MapTiles/WhiteFadeBlocks/1.png");
+    m_platformTexture->load("Assets/MapTiles/platform.png");
+    m_ladderTexture->load("Assets/MapTiles/ladder.png");
+}
 
 Map::~Map()
 {
-    for (auto& row : m_map)
-    {
-        for (auto& tile : row)
-        {
-            tile->destroy();
-        }
-    }
+    m_backgroundTexture->destroy();
+    m_solidTexture->destroy();
+    m_platformTexture->destroy();
+    m_ladderTexture->destroy();
 }
 
+//generates a path out of map chunks
 void Map::generateChunks(int totalChunks)
 {
-    m_generatedChunks.resize((2 * totalChunks) - 1);
+    int generatedChunksSize{ (2 * totalChunks) + 1 };
+    m_generatedChunks.resize(generatedChunksSize);
     for (auto& row : m_generatedChunks)
     {
-        row.resize((2 * totalChunks) - 1, MapChunkLoader::SOLID);
+        row.resize(generatedChunksSize, MapChunkLoader::SOLID);
     }
 
     int randomChunkNum{ MTRandom::getRandomInt(1, 4) };
-    int currentChunkRow{ totalChunks - 1 };
-    int currentChunkColumn{ totalChunks - 1 };
-    MapChunkLoader::ChunkEntrances prevChunkExit;
+    int currentChunkRow{ totalChunks + 1 };
+    int currentChunkColumn{ totalChunks + 1 };
+    MapChunkLoader::ChunkEntrances prevChunkExit{MapChunkLoader::T};
 
+    //variables to log space that path uses
+    int minRow{ totalChunks };
+    int maxRow{ totalChunks + 2 };
+    int minColumn{ totalChunks };
+    int maxColumn{ totalChunks + 2 };
     switch (randomChunkNum)
     {
     case 1:
         m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::T;
         --currentChunkRow;
+        if (currentChunkRow <= minRow)
+        {
+            minRow = currentChunkRow - 1;
+        }
         prevChunkExit = MapChunkLoader::T;
         break;
 
     case 2:
         m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::B;
         ++currentChunkRow;
+        if (currentChunkRow >= maxRow)
+        {
+            maxRow = currentChunkRow + 1;
+        }
         prevChunkExit = MapChunkLoader::B;
         break;
 
     case 3:
         m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::L;
         --currentChunkColumn;
+        if (currentChunkColumn <= minColumn)
+        {
+            minColumn = currentChunkColumn - 1;
+        }
         prevChunkExit = MapChunkLoader::L;
         break;
 
     case 4:
         m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::R;
         ++currentChunkColumn;
+        if (currentChunkColumn >= maxColumn)
+        {
+            maxColumn = currentChunkColumn + 1;
+        }
         prevChunkExit = MapChunkLoader::R;
         break;
     }
 
+    char dirChange;
+    if (MTRandom::getRandomInt(1, 2) == 1)
+    {
+        dirChange = 'l';
+    }
+    else
+    {
+        dirChange = 'r';
+    }
+    int dirChangeCount{ 0 };
+    int dirChangeOrNot;
+
     for (int i{ 1 }; i < totalChunks - 1; ++i)
     {
-        randomChunkNum = MTRandom::getRandomInt(1, 3);
+        dirChangeOrNot = MTRandom::getRandomInt(1, 2);
         switch (prevChunkExit)
         {
-        case MapChunkLoader::T:
-            switch (randomChunkNum)
+        case MapChunkLoader::T: 
+            switch (dirChangeOrNot)
             {
             case 1:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BL;
-                --currentChunkColumn;
-                prevChunkExit = MapChunkLoader::L;
+                switch (dirChange)
+                {
+                case 'l':
+                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BL;
+                    --currentChunkColumn;
+                    if (currentChunkColumn <= minColumn)
+                    {
+                        minColumn = currentChunkColumn - 1;
+                    }
+                    prevChunkExit = MapChunkLoader::L;
+                    break;
+
+                case 'r':
+                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BR;
+                    ++currentChunkColumn;
+                    if (currentChunkColumn >= maxColumn)
+                    {
+                        maxColumn = currentChunkColumn + 1;
+                    }
+                    prevChunkExit = MapChunkLoader::R;
+                    break;
+                }
+                ++dirChangeCount;
                 break;
 
             case 2:
                 m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TB;
                 --currentChunkRow;
+                if (currentChunkRow <= minRow)
+                {
+                    minRow = currentChunkRow - 1;
+                }
                 prevChunkExit = MapChunkLoader::T;
-                break;
-
-            case 3:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BR;
-                ++currentChunkColumn;
-                prevChunkExit = MapChunkLoader::R;
                 break;
             }
             break;
 
         case MapChunkLoader::B:
-            switch (randomChunkNum)
+            switch (dirChangeOrNot)
             {
             case 1:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TB;
-                ++currentChunkRow;
-                prevChunkExit = MapChunkLoader::B;
+                switch (dirChange)
+                {
+                case 'l':
+                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TR;
+                    ++currentChunkColumn;
+                    if (currentChunkColumn >= maxColumn)
+                    {
+                        maxColumn = currentChunkColumn + 1;
+                    }
+                    prevChunkExit = MapChunkLoader::R;
+                    break;
+
+                case 'r':
+                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TL;
+                    --currentChunkColumn;
+                    if (currentChunkColumn <= minColumn)
+                    {
+                        minColumn = currentChunkColumn - 1;
+                    }
+                    prevChunkExit = MapChunkLoader::L;
+                    break;
+                }
+                ++dirChangeCount;
                 break;
 
             case 2:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TL;
-                --currentChunkColumn;
-                prevChunkExit = MapChunkLoader::L;
-                break;
-
-            case 3:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TR;
-                ++currentChunkColumn;
-                prevChunkExit = MapChunkLoader::R;
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TB;
+                ++currentChunkRow;
+                if (currentChunkRow >= maxRow)
+                {
+                    maxRow = currentChunkRow + 1;
+                }
+                prevChunkExit = MapChunkLoader::B;
                 break;
             }
             break;
 
         case MapChunkLoader::L:
-            switch (randomChunkNum)
+            switch (dirChangeOrNot)
             {
             case 1:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TR;
-                --currentChunkRow;
-                prevChunkExit = MapChunkLoader::T;
+                switch (dirChange)
+                {
+                case 'l':
+                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BR;
+                    ++currentChunkRow;
+                    if (currentChunkRow >= maxRow)
+                    {
+                        maxRow = currentChunkRow + 1;
+                    }
+                    prevChunkExit = MapChunkLoader::B;
+                    break;
+
+                case 'r':
+                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TR;
+                    --currentChunkRow;
+                    if (currentChunkRow <= minRow)
+                    {
+                        minRow = currentChunkRow - 1;
+                    }
+                    prevChunkExit = MapChunkLoader::T;
+                    break;
+                }
+                ++dirChangeCount;
                 break;
 
             case 2:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BR;
-                ++currentChunkRow;
-                prevChunkExit = MapChunkLoader::B;
-                break;
-
-            case 3:
                 m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::LR;
                 --currentChunkColumn;
+                if (currentChunkColumn <= minColumn)
+                {
+                    minColumn = currentChunkColumn - 1;
+                }
                 prevChunkExit = MapChunkLoader::L;
                 break;
             }
             break;
 
         case MapChunkLoader::R:
-            switch (randomChunkNum)
+            switch (dirChangeOrNot)
             {
             case 1:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TL;
-                --currentChunkRow;
-                prevChunkExit = MapChunkLoader::T;
+                switch (dirChange)
+                {
+                case 'l':
+                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TL;
+                    --currentChunkRow;
+                    if (currentChunkRow <= minRow)
+                    {
+                        minRow = currentChunkRow - 1;
+                    }
+                    prevChunkExit = MapChunkLoader::T;
+                    break;
+
+                case 'r':
+                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BL;
+                    ++currentChunkRow;
+                    if (currentChunkRow >= maxRow)
+                    {
+                        maxRow = currentChunkRow + 1;
+                    }
+                    prevChunkExit = MapChunkLoader::B;
+                    break;
+                }
+                ++dirChangeCount;
                 break;
 
             case 2:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BL;
-                ++currentChunkRow;
-                prevChunkExit = MapChunkLoader::B;
-                break;
-
-            case 3:
                 m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::LR;
                 ++currentChunkColumn;
+                if (currentChunkColumn >= maxColumn)
+                {
+                    maxColumn = currentChunkColumn + 1;
+                }
                 prevChunkExit = MapChunkLoader::R;
                 break;
             }
             break;
+        }
+
+        //force direction to change same way two times
+        if (dirChangeCount == 2)
+        {
+            if (dirChange == 'l')
+            {
+                dirChange = 'r';
+            }
+            else
+            {
+                dirChange = 'l';
+            }
+            dirChangeCount = 0;
         }
     }
 
@@ -172,48 +295,49 @@ void Map::generateChunks(int totalChunks)
         break;
     }
 
-    for (const auto& row : m_generatedChunks)
+    //erase excess solids leaving a border of solids
+    if (minRow >= 0)
     {
-        for (const auto& chunk : row)
+        m_generatedChunks.erase(m_generatedChunks.begin(), m_generatedChunks.begin() + minRow);
+        maxRow -= minRow;
+    }
+    if (maxRow < static_cast<int>(m_generatedChunks.size()))
+    {
+        m_generatedChunks.erase(m_generatedChunks.begin() + maxRow + 1, m_generatedChunks.end());
+    }
+    if (minColumn >= 0)
+    {
+        for (auto& row : m_generatedChunks)
         {
-            std::cout << static_cast<int>(chunk) << "   ";
+            row.erase(row.begin(), row.begin() + minColumn);
         }
-        std::cout << '\n';
+        maxColumn -= minColumn;
     }
+    if (maxColumn < static_cast<int>(m_generatedChunks[0].size()))
+    {
+        for (auto& row : m_generatedChunks)
+        {
+            row.erase(row.begin() + maxColumn + 1, row.end());
+        }
+    }
+
+    m_playerSpawnChunk = Vector2D<int>{totalChunks + 1 - minColumn, totalChunks + 1 - minRow};
 }
 
-//Selects tile based on number and pushes to temp vector
-Tile::Type Map::getTileTypeFromNumber(int tileNumber) const
+Tile Map::getTileFromNumber(int number) const
 {
-    switch (tileNumber)
+    switch (number)
     {
     case 0:
-        return Tile::BACKGROUND;
+        return Tile{ m_backgroundTexture, Tile::BACKGROUND };
     case 1:
-        return Tile::SOLID;
+        return Tile{ m_solidTexture, Tile::SOLID };
     case 2:
-        return Tile::PLATFORM;
+        return Tile{ m_platformTexture, Tile::PLATFORM };
     case 3:
-        return Tile::LADDER;
+        return Tile{ m_ladderTexture, Tile::LADDER };
     default:
-        return Tile::BACKGROUND;
-    }
-}
-
-std::string Map::getTileFileFromNumber(int tileNumber) const
-{
-    switch (tileNumber)
-    {
-    case 0:
-        return "Assets/MapTiles/blackGrey.png";
-    case 1:
-        return "Assets/MapTiles/WhiteFadeBlocks/1.png";
-    case 2:
-        return "Assets/MapTiles/platform.png";
-    case 3:
-        return "Assets/MapTiles/ladder.png.";
-    default:
-        return "Assets/MapTiles/blackGrey.png";
+        return Tile{ m_backgroundTexture, Tile::BACKGROUND };
     }
 }
 
@@ -246,15 +370,15 @@ void Map::loadMap(int totalChunks)
                 for (int chunkColumn{ 0 }; chunkColumn < Constants::chunkWidth; ++chunkColumn)
                 {
                     int column{ (generatedChunksColumn * Constants::chunkWidth) + chunkColumn };
-                    m_map[row][column].reset(new Tile{ tileNumbers[chunkRow][chunkColumn] });
+                    m_map[row][column] = getTileFromNumber( tileNumbers[chunkRow][chunkColumn] );
                 }
             }
         }
     }
 
     //level height and width used for determining camera boundary
-    m_levelHeight = static_cast<int>(m_map.size()) * m_map[0][0]->getSize();
-    m_levelWidth = static_cast<int>(m_map[0].size()) * m_map[0][0]->getSize();
+    m_levelHeight = static_cast<int>(m_map.size()) * m_map[0][0].getSize();
+    m_levelWidth = static_cast<int>(m_map[0].size()) * m_map[0][0].getSize();
 
     setTiles();
 
@@ -268,7 +392,7 @@ void Map::setTiles()
     {
         for (index_type column{ 0 }; column < m_map[0].size(); ++column)
         {
-            m_map[row][column]->setPos(1.0 * column * Constants::tileSize,
+            m_map[row][column].setPos(1.0 * column * Constants::tileSize,
                 1.0 * row * Constants::tileSize);
         }
     }
@@ -276,7 +400,7 @@ void Map::setTiles()
 
 Map::index_type Map::cameraCoordToMapIndex(int coord) const
 {
-    return (coord - (coord % m_map[0][0]->getSize())) / m_map[0][0]->getSize();
+    return (coord - (coord % m_map[0][0].getSize())) / m_map[0][0].getSize();
 }
 
 void Map::drawMap(const Camera& camera) const
@@ -290,7 +414,7 @@ void Map::drawMap(const Camera& camera) const
         for (index_type column{ cameraCoordToMapIndex(camera.getx()) };
             column < (xmaxCameraIndex + 1 < m_map[0].size() ? xmaxCameraIndex + 1: m_map[0].size()); ++column)
         {
-            m_map[row][column]->cameraDraw(camera);
+            m_map[row][column].cameraDraw(camera);
         }
     }
 }
@@ -301,7 +425,7 @@ void Map::printMap() const
     {
         for (const auto& tile : row)
         {
-            switch (tile->getType())
+            switch (tile.getType())
             {
             case Tile::BACKGROUND:
                 std::cout << "0 ";

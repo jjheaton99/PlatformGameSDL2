@@ -34,11 +34,6 @@ bool Game::init()
 
             else
             {
-                TileTextures::background->load("Assets/MapTiles/blackGrey.png");
-                TileTextures::block->load("Assets/MapTiles/WhiteFadeBlocks/1.png");
-                TileTextures::platform->load("Assets/MapTiles/platform.png");
-                TileTextures::ladder->load("Assets/MapTiles/ladder.png");
-
                 SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 0);
                 m_stateMachine.reset(new StateMachine{});
 
@@ -50,11 +45,6 @@ bool Game::init()
 
 void Game::close()
 {
-    TileTextures::background->destroy();
-    TileTextures::block->destroy();
-    TileTextures::platform->destroy();
-    TileTextures::ladder->destroy();
-
     SDL_DestroyRenderer(g_renderer);
 
     g_window.destroy();

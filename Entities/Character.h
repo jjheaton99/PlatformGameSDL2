@@ -27,8 +27,8 @@ protected:
     double m_ladderxPos{ 0.0 };
 
     //for checking collisions with map tiles
-    void getCollideTiles(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, int characterRow, int characterColumn);
-    virtual bool sweepMapCollideCheck(const std::vector<std::vector<std::unique_ptr<Tile>>>& map) = 0;
+    void getCollideTiles(const std::vector<std::vector<Tile>>& map, int characterRow, int characterColumn);
+    virtual bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) = 0;
     //for checking collisions with the edge of the map
     virtual bool edgeCheck(const Camera& camera) = 0;
 
@@ -40,7 +40,7 @@ public:
     virtual ~Character();
 
     //for enemies
-    virtual void update(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, const Camera& camera, Character& player) = 0;
+    virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player) = 0;
     virtual void cameraDraw(const Camera& camera) const override;
 
     void addHP(int HP) { m_hitPoints += HP; }

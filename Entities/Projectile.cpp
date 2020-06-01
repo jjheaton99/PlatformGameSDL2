@@ -9,7 +9,7 @@ Projectile::~Projectile()
     destroy();
 }
 
-void Projectile::getCollideTiles(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, int projectileRow, int projectileColumn)
+void Projectile::getCollideTiles(const std::vector<std::vector<Tile>>& map, int projectileRow, int projectileColumn)
 {
     //delete any existing hitboxes 
     m_solidColliders.clear();
@@ -41,12 +41,12 @@ void Projectile::getCollideTiles(const std::vector<std::vector<std::unique_ptr<T
     {
         for (int column{ startColumn }; column <= endColumn; ++column)
         {
-            if (map[row][column]->getType() == Tile::SOLID)
+            if (map[row][column].getType() == Tile::SOLID)
             {
                 m_solidColliders.push_back({
-                    map[row][column]->getCollider(),
-                    Collider::xOverlap(m_collider, map[row][column]->getCollider()),
-                    Collider::yOverlap(m_collider, map[row][column]->getCollider()),
+                    map[row][column].getCollider(),
+                    Collider::xOverlap(m_collider, map[row][column].getCollider()),
+                    Collider::yOverlap(m_collider, map[row][column].getCollider()),
                 });
             }
         }

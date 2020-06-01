@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(Type type, double xPos, double yPos, int size)
+/*Tile::Tile(Type type, double xPos, double yPos, int size)
     : GameObject(xPos, yPos), m_type{type}, m_size{size}
 {
     switchTileType(type);
@@ -26,6 +26,18 @@ Tile::Tile(int tileNumber, double xPos, double yPos, int size)
     m_dstRect.h = m_size;
 
     m_collider.setDimensions(m_size, m_size);
+}*/
+
+Tile::Tile(std::shared_ptr<WTexture> tileTexture, Type type, double xPos, double yPos, int size)
+    : GameObject(xPos, yPos), m_type{ type }, m_size{ size }
+{
+    m_srcRect = { 0, 0, 32, 32 };
+    m_dstRect.w = m_size;
+    m_dstRect.h = m_size;
+
+    m_collider.setDimensions(m_size, m_size);
+
+    m_tileTexture = tileTexture;
 }
 
 void Tile::setPos(double xPos, double yPos)
@@ -36,7 +48,7 @@ void Tile::setPos(double xPos, double yPos)
     m_collider.setPosition(xPos, yPos);
 }
 
-void Tile::switchTileType(Type tileType)
+/*void Tile::switchTileType(Type tileType)
 {
     switch (tileType)
     {
@@ -88,11 +100,11 @@ void Tile::switchTileTypeFromInt(int tileType)
         m_tileTexture = TileTextures::background;
         break;
     }
-}
+}*/
 
 void Tile::cameraDraw(const Camera& camera) const
 {
-    if (m_collider.collideCheck(camera.getCollider()))
+    if (m_collider.collideCheck(camera.getCollider()) && m_tileTexture)
     {
         SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
         m_tileTexture->draw(m_srcRect, relativeDstRect, 0, nullptr, SDL_FLIP_NONE);

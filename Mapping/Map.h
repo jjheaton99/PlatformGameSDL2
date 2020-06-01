@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "MapChunkLoader.h"
 #include "Random.h"
+#include <algorithm>
 #include <array>
 #include <vector>
 #include <fstream>
@@ -13,7 +14,7 @@
 class Map
 {
 public:
-    using map_type = std::vector<std::vector<std::unique_ptr<Tile>>>;
+    using map_type = std::vector<std::vector<Tile>>;
     using index_type = map_type::size_type;
 
 private:
@@ -22,13 +23,19 @@ private:
 
     std::vector<std::vector<MapChunkLoader::ChunkEntrances>> m_generatedChunks;
 
+    std::shared_ptr<WTexture> m_backgroundTexture{ std::make_shared<WTexture>() };
+    std::shared_ptr<WTexture> m_solidTexture{ std::make_shared<WTexture>() };
+    std::shared_ptr<WTexture> m_platformTexture{ std::make_shared<WTexture>() };
+    std::shared_ptr<WTexture> m_ladderTexture{ std::make_shared<WTexture>() };
+
     int m_levelWidth;
     int m_levelHeight;
    
-    void generateChunks(int totalChunks);
+    Vector2D<int> m_playerSpawnChunk;
 
-    Tile::Type getTileTypeFromNumber(int tileNumber) const;
-    std::string getTileFileFromNumber(int tileNumber) const;
+    void generateChunks(int totalChunks);
+    Tile getTileFromNumber(int number) const;
+
     index_type cameraCoordToMapIndex(int coord) const;
     void setTiles();
 
@@ -39,9 +46,11 @@ public:
     void loadMap(int totalChunks);
     void drawMap(const Camera& camera) const;
 
-    const std::vector<std::vector<std::unique_ptr<Tile>>>& getMap() const { return m_map; }
+    const std::vector<std::vector<Tile>>& getMap() const { return m_map; }
     int getLevelWidth() const { return m_levelWidth; }
     int getLevelHeight() const { return m_levelHeight; }
+
+    const Vector2D<int>& getPlayerSpawnChunk() const { return m_playerSpawnChunk; }
 
     //for testing
     void printMap() const;

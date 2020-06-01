@@ -38,7 +38,7 @@ bool FlyingCharacter::edgeCheck(const Camera& camera)
     return false;
 }
 
-bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<std::unique_ptr<Tile>>>& map)
+bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
 {
     //character column and row variables are the position of the character in terms of map tiles
     int characterColumn{ static_cast<int>(m_collider.getHitBox().x / Constants::tileSize) };

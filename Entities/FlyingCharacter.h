@@ -6,7 +6,7 @@ class FlyingCharacter : public Character
 {
 protected:
     //tilemap collision handlers
-    virtual bool sweepMapCollideCheck(const std::vector<std::vector<std::unique_ptr<Tile>>>& map) override;
+    virtual bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) override;
     virtual bool edgeCheck(const Camera& camera) override;
 
 public:

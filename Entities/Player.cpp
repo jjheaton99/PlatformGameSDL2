@@ -27,7 +27,7 @@ Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, con
 Player::~Player()
 {}
 
-void Player::update(const std::vector<std::vector<std::unique_ptr<Tile>>>& map, Camera& camera, std::vector<std::shared_ptr<Character>>& enemies)
+void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::shared_ptr<Character>>& enemies)
 {
     //std::cout << m_hitPoints << '\n';
     if (m_hitPoints <= 0)
