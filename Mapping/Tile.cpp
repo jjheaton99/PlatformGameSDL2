@@ -1,8 +1,10 @@
 #include "Tile.h"
 
-Tile::Tile(const char* fileName, Type type, double xPos, double yPos, int size)
-    : GameObject(fileName, xPos, yPos), m_type{type}, m_size{size}
+Tile::Tile(Type type, double xPos, double yPos, int size)
+    : GameObject(xPos, yPos), m_type{type}, m_size{size}
 {
+    switchTileType(type);
+
     m_srcRect.w = 32;
     m_srcRect.h = 32;
 
@@ -15,7 +17,7 @@ Tile::Tile(const char* fileName, Type type, double xPos, double yPos, int size)
 Tile::Tile(int tileNumber, double xPos, double yPos, int size)
     : GameObject(xPos, yPos), m_size{ size }
 {
-    switchTileTypeAndTextureFromInt(tileNumber);
+    switchTileTypeFromInt(tileNumber);
 
     m_srcRect.w = 32;
     m_srcRect.h = 32;
@@ -34,60 +36,65 @@ void Tile::setPos(double xPos, double yPos)
     m_collider.setPosition(xPos, yPos);
 }
 
-void Tile::switchTileTypeAndTexture(Type tileType, const char* fileName)
+void Tile::switchTileType(Type tileType)
 {
-    //ensure old tile texture is destroyed to prevent memory leak
-    m_texture.load(fileName);
-
     switch (tileType)
     {
     case BACKGROUND:
         m_type = BACKGROUND;
+        m_tileTexture = TileTextures::background;
         break;
     case SOLID:
         m_type = SOLID;
+        m_tileTexture = TileTextures::block;
         break;
     case PLATFORM:
         m_type = PLATFORM;
+        m_tileTexture = TileTextures::platform;
         break;
     case LADDER:
         m_type = LADDER;
+        m_tileTexture = TileTextures::ladder;
         break;
     default:
         m_type = BACKGROUND;
+        m_tileTexture = TileTextures::background;
         break;
     }
 }
 
-void Tile::switchTileTypeAndTextureFromInt(int tileType)
+void Tile::switchTileTypeFromInt(int tileType)
 {
-    //ensure old tile texture is destroyed to prevent memory leak
-    if (m_texture.textureIsLoaded())
-    {
-        destroy();
-    }
-
     switch (tileType)
     {
     case 0:
-        m_texture.load("Assets/MapTiles/blackGrey.png");
         m_type = BACKGROUND;
+        m_tileTexture = TileTextures::background;
         break;
     case 1:
-        m_texture.load("Assets/MapTiles/WhiteFadeBlocks/1.png");
         m_type = SOLID;
+        m_tileTexture = TileTextures::block;
         break;
     case 2:
-        m_texture.load("Assets/MapTiles/platform.png");
         m_type = PLATFORM;
+        m_tileTexture = TileTextures::platform;
         break;
     case 3:
-        m_texture.load("Assets/MapTiles/ladder.png.");
         m_type = LADDER;
+        m_tileTexture = TileTextures::ladder;
         break;
     default:
-        m_texture.load("Assets/MapTiles/blackGrey.png");
         m_type = BACKGROUND;
+        m_tileTexture = TileTextures::background;
         break;
+    }
+}
+
+void Tile::cameraDraw(const Camera& camera) const
+{
+    if (m_collider.collideCheck(camera.getCollider()))
+    {
+        SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
+        m_tileTexture->draw(m_srcRect, relativeDstRect, 0, nullptr, SDL_FLIP_NONE);
     }
 }

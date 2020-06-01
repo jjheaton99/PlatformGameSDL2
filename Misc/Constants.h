@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 #include "WTexture.h"
+#include <memory>
 
 namespace Constants
 {
@@ -15,12 +16,14 @@ namespace Constants
     const int chunkHeight{ 25 };
 }
 
+class WTexture;
+
 namespace TileTextures
 {
-    WTexture background{};
-    WTexture block{};
-    WTexture platform{};
-    WTexture ladder{};
+    extern std::shared_ptr<WTexture> background;
+    extern std::shared_ptr<WTexture> block;
+    extern std::shared_ptr<WTexture> platform;
+    extern std::shared_ptr<WTexture> ladder;
 }
 
 extern int g_screenWidth;
