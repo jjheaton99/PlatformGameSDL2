@@ -2,9 +2,9 @@
 
 SPlayGame::SPlayGame(const char* mapFile)
 {
-    int pathLength{ 6 };
+    int pathLength{ 20 };
     m_map->loadMap(pathLength);
-    m_player->setPos((1.0 * (pathLength - 1) * Constants::chunkWidth * Constants::tileSize) + 700.0, (1.0 * (pathLength - 1) * Constants::chunkHeight * Constants::tileSize) + 700.0);
+    m_player->setPos(((pathLength - 1.0) * Constants::chunkWidth * Constants::tileSize) + 700.0, ((pathLength - 1.0) * Constants::chunkHeight * Constants::tileSize) + 700.0);
 
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());

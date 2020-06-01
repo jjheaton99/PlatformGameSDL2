@@ -18,6 +18,7 @@ private:
     Type m_type;
     int m_size;
 
+    //pointer to global texture to avoid loading multiple copies of the same tile texture
     std::shared_ptr<WTexture> m_tileTexture;
     
 public:

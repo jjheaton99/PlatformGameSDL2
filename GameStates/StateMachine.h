@@ -22,7 +22,10 @@ private:
     std::shared_ptr<SPlayGame> m_playGame{ nullptr };
     bool m_gameStarted{ false };
 
+    TextureObject m_loading{ "Assets/MiscTextures/loading.png" };
+
     void changeStateSwitch(GameState::State state);
+    void drawLoadingScreen();
 
 public:
     StateMachine();

@@ -1,10 +1,15 @@
 #include "StateMachine.h"
 
 StateMachine::StateMachine()
-{}
+{
+    m_loading.setSrcRect(0, 0, 96, 14);
+    m_loading.setDstRect(g_screenWidth - 300, g_screenHeight - 70, 384, 56);
+}
 
 StateMachine::~StateMachine()
-{}
+{
+    m_loading.destroy();
+}
 
 void StateMachine::setNextState(GameState::State nextState)
 {
@@ -77,6 +82,7 @@ void StateMachine::changeState()
             m_nextState = m_prevStateID;
         }
 
+        drawLoadingScreen();
         changeStateSwitch(m_nextState);
 
         m_prevStateID = m_currentStateID;
@@ -117,5 +123,14 @@ void StateMachine::gameLoop()
     SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 0);
     SDL_RenderClear(g_renderer);
     m_currentState->render();
+    SDL_RenderPresent(g_renderer);
+}
+
+void StateMachine::drawLoadingScreen()
+{
+    m_loading.setDstRect(g_screenWidth - 300, g_screenHeight - 70, 384, 56);
+    SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
+    SDL_RenderClear(g_renderer);
+    m_loading.draw();
     SDL_RenderPresent(g_renderer);
 }
