@@ -27,7 +27,7 @@ public:
         TLR,
         BLR,
         TBLR,
-        NONE
+        SOLID
     };
 
     using intMap_type = std::vector<std::vector<int>>;

@@ -2,21 +2,19 @@
 
 SPlayGame::SPlayGame(const char* mapFile)
 {
-    m_map->loadMap(0);
+    int pathLength{ 6 };
+    m_map->loadMap(pathLength);
+    m_player->setPos((1.0 * (pathLength - 1) * Constants::chunkWidth * Constants::tileSize) + 700.0, (1.0 * (pathLength - 1) * Constants::chunkHeight * Constants::tileSize) + 700.0);
 
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
-    for (int i{ 2 }; i < m_camera.getxBoundary() /100.0; ++i)
+    for (int i{ 0 }; i < 100; ++i)
     {
-        //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 100.0 * i, 2000);
+        //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 200.0 * i, 200*i);
     }
-    //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 500, 2000);
-    //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 600, 2000);
-    //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 700, 2000);
-    //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 500, 2200);
-    //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 600, 2200);
-    //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 700, 2200);
+    m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 200, 700);
+    m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 200, 500);
 }
 
 SPlayGame::~SPlayGame()

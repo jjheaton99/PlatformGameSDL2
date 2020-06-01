@@ -12,22 +12,174 @@ Map::~Map()
             tile->destroy();
         }
     }
-
-    m_background.destroy();
-    m_block.destroy();
-    m_platform.destroy();
-    m_ladder.destroy();
 }
 
 void Map::generateChunks(int totalChunks)
 {
-    m_generatedChunks.resize(3);
+    m_generatedChunks.resize((2 * totalChunks) - 1);
     for (auto& row : m_generatedChunks)
     {
-        row.resize(3, MapChunkLoader::ChunkEntrances::TBLR);
+        row.resize((2 * totalChunks) - 1, MapChunkLoader::SOLID);
     }
 
-    //m_generatedChunks[0][0] = MapChunkLoader::ChunkEntrances::BR;
+    int randomChunkNum{ MTRandom::getRandomInt(1, 4) };
+    int currentChunkRow{ totalChunks - 1 };
+    int currentChunkColumn{ totalChunks - 1 };
+    MapChunkLoader::ChunkEntrances prevChunkExit;
+
+    switch (randomChunkNum)
+    {
+    case 1:
+        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::T;
+        --currentChunkRow;
+        prevChunkExit = MapChunkLoader::T;
+        break;
+
+    case 2:
+        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::B;
+        ++currentChunkRow;
+        prevChunkExit = MapChunkLoader::B;
+        break;
+
+    case 3:
+        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::L;
+        --currentChunkColumn;
+        prevChunkExit = MapChunkLoader::L;
+        break;
+
+    case 4:
+        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::R;
+        ++currentChunkColumn;
+        prevChunkExit = MapChunkLoader::R;
+        break;
+    }
+
+    for (int i{ 1 }; i < totalChunks - 1; ++i)
+    {
+        randomChunkNum = MTRandom::getRandomInt(1, 3);
+        switch (prevChunkExit)
+        {
+        case MapChunkLoader::T:
+            switch (randomChunkNum)
+            {
+            case 1:
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BL;
+                --currentChunkColumn;
+                prevChunkExit = MapChunkLoader::L;
+                break;
+
+            case 2:
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TB;
+                --currentChunkRow;
+                prevChunkExit = MapChunkLoader::T;
+                break;
+
+            case 3:
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BR;
+                ++currentChunkColumn;
+                prevChunkExit = MapChunkLoader::R;
+                break;
+            }
+            break;
+
+        case MapChunkLoader::B:
+            switch (randomChunkNum)
+            {
+            case 1:
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TB;
+                ++currentChunkRow;
+                prevChunkExit = MapChunkLoader::B;
+                break;
+
+            case 2:
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TL;
+                --currentChunkColumn;
+                prevChunkExit = MapChunkLoader::L;
+                break;
+
+            case 3:
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TR;
+                ++currentChunkColumn;
+                prevChunkExit = MapChunkLoader::R;
+                break;
+            }
+            break;
+
+        case MapChunkLoader::L:
+            switch (randomChunkNum)
+            {
+            case 1:
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TR;
+                --currentChunkRow;
+                prevChunkExit = MapChunkLoader::T;
+                break;
+
+            case 2:
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BR;
+                ++currentChunkRow;
+                prevChunkExit = MapChunkLoader::B;
+                break;
+
+            case 3:
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::LR;
+                --currentChunkColumn;
+                prevChunkExit = MapChunkLoader::L;
+                break;
+            }
+            break;
+
+        case MapChunkLoader::R:
+            switch (randomChunkNum)
+            {
+            case 1:
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TL;
+                --currentChunkRow;
+                prevChunkExit = MapChunkLoader::T;
+                break;
+
+            case 2:
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BL;
+                ++currentChunkRow;
+                prevChunkExit = MapChunkLoader::B;
+                break;
+
+            case 3:
+                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::LR;
+                ++currentChunkColumn;
+                prevChunkExit = MapChunkLoader::R;
+                break;
+            }
+            break;
+        }
+    }
+
+    switch (prevChunkExit)
+    {
+    case MapChunkLoader::T:
+        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::B;
+        break;
+
+    case MapChunkLoader::B:
+        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::T;
+        break;
+
+    case MapChunkLoader::L:
+        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::R;
+        break;
+
+    case MapChunkLoader::R:
+        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::L;
+        break;
+    }
+
+    for (const auto& row : m_generatedChunks)
+    {
+        for (const auto& chunk : row)
+        {
+            std::cout << static_cast<int>(chunk) << "   ";
+        }
+        std::cout << '\n';
+    }
 }
 
 //Selects tile based on number and pushes to temp vector
@@ -75,10 +227,10 @@ void Map::loadMap(int totalChunks)
 {
     //Resize map based on generated chunks and size of chunks
     generateChunks(totalChunks);
-    m_map.resize(m_chunkHeight * m_generatedChunks.size());
+    m_map.resize(Constants::chunkHeight * m_generatedChunks.size());
     for (auto& row : m_map)
     {
-        row.resize(m_chunkWidth * m_generatedChunks[0].size());
+        row.resize(Constants::chunkWidth * m_generatedChunks[0].size());
     }
 
     //for loops to load tiles into map
@@ -88,12 +240,12 @@ void Map::loadMap(int totalChunks)
         for (int generatedChunksColumn{ 0 }; generatedChunksColumn < static_cast<int>(m_generatedChunks[0].size()); ++generatedChunksColumn)
         {
             MapChunkLoader::intMap_type tileNumbers{ m_chunkLoader.loadAndGetChunk(m_generatedChunks[generatedChunksRow][generatedChunksColumn]) };
-            for (int chunkRow{ 0 }; chunkRow < m_chunkHeight; ++chunkRow)
+            for (int chunkRow{ 0 }; chunkRow < Constants::chunkHeight; ++chunkRow)
             {
-                int row{ (generatedChunksRow * m_chunkHeight) + chunkRow };
-                for (int chunkColumn{ 0 }; chunkColumn < m_chunkWidth; ++chunkColumn)
+                int row{ (generatedChunksRow * Constants::chunkHeight) + chunkRow };
+                for (int chunkColumn{ 0 }; chunkColumn < Constants::chunkWidth; ++chunkColumn)
                 {
-                    int column{ (generatedChunksColumn * m_chunkWidth) + chunkColumn };
+                    int column{ (generatedChunksColumn * Constants::chunkWidth) + chunkColumn };
                     m_map[row][column].reset(new Tile{ tileNumbers[chunkRow][chunkColumn] });
                 }
             }

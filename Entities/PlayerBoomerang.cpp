@@ -173,7 +173,8 @@ void PlayerBoomerang::motion()
 
         if (velMag > m_maxSpeed)
         {
-            scaleFactor = m_acceleration / velMag;
+            //subtract excess speed
+            scaleFactor = (velMag - m_maxSpeed) / velMag;
             m_velocity.subtract(scaleFactor * m_velocity);
         }
     }
@@ -187,7 +188,7 @@ void PlayerBoomerang::motion()
 
         if (velMag > m_maxSpeed)
         {
-            scaleFactor = m_acceleration / velMag;
+            scaleFactor = (velMag - m_maxSpeed) / velMag;
             m_velocity.subtract(scaleFactor * m_velocity);
         }
     }

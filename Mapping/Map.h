@@ -3,6 +3,7 @@
 #include "Tile.h"
 #include "Camera.h"
 #include "MapChunkLoader.h"
+#include "Random.h"
 #include <array>
 #include <vector>
 #include <fstream>
@@ -18,15 +19,8 @@ public:
 private:
     map_type m_map;
     MapChunkLoader m_chunkLoader{};
-    const int m_chunkWidth{ 25 };
-    const int m_chunkHeight{ 25 };
 
     std::vector<std::vector<MapChunkLoader::ChunkEntrances>> m_generatedChunks;
-
-    Tile m_background{ "Assets/MapTiles/blackGrey.png", Tile::BACKGROUND };
-    Tile m_block{ "Assets/MapTiles/WhiteFadeBlocks/1.png", Tile::SOLID };
-    Tile m_platform{ "Assets/MapTiles/platform.png", Tile::PLATFORM };
-    Tile m_ladder{ "Assets/MapTiles/ladder.png.", Tile::LADDER };
 
     int m_levelWidth;
     int m_levelHeight;

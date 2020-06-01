@@ -104,6 +104,9 @@ const MapChunkLoader::intMap_type& MapChunkLoader::loadAndGetChunk(ChunkEntrance
 	case MapChunkLoader::TBLR:
         readFileToChunkVector(m_TBLRfiles[0]);
         break;
+    case MapChunkLoader::SOLID:
+        readFileToChunkVector("Assets/Maps/MapChunks/solid.txt");
+        break;
 	}
     return m_chunkVector;
 }

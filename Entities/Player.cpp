@@ -343,8 +343,8 @@ void Player::cameraDraw(const Camera& camera) const
 
 void Player::moveCamera(Camera& camera)
 {
-    camera.setPos(static_cast<int>(m_position.getx()) - (g_screenWidth / 2),
-        static_cast<int>(m_position.gety()) - (g_screenHeight / 2));
+    camera.setPos(static_cast<int>(m_position.getx()) + (m_dstRect.w / 2) - (g_screenWidth / 2),
+        static_cast<int>(m_position.gety()) + (m_dstRect.h / 2) - (g_screenHeight / 2));
 
     //Now to boundary check the camera
     if (!camera.xInBoundary() && !camera.yInBoundary())

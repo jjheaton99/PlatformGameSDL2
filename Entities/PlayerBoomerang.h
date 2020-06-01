@@ -6,7 +6,7 @@
 class PlayerBoomerang : public Projectile
 {
 private:
-    double m_acceleration{ 5.0 };
+    double m_acceleration{ 12.0 };
     double m_maxSpeed{ 30.0 };
     double m_distanceTravelled{ 0.0 };
     double m_range{ 1000.0 };

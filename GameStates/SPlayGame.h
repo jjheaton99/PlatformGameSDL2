@@ -14,7 +14,7 @@ class SPlayGame : public GameState
 {
 private:
     std::unique_ptr<Map> m_map{ std::make_unique<Map>() };
-    std::shared_ptr<Player> m_player{ std::make_shared<Player>(500, 500) };
+    std::shared_ptr<Player> m_player{ std::make_shared<Player>() };
     std::unique_ptr<GameObjectManager> m_objectManager{ std::make_unique<GameObjectManager>() };
     Camera m_camera{};
     WTimer m_stepTimer;

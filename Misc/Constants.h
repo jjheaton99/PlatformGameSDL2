@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SDL.h"
+#include "WTexture.h"
 
 namespace Constants
 {
@@ -10,6 +11,16 @@ namespace Constants
     //the time between game logic updates
     const double updateStep{ 1.0 / 60.0 };
     const int tileSize{ 60 };
+    const int chunkWidth{ 25 };
+    const int chunkHeight{ 25 };
+}
+
+namespace TileTextures
+{
+    WTexture background{};
+    WTexture block{};
+    WTexture platform{};
+    WTexture ladder{};
 }
 
 extern int g_screenWidth;
