@@ -38,6 +38,14 @@ private:
 
     double m_angle{ 0.0 };
 
+    bool m_jumpingHigher{ false };
+    int m_jumpHigherCount{ 0 };
+
+    bool m_floatingLeft{ false };
+    bool m_floatingRight{ false };
+    double m_maxFloatSpeed{ 5.0 };
+    double m_floatAccel{ 0.8 };
+
     int m_crouchStepCount{ 0 };
 
     const double m_iDuration{ 0.25 };
@@ -82,6 +90,13 @@ public:
 
     bool isFacingLeft() const { return m_facingLeft; }
     
+    void jumpHigher() { m_jumpingHigher = true; }
+    void stopJumpingHigher() { m_jumpingHigher = false; }
+    bool isJumpingHigher() { return m_jumpingHigher; }
+
+    void floatLeft();
+    void floatRight();
+
     bool isInvincible() const { return m_invincible; }
     void startiFrames();
 };

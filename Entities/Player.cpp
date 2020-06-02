@@ -16,7 +16,7 @@ Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, con
     m_yMaxSpeed = 100.0;
     m_xMaxSpeed = 12.0;
     m_walkAcceleration = 0.8;
-    m_climbSpeed = 12.0;
+    m_climbSpeed = 13.0;
     
     m_spriteIndex = 0;
 
@@ -124,6 +124,16 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         }
     }
 
+    if (m_jumpingHigher)
+    {
+        ++m_jumpHigherCount;
+        if (m_jumpHigherCount > 11)
+        {
+            m_jumpingHigher = false;
+            m_jumpHigherCount = 0;
+        }
+    }
+
     //attack texture position set with an offset from player position 
     m_sideAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
     m_sideAttack.update(enemies);
@@ -158,7 +168,20 @@ void Player::motion()
         }
     }
 
-    double fallAccel{ m_velocity.gety() > 0 ? 1.5 * Constants::g : Constants::g };
+    double fallAccel;
+    if (m_velocity.gety() > 0)
+    {
+        fallAccel = 1.5 * Constants::g;
+    }
+    else if (m_jumpingHigher)
+    {
+        fallAccel = 0.2 * Constants::g;
+    }
+    else
+    {
+        fallAccel = Constants::g;
+    }
+
     switch (m_movement)
     {
     case GroundedCharacter::AIRBORNE:
@@ -172,14 +195,32 @@ void Player::motion()
             m_velocity.add(0, m_yMaxSpeed);
         }
 
-        if (m_velocity.gety() == m_yMaxSpeed || std::abs(m_velocity.getx()) > m_xMaxSpeed)
+        //player will move slightly left or right in the air when keys are held
+        if (m_floatingLeft)
         {
-            m_velocity.xScale(0.93);
+            std::cout << "left\n";
+            if (m_velocity.getx() - m_floatAccel >= -m_maxFloatSpeed)
+            {
+                m_velocity.add(-m_floatAccel, 0.0);
+            }
+        }
+        else if (m_floatingRight)
+        {
+            std::cout << "right\n";
+            if (m_velocity.getx() + m_floatAccel <= m_maxFloatSpeed)
+            {
+                m_velocity.add(m_floatAccel, 0.0);
+            }
+        }
+        if (std::abs(m_velocity.getx()) > m_xMaxSpeed) 
+        {
+            m_velocity.xScale(0.95);
             if (std::abs(m_velocity.getx()) < 0.0001)
             {
                 m_velocity.xScale(0);
             }
         }
+
         break;
 
     case GroundedCharacter::LEFT:
@@ -239,6 +280,9 @@ void Player::motion()
     default:
         break;
     }
+
+    m_floatingLeft = false;
+    m_floatingRight = false;
 }
 
 void Player::cycleWalkAnimation()
@@ -506,4 +550,18 @@ double Player::getDodgeCooldownFraction() const
     {
         return 1.0 - (static_cast<double>(m_dodgeStepCount) / (m_dodgeCooldown / Constants::updateStep));
     }
+}
+
+void Player::floatLeft()
+{ 
+    m_floatingLeft = true;
+    m_floatingRight = false;
+    m_facingLeft = true;
+}
+
+void Player::floatRight() 
+{
+    m_floatingRight = true;
+    m_floatingLeft = false;
+    m_facingLeft = false;
 }

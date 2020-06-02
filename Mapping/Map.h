@@ -43,7 +43,10 @@ public:
     Map();
     ~Map();
 
+    //random map with specified number of chunks
     void loadMap(int totalChunks);
+    //overload for loading map directly from single text file
+    void loadMap(const char* fileName);
     void drawMap(const Camera& camera) const;
 
     const std::vector<std::vector<Tile>>& getMap() const { return m_map; }

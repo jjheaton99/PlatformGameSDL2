@@ -33,15 +33,27 @@ void SPlayGame::playerControlsKeyHold()
         }
         else if (currentKeyState[SDL_SCANCODE_A])
         {
-            m_player->moveLeft();
+                m_player->moveLeft();
         }
         else if (currentKeyState[SDL_SCANCODE_D])
         {
-            m_player->moveRight();
+                m_player->moveRight();
         }
         else
         {
             m_player->stop();
+        }
+    }
+
+    else if (m_player->getMovement() == Player::AIRBORNE && !m_player->isClimbing())
+    {
+        if (currentKeyState[SDL_SCANCODE_A])
+        {
+            m_player->floatLeft();
+        }
+        else if (currentKeyState[SDL_SCANCODE_D])
+        {
+            m_player->floatRight();
         }
     }
 
@@ -104,7 +116,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
         case SDLK_SPACE:
             if (!(m_player->getMovement() == Player::AIRBORNE))
             {
-                double jumpVel{ 25.0 };
+                double jumpVel{ 20.0 };
 
                 if (m_player->isClimbing())
                 {
@@ -112,6 +124,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                     break;
                 }
 
+                m_player->jumpHigher();
                 m_player->dodgeCancel();
                 m_player->attackCancel();
                 if (std::abs(m_player->getVel().getx()) < 15.0)
@@ -222,6 +235,14 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
 
         default:
             break;
+        }
+    }
+
+    if (event.type == SDL_KEYUP)
+    {
+        if (event.key.keysym.sym == SDLK_SPACE && m_player->isJumpingHigher())
+        {
+            m_player->stopJumpingHigher();
         }
     }
 }

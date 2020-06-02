@@ -6,7 +6,7 @@ namespace Constants
 {
     const double pi{ 3.14159265359 };
     //g defines acceleration due to gravity for game objects
-    const double g{ 1.25 };
+    const double g{ 1.5 };
     //the time between game logic updates
     const double updateStep{ 1.0 / 60.0 };
     const int tileSize{ 60 };

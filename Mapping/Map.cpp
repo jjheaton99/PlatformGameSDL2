@@ -341,12 +341,6 @@ Tile Map::getTileFromNumber(int number) const
     }
 }
 
-//loads tilemap from text file of rows of numbers that correspond to tile positions
-//eg
-//00 01 00 00 00
-//00 01 00 00 00
-//02 02 03 04 05
-//05 04 03 02 01
 void Map::loadMap(int totalChunks)
 {
     //Resize map based on generated chunks and size of chunks
@@ -381,8 +375,60 @@ void Map::loadMap(int totalChunks)
     m_levelWidth = static_cast<int>(m_map[0].size()) * m_map[0][0].getSize();
 
     setTiles();
+}
 
-    //printMap();
+//loads tilemap from text file of rows of numbers that correspond to tile positions
+//eg
+//00 01 00 00 00
+//00 01 00 00 00
+//02 02 03 04 05
+//05 04 03 02 01
+void Map::loadMap(const char* fileName)
+{
+    //Erase any previous map
+    m_map.clear();
+    std::ifstream mapFile(fileName);
+    if (!mapFile.is_open())
+    {
+        std::cout << "Unable to open file " << fileName << "!\n";
+        return;
+    }
+    else
+    {
+        std::string line;
+        std::vector<Tile> tileRow;
+        //reads in file line by line and constructs tilemap row vector
+        while (!mapFile.eof())
+        {
+            std::getline(mapFile, line);
+            tileRow.resize(0);
+
+            std::string tileNumberString{};
+            int tileNumber{ 0 };
+            index_type index{ 0 };
+            index_type spacePos{ line.find(' ', index) };
+            //finds all substrings sided by spaces and converts them integers to for pushing tiles
+            while (spacePos != std::string::npos)
+            {
+                tileNumberString = line.substr(index, spacePos - index);
+                index = spacePos + 1;
+                spacePos = line.find(' ', index);
+                tileNumber = std::stoi(tileNumberString);
+                tileRow.push_back(getTileFromNumber(tileNumber));
+            }
+            //last number in the line
+            tileNumberString = line.substr(index, line.length() - index);
+            tileRow.push_back(getTileFromNumber(tileNumber));
+            //adds the row to the overall map
+            m_map.push_back(tileRow);
+        }
+        mapFile.close();
+
+        m_levelHeight = static_cast<int>(m_map.size()) * m_map[0][0].getSize();
+        m_levelWidth = static_cast<int>(m_map[0].size()) * m_map[0][0].getSize();
+
+        setTiles();
+    }
 }
 
 //sets the positions of all the tiles
