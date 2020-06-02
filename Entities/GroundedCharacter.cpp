@@ -92,6 +92,8 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
     );
 
     int collideCount{ 0 };
+    //bool xCollision{ false };
+    //bool yCollision{ false };
 
     for (auto& sweptCollider : m_solidColliders)
     {
@@ -177,6 +179,79 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
         default:
             break;
         }
+        /*switch (collideResult.first)
+        {
+        case Collider::TOP:
+            if (!yCollision)
+            {
+                m_velocity.yScale(collideResult.second);
+                m_movement = STOP;
+                yCollision = true;
+            }
+            //std::cout << "top" << '\n';
+            //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
+            break;
+
+        case Collider::BOTTOM:
+            if (!yCollision)
+            {
+                m_velocity.yScale(collideResult.second);
+                yCollision = true;
+            }
+            //std::cout << "bottom" << '\n';
+            //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
+            break;
+
+        case Collider::LEFT:
+            if (!xCollision)
+            {
+                m_velocity.xScale(collideResult.second);
+                xCollision = true;
+            }
+            //std::cout << "left" << '\n';
+            //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
+            break;
+
+        case Collider::RIGHT:
+            if (!xCollision)
+            {
+                m_velocity.xScale(collideResult.second);
+                xCollision = true;
+            }
+            //std::cout << "right" << '\n';
+            //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
+            break;
+
+            //for overlap collisions we subtract velocity to move character out of block
+        case Collider::OVERLAP_TOP:
+            m_position.subtract(0.0, std::get<2>(sweptCollider));
+            m_movement = STOP;
+            yCollision = true;
+            //std::cout << "otop" << '\n';
+            break;
+
+        case Collider::OVERLAP_BOTTOM:
+            m_position.add(0.0, std::get<2>(sweptCollider));
+            yCollision = true;
+            //std::cout << "obottom" << '\n';
+            break;
+
+        case Collider::OVERLAP_LEFT:
+            m_position.subtract(std::get<1>(sweptCollider), 0.0);
+            xCollision = true;
+            //std::cout << "oleft" << '\n';
+            break;
+
+        case Collider::OVERLAP_RIGHT:
+            m_position.add(std::get<1>(sweptCollider), 0.0);
+            xCollision = true;
+            //std::cout << "oright" << '\n';
+            break;
+
+        case Collider::NONE:
+        default:
+            break;
+        }*/
     }
 
     for (auto& sweptCollider : m_platformColliders)
@@ -190,12 +265,30 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
             setCollider();
             m_movement = STOP;
             ++collideCount;
+            /*if (!yCollision)
+            {
+                m_velocity.yScale(collideResult.second);
+                m_movement = STOP;
+                yCollision = true;
+            }*/
             //std::cout << "platform" << '\n';
             //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
         }
     }
 
+    /*m_position.add(m_velocity);
+    setCollider();
+    if (xCollision)
+    {
+        m_velocity.xScale(0);
+    }
+    if (yCollision)
+    {
+        m_velocity.yScale(0);
+    }*/
+
     return collideCount > 0;
+    //return xCollision || yCollision;
 }
 
 void GroundedCharacter::crouch() 

@@ -2,7 +2,7 @@
 
 SPlayGame::SPlayGame(const char* mapFile)
 {
-    int pathLength{ 50 };
+    int pathLength{ 100 };
     m_map->loadMap(pathLength);
     m_player->setPos(((1.0 * m_map->getPlayerSpawnChunk().getx()) * Constants::chunkWidth * Constants::tileSize) + 700.0,
         ((1.0 * m_map->getPlayerSpawnChunk().gety()) * Constants::chunkHeight * Constants::tileSize) + 700.0);

@@ -158,12 +158,13 @@ void Player::motion()
         }
     }
 
+    double fallAccel{ m_velocity.gety() > 0 ? 1.5 * Constants::g : Constants::g };
     switch (m_movement)
     {
     case GroundedCharacter::AIRBORNE:
-        if (m_velocity.gety() + Constants::g <= m_yMaxSpeed)
+        if (m_velocity.gety() + fallAccel <= m_yMaxSpeed)
         {
-            m_velocity.add(0, Constants::g);
+            m_velocity.add(0, fallAccel);
         }
         else
         {
