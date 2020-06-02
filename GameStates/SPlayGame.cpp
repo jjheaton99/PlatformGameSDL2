@@ -11,10 +11,10 @@ SPlayGame::SPlayGame(const char* mapFile)
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
-    for (int i{ 0 }; i < 5; ++i)
+    for (int i{ 0 }; i < 100; ++i)
     {
-        m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, playerxSpawn + 500.0 + i * 20, playerySpawn + 500.0 + i * 20);
-        m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, playerxSpawn - 500.0 - i * 20, playerySpawn - 500.0 - i * 20);
+        m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, playerxSpawn + 500.0 + 1.0 * i, playerySpawn + 500.0 + 1.0 * i);
+        m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, playerxSpawn - 500.0 - 1.0 * i, playerySpawn - 500.0 - 1.0 * i);
     }
 }
 
@@ -33,11 +33,11 @@ void SPlayGame::playerControlsKeyHold()
         }
         else if (currentKeyState[SDL_SCANCODE_A])
         {
-                m_player->moveLeft();
+            m_player->moveLeft();
         }
         else if (currentKeyState[SDL_SCANCODE_D])
         {
-                m_player->moveRight();
+            m_player->moveRight();
         }
         else
         {
@@ -335,27 +335,40 @@ GameState::State SPlayGame::update()
     {
         m_timeAccumulator += timeStep;
 
+        //int updateCount{ 0 };
+        //game logic updates as many times as it can within the time between rendered frames
         while (m_timeAccumulator > Constants::updateStep)
         {
+            m_updateTimer.start();
+
+            //++updateCount;
             m_timeAccumulator -= Constants::updateStep;
             m_player->update(m_map->getMap(), m_camera, m_objectManager->getEnemies());
             m_objectManager->update(m_map->getMap(), m_camera, *m_player);
             m_UI.update();
+            m_map->update();
             if (m_player->isDead())
             {
                 return GAME_OVER;
             }
+
+            //add extra time in case logic update took too long to prevent slowing
+            m_timeAccumulator += m_updateTimer.getTicks() / 1000.0;
+            m_updateTimer.stop();
         }
+
+        //std::cout << updateCount << '\n';
+        //updateCount = 0;
 
         m_stepTimer.start();
 
         m_camera.resize();
 
-        double frameRate{ averageFPS(timeStep) };
+        /*double frameRate{ averageFPS(timeStep) };
         if (frameRate > 0)
         {
-            //std::cout << frameRate << '\n';
-        }
+            std::cout << frameRate << '\n';
+        }*/
 
         return STATE_NULL;
     }

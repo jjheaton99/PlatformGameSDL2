@@ -22,16 +22,13 @@ private:
     std::shared_ptr<WTexture> m_tileTexture;
     
 public:
-    //Tile(Type type = BACKGROUND, double xPos = 0, double yPos = 0, int size = Constants::tileSize);
-    //Tile(int tileNumber, double xPos = 0, double yPos = 0, int size = Constants::tileSize);
     Tile(std::shared_ptr<WTexture> tileTexture = nullptr, Type type = BACKGROUND, double xPos = 0, double yPos = 0, int size = Constants::tileSize);
 
     void setPos(double xPos, double yPos) override;
     int getSize() const { return m_size; }
     Type getType() const { return m_type; }
 
-    //void switchTileType(Type tileType);
-    //void switchTileTypeFromInt(int tileType);
+    void switchTileTypeAndTexture(std::shared_ptr<WTexture> tileTexture, Type tileType);
 
     void cameraDraw(const Camera& camera) const override;
 };

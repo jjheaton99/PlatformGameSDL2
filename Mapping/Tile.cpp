@@ -48,34 +48,27 @@ void Tile::setPos(double xPos, double yPos)
     m_collider.setPosition(xPos, yPos);
 }
 
-/*void Tile::switchTileType(Type tileType)
+void Tile::switchTileTypeAndTexture(std::shared_ptr<WTexture> tileTexture, Type tileType)
 {
+    m_tileTexture = tileTexture;
     switch (tileType)
     {
     case BACKGROUND:
         m_type = BACKGROUND;
-        m_tileTexture = TileTextures::background;
         break;
     case SOLID:
         m_type = SOLID;
-        m_tileTexture = TileTextures::block;
         break;
     case PLATFORM:
         m_type = PLATFORM;
-        m_tileTexture = TileTextures::platform;
         break;
     case LADDER:
         m_type = LADDER;
-        m_tileTexture = TileTextures::ladder;
-        break;
-    default:
-        m_type = BACKGROUND;
-        m_tileTexture = TileTextures::background;
         break;
     }
 }
 
-void Tile::switchTileTypeFromInt(int tileType)
+/*void Tile::switchTileTypeFromInt(int tileType)
 {
     switch (tileType)
     {

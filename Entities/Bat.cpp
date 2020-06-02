@@ -17,11 +17,10 @@ void Bat::enemyControls(const Character& player)
     m_velocity.add(scaleFactor * relPos);
     double velMag{ m_velocity.magnitude() };
 
+    //remove excess speed
     if (velMag > m_maxSpeed)
     {
-        scaleFactor = m_acceleration / velMag;
+        scaleFactor = (velMag - m_maxSpeed) / velMag;
         m_velocity.subtract(scaleFactor * m_velocity);
     }
-    //std::cout << relPos.direction() << "   " << m_velocity.direction() << '\n';
-    //setDirection(relPos.direction());
 }

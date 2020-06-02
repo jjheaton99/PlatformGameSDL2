@@ -32,7 +32,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     //std::cout << m_hitPoints << '\n';
     if (m_hitPoints <= 0)
     {
-        kill();
+        //kill();
     }
 
     motion();

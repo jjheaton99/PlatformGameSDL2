@@ -92,9 +92,11 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
 
     int collideCount{ 0 };
 
+    std::vector<Collider::sweptAABBresult_type> collideResults;
+
     for (auto& sweptCollider : m_solidColliders)
     {
-        auto collideResult{ m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, sweptCollider) };
+        auto collideResult{m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, sweptCollider) };
 
         switch (collideResult.first)
         {

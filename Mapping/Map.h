@@ -35,6 +35,7 @@ private:
 
     void generateChunks(int totalChunks);
     Tile getTileFromNumber(int number) const;
+    void switchTile(int mapRow, int mapColumn, Tile::Type type);
 
     index_type cameraCoordToMapIndex(int coord) const;
     void setTiles();
@@ -47,6 +48,8 @@ public:
     void loadMap(int totalChunks);
     //overload for loading map directly from single text file
     void loadMap(const char* fileName);
+
+    void update();
     void drawMap(const Camera& camera) const;
 
     const std::vector<std::vector<Tile>>& getMap() const { return m_map; }

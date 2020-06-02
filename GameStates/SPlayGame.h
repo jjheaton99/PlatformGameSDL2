@@ -18,6 +18,7 @@ private:
     std::unique_ptr<GameObjectManager> m_objectManager{ std::make_unique<GameObjectManager>() };
     Camera m_camera{};
     WTimer m_stepTimer;
+    WTimer m_updateTimer;
     UserInterface m_UI{ m_player };
     double m_timeAccumulator{ 0.0 };
 

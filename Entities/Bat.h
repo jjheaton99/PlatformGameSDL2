@@ -7,7 +7,7 @@ class Player;
 class Bat : public FlyingEnemy
 {
 protected:
-    double m_acceleration{ 1.0 };
+    double m_acceleration{ 5.0 };
     double m_maxSpeed{ 15.0 };
     double m_rotateAccel{ 20.0 };
 

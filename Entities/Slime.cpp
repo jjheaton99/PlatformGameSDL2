@@ -31,7 +31,7 @@ void Slime::enemyControls(Character& player)
             m_movement = STOP;
         }
 
-        if (MTRandom::getRandomInt(0, 99) < 1)
+        if (MTRandom::getRandomInt(0, 99) < 2)
         {
             m_movement = AIRBORNE;
             addVel(Vector2D<double>{0.0, -20.0});

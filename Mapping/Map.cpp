@@ -16,6 +16,19 @@ Map::~Map()
     m_ladderTexture->destroy();
 }
 
+void Map::update()
+{
+    /*int randomRow;
+    int randomColumn;
+
+    for (int i{ 0 }; i < 200; ++i)
+    {
+        randomRow = MTRandom::getRandomInt(0, m_map.size() - 1);
+        randomColumn = MTRandom::getRandomInt(0, m_map[0].size() - 1);
+        switchTile(randomRow, randomColumn, Tile::BACKGROUND);
+    }*/
+}
+
 //generates a path out of map chunks
 void Map::generateChunks(int totalChunks)
 {
@@ -491,5 +504,29 @@ void Map::printMap() const
             }
         }
         std::cout << '\n';
+    }
+}
+
+void Map::switchTile(int mapRow, int mapColumn, Tile::Type type)
+{
+    if (mapRow >= 0 && mapRow < static_cast<int>(m_map.size()) && mapColumn >= 0 && mapColumn < static_cast<int>(m_map[0].size()))
+    {
+        switch (type)
+        {
+        case Tile::BACKGROUND:
+            m_map[mapRow][mapColumn].switchTileTypeAndTexture( m_backgroundTexture, Tile::BACKGROUND );
+            break;
+        case Tile::SOLID:
+            m_map[mapRow][mapColumn].switchTileTypeAndTexture( m_solidTexture, Tile::SOLID );
+            break;
+        case Tile::PLATFORM:
+            m_map[mapRow][mapColumn].switchTileTypeAndTexture( m_platformTexture, Tile::PLATFORM );
+            break;
+        case Tile::LADDER:
+            m_map[mapRow][mapColumn].switchTileTypeAndTexture( m_ladderTexture, Tile::LADDER );
+            break;
+        default:
+            break;
+        }
     }
 }
