@@ -7,11 +7,11 @@ class PlayerBoomerang : public Projectile
 {
 private:
     double m_acceleration{ 12.0 };
-    double m_maxSpeed{ 30.0 };
+    double m_maxSpeed{ 25.0 };
     double m_distanceTravelled{ 0.0 };
     double m_range{ 1000.0 };
-
-    int m_damage;
+    int m_maxCollisions{ 5 };
+    int m_collisionCount{ 0 };
 
     bool m_flying{ false };
     bool m_returningToPlayer{ false };
@@ -20,6 +20,7 @@ private:
     bool m_isCooling{ false };
 
     std::weak_ptr<Character> m_target;
+    std::weak_ptr<Character> m_prevTarget;
 
     double m_angle{ 0.0 };
 

@@ -1,7 +1,7 @@
 #include "PlayerBoomerang.h"
 
 PlayerBoomerang::PlayerBoomerang(double xPos, double yPos, double xVel, double yVel, double colliderWidth, double colliderHeight, const char* fileName, int damage)
-    : Projectile(fileName, xPos, yPos, xVel, yVel, colliderWidth, colliderHeight), m_damage{damage}
+    : Projectile(fileName, xPos, yPos, xVel, yVel, colliderWidth, colliderHeight, damage)
 {
     m_srcRect = { 0, 0, 32, 32 };
 
@@ -21,8 +21,14 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
         //put enemy collide check before map to ensure it hits
         if (enemyCollideCheck(enemies))
         {
-            m_returningToPlayer = true;
-            m_target = player;
+            ++m_collisionCount;
+            if (m_collisionCount >= m_maxCollisions)
+            {
+                m_returningToPlayer = true;
+                m_target = player;
+                m_prevTarget.reset();
+                m_collisionCount = 0;
+            }
         }
 
         //passes through map if returning to player
@@ -30,8 +36,14 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
         {
             if (sweepMapCollideCheck(map))
             {
-                m_returningToPlayer = true;
-                m_target = player;
+                ++m_collisionCount;
+                if (m_collisionCount >= m_maxCollisions)
+                {
+                    m_returningToPlayer = true;
+                    m_target = player;
+                    m_prevTarget.reset();
+                    m_collisionCount = 0;
+                }
             }
         }
 
@@ -40,6 +52,8 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
         {
             m_returningToPlayer = true;
             m_target = player;
+            m_prevTarget.reset();
+            m_collisionCount = 0;
         }
 
         //when returning needs to collide check with player
@@ -96,12 +110,14 @@ bool PlayerBoomerang::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
         if (m_collider.sweptAABBDeflect(1.0, sweptCollider, m_position, m_velocity, Vector2D<double>{0.0, 0.0}))
         {
             setCollider();
+            m_prevTarget.reset();
             return true;
         }
     }
     return false;
 }
 
+//searches for enemy closest to boomerang and locks on
 bool PlayerBoomerang::aquireTargetEnemy(const std::vector<std::shared_ptr<Character>>& enemies)
 {
     if (!m_target.lock())
@@ -113,7 +129,7 @@ bool PlayerBoomerang::aquireTargetEnemy(const std::vector<std::shared_ptr<Charac
 
         for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
         {
-            if (enemies[i])
+            if (enemies[i] && enemies[i] != m_prevTarget.lock())
             {
                 enemyDistance = (enemies[i]->getPos() - m_position).magnitude();
                 if (enemyDistance < closestEnemyDistance)
@@ -151,7 +167,9 @@ bool PlayerBoomerang::enemyCollideCheck(std::vector<std::shared_ptr<Character>>&
             if (m_collider.sweptAABBCheck(m_velocity, m_target.lock()->getVel(), sweptCollider).first != Collider::NONE)
             {
                 m_target.lock()->removeHP(m_damage);
-                m_target.lock()->addVel(m_velocity);
+                m_target.lock()->addVel(0.3 * m_velocity);
+                m_prevTarget = m_target;
+                m_target.reset();
                 return true;
             }
         }

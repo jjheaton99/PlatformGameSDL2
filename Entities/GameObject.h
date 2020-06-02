@@ -3,6 +3,7 @@
 #include "TextureObject.h"
 #include "Collider.h"
 #include "Camera.h"
+#include "Random.h"
 #include <vector>
 #include <cmath>
 

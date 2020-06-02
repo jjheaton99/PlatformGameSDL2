@@ -198,7 +198,6 @@ void Player::motion()
         //player will move slightly left or right in the air when keys are held
         if (m_floatingLeft)
         {
-            std::cout << "left\n";
             if (m_velocity.getx() - m_floatAccel >= -m_maxFloatSpeed)
             {
                 m_velocity.add(-m_floatAccel, 0.0);
@@ -206,7 +205,6 @@ void Player::motion()
         }
         else if (m_floatingRight)
         {
-            std::cout << "right\n";
             if (m_velocity.getx() + m_floatAccel <= m_maxFloatSpeed)
             {
                 m_velocity.add(m_floatAccel, 0.0);

@@ -8,6 +8,7 @@ class Projectile : public GameObject
 {
 protected:
     bool m_terminated{ false };
+    int m_damage;
 
     std::vector<Collider::sweptObstacleTuple> m_solidColliders;
 
@@ -18,7 +19,7 @@ protected:
     virtual void motion() = 0;
     
 public:
-    Projectile(const char* fileName, double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 0, double colliderHeight = 0);
+    Projectile(const char* fileName, double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 0, double colliderHeight = 0, int damage = 1);
     virtual ~Projectile();
 
     bool isTerminated() const { return m_terminated; }

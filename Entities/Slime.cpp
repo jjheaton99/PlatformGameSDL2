@@ -16,16 +16,25 @@ Slime::Slime(double xStartPos, double yStartPos, double xVel, double yVel, const
 
 void Slime::enemyControls(Character& player)
 {
-    if (m_position.getx() < player.getPos().getx() + 20 - m_collider.getHitBox().w)
+    if (m_movement != AIRBORNE)
     {
-        m_movement = RIGHT;
-    }
-    else if (m_position.getx() > player.getPos().getx() + 80)
-    {
-        m_movement = LEFT;
-    }
-    else
-    {
-        m_movement = STOP;
+        if (m_position.getx() < player.getPos().getx() + 20 - m_collider.getHitBox().w)
+        {
+            m_movement = RIGHT;
+        }
+        else if (m_position.getx() > player.getPos().getx() + 80)
+        {
+            m_movement = LEFT;
+        }
+        else
+        {
+            m_movement = STOP;
+        }
+
+        if (MTRandom::getRandomInt(0, 99) < 1)
+        {
+            m_movement = AIRBORNE;
+            addVel(Vector2D<double>{0.0, -20.0});
+        }
     }
 }

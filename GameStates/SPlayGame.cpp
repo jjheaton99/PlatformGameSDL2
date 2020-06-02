@@ -4,18 +4,18 @@ SPlayGame::SPlayGame(const char* mapFile)
 {
     int pathLength{ 100 };
     m_map->loadMap(pathLength);
-    m_player->setPos(((1.0 * m_map->getPlayerSpawnChunk().getx()) * Constants::chunkWidth * Constants::tileSize) + 700.0,
-        ((1.0 * m_map->getPlayerSpawnChunk().gety()) * Constants::chunkHeight * Constants::tileSize) + 700.0);
+    double playerxSpawn{ ((1.0 * m_map->getPlayerSpawnChunk().getx()) * Constants::chunkWidth * Constants::tileSize) + 700.0 };
+    double playerySpawn{ ((1.0 * m_map->getPlayerSpawnChunk().gety()) * Constants::chunkHeight * Constants::tileSize) + 700.0 };
+    m_player->setPos(playerxSpawn, playerySpawn);
 
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
-    for (int i{ 0 }; i < 100; ++i)
+    for (int i{ 0 }; i < 5; ++i)
     {
-        //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 200.0 * i, 200*i);
+        m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, playerxSpawn + 500.0 + i * 20, playerySpawn + 500.0 + i * 20);
+        m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, playerxSpawn - 500.0 - i * 20, playerySpawn - 500.0 - i * 20);
     }
-    //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, 200, 700);
-    //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, 200, 500);
 }
 
 SPlayGame::~SPlayGame()

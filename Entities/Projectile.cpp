@@ -1,7 +1,7 @@
 #include "Projectile.h"
 
-Projectile::Projectile(const char* fileName, double xPos, double yPos, double xVel, double yVel, double colliderWidth, double colliderHeight)
-    : GameObject(fileName, xPos, yPos, xVel, yVel, colliderWidth, colliderHeight)
+Projectile::Projectile(const char* fileName, double xPos, double yPos, double xVel, double yVel, double colliderWidth, double colliderHeight, int damage)
+    : GameObject(fileName, xPos, yPos, xVel, yVel, colliderWidth, colliderHeight), m_damage{ damage }
 {}
 
 Projectile::~Projectile()
