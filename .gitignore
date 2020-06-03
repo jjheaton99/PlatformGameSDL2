@@ -1,8 +1,8 @@
 /Debug
 /Release
 /.vs
-.tmx
-.tsx
+*.tmx
+*.tsx
 libFLAC-8.dll
 libjpeg-9.dll
 libmodplug-1.dll
