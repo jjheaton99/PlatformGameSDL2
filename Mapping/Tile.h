@@ -22,7 +22,7 @@ private:
     std::shared_ptr<WTexture> m_tileTexture;
     
 public:
-    Tile(std::shared_ptr<WTexture> tileTexture = nullptr, Type type = BACKGROUND, double xPos = 0, double yPos = 0, int size = Constants::tileSize);
+    Tile(std::shared_ptr<WTexture> tileTexture = nullptr, int srcRectx = 0, int srcRecty = 0, Type type = BACKGROUND, double xPos = 0, double yPos = 0, int size = Constants::tileSize);
 
     void setPos(double xPos, double yPos) override;
     int getSize() const { return m_size; }

@@ -2,18 +2,12 @@
 
 Map::Map()
 {
-    m_backgroundTexture->load("Assets/MapTiles/blackGrey.png");
-    m_solidTexture->load("Assets/MapTiles/WhiteFadeBlocks/1.png");
-    m_platformTexture->load("Assets/MapTiles/platform.png");
-    m_ladderTexture->load("Assets/MapTiles/ladder.png");
+    m_tileset->load("Assets/MapTiles/sciFiTiles.png");
 }
 
 Map::~Map()
 {
-    m_backgroundTexture->destroy();
-    m_solidTexture->destroy();
-    m_platformTexture->destroy();
-    m_ladderTexture->destroy();
+    m_tileset->destroy();
 }
 
 void Map::update()
@@ -342,15 +336,49 @@ Tile Map::getTileFromNumber(int number) const
     switch (number)
     {
     case 0:
-        return Tile{ m_backgroundTexture, Tile::BACKGROUND };
+        return Tile{ m_tileset, 32 * number, 0, Tile::BACKGROUND };
     case 1:
-        return Tile{ m_solidTexture, Tile::SOLID };
+        return Tile{ m_tileset, 32 * number, 0, Tile::BACKGROUND };
     case 2:
-        return Tile{ m_platformTexture, Tile::PLATFORM };
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
     case 3:
-        return Tile{ m_ladderTexture, Tile::LADDER };
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 4:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 5:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 6:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 7:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 8:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 9:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 10:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 11:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 12:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 13:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 14:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 15:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 16:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 17:
+        return Tile{ m_tileset, 32 * number, 0, Tile::PLATFORM };
+    case 18:
+        return Tile{ m_tileset, 32 * number, 0, Tile::PLATFORM };
+    case 19:
+        return Tile{ m_tileset, 32 * number, 0, Tile::PLATFORM };
+    case 20:
+        return Tile{ m_tileset, 32 * number, 0, Tile::LADDER };
     default:
-        return Tile{ m_backgroundTexture, Tile::BACKGROUND };
+        return Tile{ m_tileset, 0, 0, Tile::BACKGROUND };
     }
 }
 
@@ -507,7 +535,7 @@ void Map::printMap() const
     }
 }
 
-void Map::switchTile(int mapRow, int mapColumn, Tile::Type type)
+/*void Map::switchTile(int mapRow, int mapColumn, Tile::Type type)
 {
     if (mapRow >= 0 && mapRow < static_cast<int>(m_map.size()) && mapColumn >= 0 && mapColumn < static_cast<int>(m_map[0].size()))
     {
@@ -529,4 +557,111 @@ void Map::switchTile(int mapRow, int mapColumn, Tile::Type type)
             break;
         }
     }
-}
+}*/
+
+/*m_background->load("Assets/MapTiles/background.png");
+m_solid1->load("Assets/MapTiles/WhiteFadeBlocks/1.png");
+m_solid2->load("Assets/MapTiles/WhiteFadeBlocks/2.png");
+m_solid3->load("Assets/MapTiles/WhiteFadeBlocks/3.png");
+m_solid4->load("Assets/MapTiles/WhiteFadeBlocks/4.png");
+m_solid5->load("Assets/MapTiles/WhiteFadeBlocks/5.png");
+m_solid6->load("Assets/MapTiles/WhiteFadeBlocks/6.png");
+m_solid7->load("Assets/MapTiles/WhiteFadeBlocks/7.png");
+m_solid8->load("Assets/MapTiles/WhiteFadeBlocks/8.png");
+m_solid9->load("Assets/MapTiles/WhiteFadeBlocks/9.png");
+m_solid10->load("Assets/MapTiles/WhiteFadeBlocks/10.png");
+m_solid11->load("Assets/MapTiles/WhiteFadeBlocks/11.png");
+m_solid12->load("Assets/MapTiles/WhiteFadeBlocks/12.png");
+m_solid13->load("Assets/MapTiles/WhiteFadeBlocks/13.png");
+m_solid14->load("Assets/MapTiles/WhiteFadeBlocks/14.png");
+m_solid15->load("Assets/MapTiles/WhiteFadeBlocks/15.png");
+m_solid16->load("Assets/MapTiles/WhiteFadeBlocks/16.png");
+m_solid17->load("Assets/MapTiles/WhiteFadeBlocks/17.png");
+m_solid18->load("Assets/MapTiles/WhiteFadeBlocks/18.png");
+m_solid19->load("Assets/MapTiles/WhiteFadeBlocks/19.png");
+m_solid20->load("Assets/MapTiles/WhiteFadeBlocks/20.png");
+m_platform->load("Assets/MapTiles/platform.png");
+m_ladderPlatform->load("Assets/MapTiles/ladderPlatform.png");
+m_ladder->load("Assets/MapTiles/ladder.png");*/
+
+/*m_background->destroy();
+m_solid1->destroy();
+m_solid2->destroy();
+m_solid3->destroy();
+m_solid4->destroy();
+m_solid5->destroy();
+m_solid6->destroy();
+m_solid7->destroy();
+m_solid8->destroy();
+m_solid9->destroy();
+m_solid10->destroy();
+m_solid11->destroy();
+m_solid12->destroy();
+m_solid13->destroy();
+m_solid14->destroy();
+m_solid15->destroy();
+m_solid16->destroy();
+m_solid17->destroy();
+m_solid18->destroy();
+m_solid19->destroy();
+m_solid20->destroy();
+m_platform->destroy();
+m_ladderPlatform->destroy();
+m_ladder->destroy();*/
+
+/*Tile Map::getTileFromNumber(int number) const
+{
+    switch (number)
+    {
+    case 0:
+        return Tile{ m_background, Tile::BACKGROUND };
+    case 1:
+        return Tile{ m_solid1, Tile::SOLID };
+    case 2:
+        return Tile{ m_solid2, Tile::SOLID };
+    case 3:
+        return Tile{ m_solid3, Tile::SOLID };
+    case 4:
+        return Tile{ m_solid4, Tile::SOLID };
+    case 5:
+        return Tile{ m_solid5, Tile::SOLID };
+    case 6:
+        return Tile{ m_solid6, Tile::SOLID };
+    case 7:
+        return Tile{ m_solid7, Tile::SOLID };
+    case 8:
+        return Tile{ m_solid8, Tile::SOLID };
+    case 9:
+        return Tile{ m_solid9, Tile::SOLID };
+    case 10:
+        return Tile{ m_solid10, Tile::SOLID };
+    case 11:
+        return Tile{ m_solid11, Tile::SOLID };
+    case 12:
+        return Tile{ m_solid12, Tile::SOLID };
+    case 13:
+        return Tile{ m_solid13, Tile::SOLID };
+    case 14:
+        return Tile{ m_solid14, Tile::SOLID };
+    case 15:
+        return Tile{ m_solid15, Tile::SOLID };
+    case 16:
+        return Tile{ m_solid16, Tile::SOLID };
+    case 17:
+        return Tile{ m_solid17, Tile::SOLID };
+    case 18:
+        return Tile{ m_solid18, Tile::SOLID };
+    case 19:
+        return Tile{ m_solid19, Tile::SOLID };
+    case 20:
+        return Tile{ m_solid20, Tile::SOLID };
+    case 21:
+        return Tile{ m_platform, Tile::PLATFORM };
+    case 22:
+        return Tile{ m_ladderPlatform, Tile::PLATFORM };
+    case 23:
+        return Tile{ m_ladder, Tile::LADDER };
+    default:
+        return Tile{ m_background, Tile::BACKGROUND };
+    }
+}*/

@@ -28,14 +28,14 @@ bool MapChunkLoader::readFileToChunkVector(const std::string& file)
             std::string tileNumberString{};
             int tileNumber{ 0 };
             int index{ 0 };
-            int spacePos{ static_cast<int>(line.find(' ', index)) };
+            int commaPos{ static_cast<int>(line.find(',', index)) };
 
             //finds all substrings sided by spaces and converts them integers to for pushing tiles
-            while (spacePos != std::string::npos)
+            while (commaPos != std::string::npos)
             {
-                tileNumberString = line.substr(index, spacePos - index);
-                index = spacePos + 1;
-                spacePos = line.find(' ', index);
+                tileNumberString = line.substr(index, commaPos - index);
+                index = commaPos + 1;
+                commaPos = line.find(',', index);
 
                 tileNumber = std::stoi(tileNumberString);
                 tileRow.push_back(tileNumber);
@@ -43,6 +43,7 @@ bool MapChunkLoader::readFileToChunkVector(const std::string& file)
 
             //last number in the line
             tileNumberString = line.substr(index, line.length() - index);
+            tileNumber = std::stoi(tileNumberString);
             tileRow.push_back(tileNumber);
 
             //adds the row to the overall chunk
@@ -105,7 +106,7 @@ const MapChunkLoader::intMap_type& MapChunkLoader::loadAndGetChunk(ChunkEntrance
         readFileToChunkVector(m_TBLRfiles[0]);
         break;
     case MapChunkLoader::SOLID:
-        readFileToChunkVector("Assets/Maps/MapChunks/solid.txt");
+        readFileToChunkVector("Assets/Maps/MapChunks/solid.csv");
         break;
 	}
     return m_chunkVector;

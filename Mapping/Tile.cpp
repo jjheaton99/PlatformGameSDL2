@@ -28,10 +28,10 @@ Tile::Tile(int tileNumber, double xPos, double yPos, int size)
     m_collider.setDimensions(m_size, m_size);
 }*/
 
-Tile::Tile(std::shared_ptr<WTexture> tileTexture, Type type, double xPos, double yPos, int size)
+Tile::Tile(std::shared_ptr<WTexture> tileTexture, int srcRectx, int srcRecty, Type type, double xPos, double yPos, int size)
     : GameObject(xPos, yPos), m_type{ type }, m_size{ size }
 {
-    m_srcRect = { 0, 0, 32, 32 };
+    m_srcRect = { srcRectx, srcRecty, 32, 32 };
     m_dstRect.w = m_size;
     m_dstRect.h = m_size;
 

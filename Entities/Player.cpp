@@ -13,7 +13,7 @@ Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, con
         m_spriteRects[i].y = 0;
     }
 
-    m_yMaxSpeed = 100.0;
+    m_yMaxSpeed = 50.0;
     m_xMaxSpeed = 12.0;
     m_walkAcceleration = 0.8;
     m_climbSpeed = 13.0;

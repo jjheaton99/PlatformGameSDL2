@@ -10,8 +10,8 @@ namespace Constants
     //the time between game logic updates
     const double updateStep{ 1.0 / 60.0 };
     const int tileSize{ 60 };
-    const int chunkWidth{ 25 };
-    const int chunkHeight{ 25 };
+    const int chunkWidth{ 35 };
+    const int chunkHeight{ 35 };
 }
 
 extern int g_screenWidth;
