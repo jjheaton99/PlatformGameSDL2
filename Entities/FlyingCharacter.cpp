@@ -41,100 +41,80 @@ bool FlyingCharacter::edgeCheck(const Camera& camera)
 bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
 {
     //character column and row variables are the position of the character in terms of map tiles
-    int characterColumn{ static_cast<int>(m_collider.getHitBox().x / Constants::tileSize) };
-    int characterRow{ static_cast<int>(m_collider.getHitBox().y / Constants::tileSize) };
+    int characterColumn{ Tile::coordToMapIndex(m_collider.getHitBox().x) };
+    int characterRow{ Tile::coordToMapIndex(m_collider.getHitBox().y) };
 
     getCollideTiles(map, characterRow, characterColumn);
-
     //sort by greatest overlaps
     std::sort(m_solidColliders.begin(), m_solidColliders.end(), [&](const auto& a, const auto& b) {
         return ((std::get<1>(a) > std::get<1>(b) && std::get<1>(a) > std::get<2>(b)) || (std::get<2>(a) > std::get<1>(b) && std::get<2>(a) > std::get<2>(b)));
         }
     );
 
-    int collideCount{ 0 };
-    double deflectionFactor{ 1.0 };
+    bool xCollision{ false };
+    bool yCollision{ false };
 
+    Vector2D<double> tempVel{ m_velocity };
+
+    double deflectionFactor{ 1.0 };
     for (auto& sweptCollider : m_solidColliders)
     {
-        auto collideResult{ m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, sweptCollider) };
-        switch (collideResult.first)
+        //if we have had collision in both directions, skip
+        if (!xCollision || !yCollision)
         {
-        case Collider::TOP:
-            m_velocity.yScale(-deflectionFactor);
-            m_position.add(m_velocity);
-            setCollider();
-            ++collideCount;
-            //std::cout << "t" << '\n';
-            break;
+            auto result(m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, sweptCollider));
 
-        case Collider::BOTTOM:
-            m_velocity.yScale(-deflectionFactor);
-            m_position.add(m_velocity);
-            setCollider();
-            ++collideCount;
-            //std::cout << "b" << '\n';
-            break;
+            switch (result.first)
+            {
+            case Collider::TOP:
+                if (!yCollision)
+                {
+                    tempVel.yScale(result.second);
+                    m_velocity.yScale(-deflectionFactor);
+                    yCollision = true;
+                }
+                break;
 
-        case Collider::LEFT:
-            m_velocity.xScale(-deflectionFactor);
-            m_position.add(m_velocity);
-            setCollider();
-            ++collideCount;
-            //std::cout << "l" << '\n';
-            break;
+            case Collider::BOTTOM:
+                if (!yCollision)
+                {
+                    tempVel.yScale(result.second);
+                    m_velocity.yScale(-deflectionFactor);
+                    yCollision = true;
+                }
+                break;
 
-        case Collider::RIGHT:
-            m_velocity.xScale(-deflectionFactor);
-            m_position.add(m_velocity);
-            setCollider();
-            ++collideCount;
-            //std::cout << "r" << '\n';
-            break;
+            case Collider::LEFT:
+                if (!xCollision)
+                {
+                    tempVel.xScale(result.second);
+                    m_velocity.xScale(-deflectionFactor);
+                    xCollision = true;
+                }
+                break;
 
-            //for overlap collisions we subtract velocity to move character out of block
-        case Collider::OVERLAP_TOP:
-            m_position.subtract(0.0, std::get<2>(sweptCollider));
-            m_velocity.yScale(-deflectionFactor);
-            m_position.add(m_velocity);
-            setCollider();
-            ++collideCount;
-            //std::cout << "ot" << '\n';
-            break;
+            case Collider::RIGHT:
+                if (!xCollision)
+                {
+                    tempVel.xScale(result.second);
+                    m_velocity.xScale(-deflectionFactor);
+                    xCollision = true;
+                }
+                break;
 
-        case Collider::OVERLAP_BOTTOM:
-            m_position.add(0.0, std::get<2>(sweptCollider));
-            m_velocity.yScale(-deflectionFactor);
-            m_position.add(m_velocity);
-            setCollider();
-            ++collideCount;
-            //std::cout << "ob" << '\n';
-            break;
-
-        case Collider::OVERLAP_LEFT:
-            m_position.subtract(std::get<1>(sweptCollider), 0.0);
-            m_velocity.xScale(-deflectionFactor);
-            m_position.add(m_velocity);
-            setCollider();
-            ++collideCount;
-            //std::cout << "ol" << '\n';
-            break;
-
-        case Collider::OVERLAP_RIGHT:
-            m_position.add(std::get<1>(sweptCollider), 0.0);
-            m_velocity.xScale(-deflectionFactor);
-            m_position.add(m_velocity);
-            setCollider();
-            ++collideCount;
-            //std::cout << "or" << '\n';
-            break;
-
-        case Collider::NONE:
-        default:
-            break;
+            case Collider::NONE:
+            default:
+                break;
+            }
         }
     }
 
-    return collideCount > 0;
+    if (xCollision || yCollision)
+    {
+        m_position.add(tempVel);
+        setCollider();
+    }
+
+    return xCollision || yCollision;
 }
 

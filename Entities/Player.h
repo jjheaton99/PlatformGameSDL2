@@ -14,13 +14,12 @@ class GroundedEnemy;
 class Player : public std::enable_shared_from_this<Character>, public GroundedCharacter
 {
 private:
-    static const int m_spriteSheetCount{ 26 };
+    static const int m_spriteSheetCount{ 27 };
 
     const int m_maxHP{ 20 };
 
     std::array<SDL_Rect, m_spriteSheetCount> m_spriteRects;
     std::array<SDL_Rect, m_spriteSheetCount>::size_type m_spriteIndex;
-    bool m_facingLeft{ false };
 
     PlayerSideAttack m_sideAttack{};
     PlayerBoomerang m_boomerang{};
@@ -46,6 +45,8 @@ private:
     double m_maxFloatSpeed{ 5.0 };
     double m_floatAccel{ 0.8 };
 
+    double m_wallslideSpeed{ 7.0 };
+
     int m_crouchStepCount{ 0 };
 
     const double m_iDuration{ 0.25 };
@@ -62,10 +63,11 @@ private:
     void moveCamera(Camera& camera);
     void setCollider() override;
 
+    bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) override;
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player) override {};
 
 public:
-    Player(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/MrPix.png", int hitPoints = 10);
+    Player(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/MrPix.png", int hitPoints = 50);
     ~Player();
 
     void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::shared_ptr<Character>>& enemies);

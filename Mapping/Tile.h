@@ -30,6 +30,9 @@ public:
 
     void switchTileTypeAndTexture(std::shared_ptr<WTexture> tileTexture, Type tileType);
 
+    static int coordToMapIndex(int coord);
+    static int coordToMapIndex(double coord);
+
     void cameraDraw(const Camera& camera) const override;
 };
 

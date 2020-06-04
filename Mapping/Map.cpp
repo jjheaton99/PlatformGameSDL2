@@ -377,6 +377,18 @@ Tile Map::getTileFromNumber(int number) const
         return Tile{ m_tileset, 32 * number, 0, Tile::PLATFORM };
     case 20:
         return Tile{ m_tileset, 32 * number, 0, Tile::LADDER };
+    case 21:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 22:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 23:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 24:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 25:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 26:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
     default:
         return Tile{ m_tileset, 0, 0, Tile::BACKGROUND };
     }
@@ -418,12 +430,7 @@ void Map::loadMap(int totalChunks)
     setTiles();
 }
 
-//loads tilemap from text file of rows of numbers that correspond to tile positions
-//eg
-//00 01 00 00 00
-//00 01 00 00 00
-//02 02 03 04 05
-//05 04 03 02 01
+//loads tilemap from csv file of rows of numbers that correspond to tiles
 void Map::loadMap(const char* fileName)
 {
     //Erase any previous map
@@ -446,14 +453,14 @@ void Map::loadMap(const char* fileName)
 
             std::string tileNumberString{};
             int tileNumber{ 0 };
-            index_type index{ 0 };
-            index_type spacePos{ line.find(' ', index) };
+            int index{ 0 };
+            int commaPos{ static_cast<int>(line.find(',', index)) };
             //finds all substrings sided by spaces and converts them integers to for pushing tiles
-            while (spacePos != std::string::npos)
+            while (commaPos != std::string::npos)
             {
-                tileNumberString = line.substr(index, spacePos - index);
-                index = spacePos + 1;
-                spacePos = line.find(' ', index);
+                tileNumberString = line.substr(index, commaPos - index);
+                index = commaPos + 1;
+                commaPos = static_cast<int>(line.find(',', index));
                 tileNumber = std::stoi(tileNumberString);
                 tileRow.push_back(getTileFromNumber(tileNumber));
             }
@@ -475,9 +482,9 @@ void Map::loadMap(const char* fileName)
 //sets the positions of all the tiles
 void Map::setTiles()
 {
-    for (index_type row{ 0 }; row < m_map.size(); ++row)
+    for (int row{ 0 }; row < static_cast<int>(m_map.size()); ++row)
     {
-        for (index_type column{ 0 }; column < m_map[0].size(); ++column)
+        for (int column{ 0 }; column < static_cast<int>(m_map[0].size()); ++column)
         {
             m_map[row][column].setPos(1.0 * column * Constants::tileSize,
                 1.0 * row * Constants::tileSize);
@@ -485,21 +492,16 @@ void Map::setTiles()
     }
 }
 
-Map::index_type Map::cameraCoordToMapIndex(int coord) const
-{
-    return (coord - (coord % m_map[0][0].getSize())) / m_map[0][0].getSize();
-}
-
 void Map::drawMap(const Camera& camera) const
 {
-    index_type xmaxCameraIndex{ cameraCoordToMapIndex(camera.getx() + camera.getw()) };
-    index_type ymaxCameraIndex{ cameraCoordToMapIndex(camera.gety() + camera.geth()) };
+    int xmaxCameraIndex{ Tile::coordToMapIndex(camera.getx() + camera.getw()) };
+    int ymaxCameraIndex{ Tile::coordToMapIndex(camera.gety() + camera.geth()) };
     //for loop statements ensure only tiles in focus of camera are drawn
-    for (index_type row{ cameraCoordToMapIndex(camera.gety()) };
-        row < (ymaxCameraIndex + 1 < m_map.size() ? ymaxCameraIndex + 1: m_map.size()); ++row)
+    for (int row{ Tile::coordToMapIndex(camera.gety()) };
+        row < (ymaxCameraIndex + 1 < static_cast<int>(m_map.size()) ? ymaxCameraIndex + 1: static_cast<int>(m_map.size())); ++row)
     {
-        for (index_type column{ cameraCoordToMapIndex(camera.getx()) };
-            column < (xmaxCameraIndex + 1 < m_map[0].size() ? xmaxCameraIndex + 1: m_map[0].size()); ++column)
+        for (int column{ Tile::coordToMapIndex(camera.getx()) };
+            column < (xmaxCameraIndex + 1 < static_cast<int>(m_map[0].size()) ? xmaxCameraIndex + 1: static_cast<int>(m_map[0].size())); ++column)
         {
             m_map[row][column].cameraDraw(camera);
         }
@@ -534,134 +536,3 @@ void Map::printMap() const
         std::cout << '\n';
     }
 }
-
-/*void Map::switchTile(int mapRow, int mapColumn, Tile::Type type)
-{
-    if (mapRow >= 0 && mapRow < static_cast<int>(m_map.size()) && mapColumn >= 0 && mapColumn < static_cast<int>(m_map[0].size()))
-    {
-        switch (type)
-        {
-        case Tile::BACKGROUND:
-            m_map[mapRow][mapColumn].switchTileTypeAndTexture( m_backgroundTexture, Tile::BACKGROUND );
-            break;
-        case Tile::SOLID:
-            m_map[mapRow][mapColumn].switchTileTypeAndTexture( m_solidTexture, Tile::SOLID );
-            break;
-        case Tile::PLATFORM:
-            m_map[mapRow][mapColumn].switchTileTypeAndTexture( m_platformTexture, Tile::PLATFORM );
-            break;
-        case Tile::LADDER:
-            m_map[mapRow][mapColumn].switchTileTypeAndTexture( m_ladderTexture, Tile::LADDER );
-            break;
-        default:
-            break;
-        }
-    }
-}*/
-
-/*m_background->load("Assets/MapTiles/background.png");
-m_solid1->load("Assets/MapTiles/WhiteFadeBlocks/1.png");
-m_solid2->load("Assets/MapTiles/WhiteFadeBlocks/2.png");
-m_solid3->load("Assets/MapTiles/WhiteFadeBlocks/3.png");
-m_solid4->load("Assets/MapTiles/WhiteFadeBlocks/4.png");
-m_solid5->load("Assets/MapTiles/WhiteFadeBlocks/5.png");
-m_solid6->load("Assets/MapTiles/WhiteFadeBlocks/6.png");
-m_solid7->load("Assets/MapTiles/WhiteFadeBlocks/7.png");
-m_solid8->load("Assets/MapTiles/WhiteFadeBlocks/8.png");
-m_solid9->load("Assets/MapTiles/WhiteFadeBlocks/9.png");
-m_solid10->load("Assets/MapTiles/WhiteFadeBlocks/10.png");
-m_solid11->load("Assets/MapTiles/WhiteFadeBlocks/11.png");
-m_solid12->load("Assets/MapTiles/WhiteFadeBlocks/12.png");
-m_solid13->load("Assets/MapTiles/WhiteFadeBlocks/13.png");
-m_solid14->load("Assets/MapTiles/WhiteFadeBlocks/14.png");
-m_solid15->load("Assets/MapTiles/WhiteFadeBlocks/15.png");
-m_solid16->load("Assets/MapTiles/WhiteFadeBlocks/16.png");
-m_solid17->load("Assets/MapTiles/WhiteFadeBlocks/17.png");
-m_solid18->load("Assets/MapTiles/WhiteFadeBlocks/18.png");
-m_solid19->load("Assets/MapTiles/WhiteFadeBlocks/19.png");
-m_solid20->load("Assets/MapTiles/WhiteFadeBlocks/20.png");
-m_platform->load("Assets/MapTiles/platform.png");
-m_ladderPlatform->load("Assets/MapTiles/ladderPlatform.png");
-m_ladder->load("Assets/MapTiles/ladder.png");*/
-
-/*m_background->destroy();
-m_solid1->destroy();
-m_solid2->destroy();
-m_solid3->destroy();
-m_solid4->destroy();
-m_solid5->destroy();
-m_solid6->destroy();
-m_solid7->destroy();
-m_solid8->destroy();
-m_solid9->destroy();
-m_solid10->destroy();
-m_solid11->destroy();
-m_solid12->destroy();
-m_solid13->destroy();
-m_solid14->destroy();
-m_solid15->destroy();
-m_solid16->destroy();
-m_solid17->destroy();
-m_solid18->destroy();
-m_solid19->destroy();
-m_solid20->destroy();
-m_platform->destroy();
-m_ladderPlatform->destroy();
-m_ladder->destroy();*/
-
-/*Tile Map::getTileFromNumber(int number) const
-{
-    switch (number)
-    {
-    case 0:
-        return Tile{ m_background, Tile::BACKGROUND };
-    case 1:
-        return Tile{ m_solid1, Tile::SOLID };
-    case 2:
-        return Tile{ m_solid2, Tile::SOLID };
-    case 3:
-        return Tile{ m_solid3, Tile::SOLID };
-    case 4:
-        return Tile{ m_solid4, Tile::SOLID };
-    case 5:
-        return Tile{ m_solid5, Tile::SOLID };
-    case 6:
-        return Tile{ m_solid6, Tile::SOLID };
-    case 7:
-        return Tile{ m_solid7, Tile::SOLID };
-    case 8:
-        return Tile{ m_solid8, Tile::SOLID };
-    case 9:
-        return Tile{ m_solid9, Tile::SOLID };
-    case 10:
-        return Tile{ m_solid10, Tile::SOLID };
-    case 11:
-        return Tile{ m_solid11, Tile::SOLID };
-    case 12:
-        return Tile{ m_solid12, Tile::SOLID };
-    case 13:
-        return Tile{ m_solid13, Tile::SOLID };
-    case 14:
-        return Tile{ m_solid14, Tile::SOLID };
-    case 15:
-        return Tile{ m_solid15, Tile::SOLID };
-    case 16:
-        return Tile{ m_solid16, Tile::SOLID };
-    case 17:
-        return Tile{ m_solid17, Tile::SOLID };
-    case 18:
-        return Tile{ m_solid18, Tile::SOLID };
-    case 19:
-        return Tile{ m_solid19, Tile::SOLID };
-    case 20:
-        return Tile{ m_solid20, Tile::SOLID };
-    case 21:
-        return Tile{ m_platform, Tile::PLATFORM };
-    case 22:
-        return Tile{ m_ladderPlatform, Tile::PLATFORM };
-    case 23:
-        return Tile{ m_ladder, Tile::LADDER };
-    default:
-        return Tile{ m_background, Tile::BACKGROUND };
-    }
-}*/

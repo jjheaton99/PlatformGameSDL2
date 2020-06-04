@@ -35,7 +35,7 @@ bool MapChunkLoader::readFileToChunkVector(const std::string& file)
             {
                 tileNumberString = line.substr(index, commaPos - index);
                 index = commaPos + 1;
-                commaPos = line.find(',', index);
+                commaPos = static_cast<int>(line.find(',', index));
 
                 tileNumber = std::stoi(tileNumberString);
                 tileRow.push_back(tileNumber);

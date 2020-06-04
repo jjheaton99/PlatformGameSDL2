@@ -16,7 +16,6 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
     if (m_position.getx() > 1.0*camera.getx() - 1000.0 && m_position.getx() < 1.0*camera.getx() + 1.0*camera.getw() + 1000.0
         && m_position.gety() > 1.0*camera.gety() - 1000.0 && m_position.gety() < 1.0*camera.gety() + 1.0*camera.geth() + 1000.0)
     {
-        motion();
         enemyControls(player);
 
         //edge check goes before map collision check to prevent vector subcript error when going off the edge
@@ -27,14 +26,6 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
         }
 
         bool collided{ sweepMapCollideCheck(map) };
-        if (collided)
-        {
-            setCollider();
-        }
-
-        //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
-        //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
-        //std::cout << m_collider.getHitBox().y << "   " << m_collider.getHitBox().x << '\n';
 
         if (!collided)
         {
@@ -45,6 +36,7 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
         m_dstRect.x = static_cast<int>(m_position.getx());
         m_dstRect.y = static_cast<int>(m_position.gety());
 
+        motion();
         attackPlayer(player);
     }
 }

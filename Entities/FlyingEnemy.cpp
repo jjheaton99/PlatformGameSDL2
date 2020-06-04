@@ -31,10 +31,6 @@ void FlyingEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera
             setCollider();
         }
 
-        //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
-        //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
-        //std::cout << m_collider.getHitBox().y << "   " << m_collider.getHitBox().x << '\n';
-
         if (!collided)
         {
             m_position.add(m_velocity);
@@ -51,10 +47,17 @@ bool FlyingEnemy::attackPlayer(Character& player)
     if (!dynamic_cast<Player&>(player).isInvincible() && (m_velocity.magnitude() < (m_position - player.getPos()).magnitude()))
     {
         Collider::sweptObstacleTuple sweptCollider{ player.getCollider(), Collider::xOverlap(m_collider, player.getCollider()), Collider::yOverlap(m_collider, player.getCollider()) };
-        if (m_collider.sweptAABBDeflect(1.0, sweptCollider, m_position, m_velocity, player.getVel()))
+        if (m_collider.sweptAABBDeflect(1.5, sweptCollider, m_position, m_velocity, player.getVel()))
         {
             player.removeHP(m_damage);
             dynamic_cast<Player&>(player).startiFrames();
+            return true;
+        }
+        else if (m_collider.collideCheck(player.getCollider()))
+        {
+            player.removeHP(m_damage);
+            dynamic_cast<Player&>(player).startiFrames();
+            m_velocity.scale(-1.5);
             return true;
         }
     }

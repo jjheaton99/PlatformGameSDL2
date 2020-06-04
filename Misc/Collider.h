@@ -19,10 +19,10 @@ public:
         BOTTOM,
         LEFT,
         RIGHT,
-        OVERLAP_TOP,
-        OVERLAP_BOTTOM,
-        OVERLAP_LEFT,
-        OVERLAP_RIGHT,
+        //OVERLAP_TOP,
+        //OVERLAP_BOTTOM,
+        //OVERLAP_LEFT,
+        //OVERLAP_RIGHT,
         NONE
     };
 
@@ -43,7 +43,7 @@ private:
     static double axisBoxOverlap(double pos1, double pos2, double size1, double size2);
 
 public:
-    Collider(double width, double height, double xPos = 0, double yPos = 0);
+    Collider(double width = 0, double height = 0, double xPos = 0, double yPos = 0);
     ~Collider();
 
     void setPosition(double x, double y);

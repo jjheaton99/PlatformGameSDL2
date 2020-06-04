@@ -15,7 +15,6 @@ class Map
 {
 public:
     using map_type = std::vector<std::vector<Tile>>;
-    using index_type = map_type::size_type;
 
 private:
     map_type m_map;
@@ -33,8 +32,6 @@ private:
     void generateChunks(int totalChunks);
     Tile getTileFromNumber(int number) const;
     //void switchTile(int mapRow, int mapColumn, Tile::Type type);
-
-    index_type cameraCoordToMapIndex(int coord) const;
     void setTiles();
 
 public:
@@ -58,28 +55,3 @@ public:
     //for testing
     void printMap() const;
 };
-
-/*std::shared_ptr<WTexture> m_background{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid1{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid2{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid3{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid4{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid5{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid6{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid7{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid8{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid9{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid10{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid11{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid12{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid13{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid14{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid15{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid16{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid17{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid18{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid19{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_solid20{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_platform{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_ladderPlatform{ std::make_shared<WTexture>() };
-std::shared_ptr<WTexture> m_ladder{ std::make_shared<WTexture>() };*/

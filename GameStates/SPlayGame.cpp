@@ -25,7 +25,7 @@ void SPlayGame::playerControlsKeyHold()
 {
     const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
 
-    if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isClimbing())
+    if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isClimbing() && !(m_player->getMovement() == Player::WALLSLIDE))
     {
         if (currentKeyState[SDL_SCANCODE_S])
         {
@@ -45,7 +45,7 @@ void SPlayGame::playerControlsKeyHold()
         }
     }
 
-    else if (m_player->getMovement() == Player::AIRBORNE && !m_player->isClimbing())
+    else if (m_player->getMovement() == Player::AIRBORNE || m_player->getMovement() == Player::WALLSLIDE)
     {
         if (currentKeyState[SDL_SCANCODE_A])
         {
@@ -116,29 +116,45 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
         case SDLK_SPACE:
             if (!(m_player->getMovement() == Player::AIRBORNE))
             {
-                double jumpVel{ 20.0 };
-
-                if (m_player->isClimbing())
+                if (m_player->getMovement() == Player::WALLSLIDE)
+                {
+                    double wallJumpVel{ 18.0 };
+                    if (m_player->isFacingLeft())
+                    {
+                        m_player->setVel(wallJumpVel, - 1.5 * wallJumpVel);
+                        m_player->makeAirborne();
+                    }
+                    else
+                    {
+                        m_player->setVel(-wallJumpVel, -1.5 * wallJumpVel);
+                        m_player->makeAirborne();
+                    }
+                }
+                else if (m_player->isClimbing())
                 {
                     m_player->makeAirborne();
-                    break;
                 }
+                else
+                {
+                    double jumpVel{ 20.0 };
+                    double maxJumpxVel{ 15.0 };
 
-                m_player->jumpHigher();
-                m_player->dodgeCancel();
-                if (std::abs(m_player->getVel().getx()) < 15.0)
-                {
-                    m_player->setVel(m_player->getVel().getx(), -jumpVel);
+                    m_player->jumpHigher();
+                    m_player->dodgeCancel();
+                    if (std::abs(m_player->getVel().getx()) < maxJumpxVel)
+                    {
+                        m_player->setVel(m_player->getVel().getx(), -jumpVel);
+                    }
+                    else if (m_player->isFacingLeft())
+                    {
+                        m_player->setVel(-maxJumpxVel, -jumpVel);
+                    }
+                    else if (!m_player->isFacingLeft())
+                    {
+                        m_player->setVel(maxJumpxVel, -jumpVel);
+                    }
+                    m_player->makeAirborne();
                 }
-                else if (m_player->isFacingLeft())
-                {
-                    m_player->setVel(-15.0, -jumpVel);
-                }
-                else if (!m_player->isFacingLeft())
-                {
-                    m_player->setVel(15.0, -jumpVel);
-                }
-                m_player->makeAirborne();
             }
             break;
 
@@ -148,11 +164,15 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                 m_player->attackCancel();
                 if (currentKeyState[SDL_SCANCODE_A])
                 {
-                    if (m_player->isClimbing())
+                    if (m_player->getMovement() == Player::WALLSLIDE)
+                    {
+                        m_player->makeAirborne();
+                        m_player->addVel(12.5, 0);
+                    }
+                    else if (m_player->isClimbing())
                     {
                         m_player->makeAirborne();
                         m_player->addVel(-12.5, 0);
-
                     }
                     else if (m_player->getMovement() == Player::AIRBORNE)
                     {
@@ -175,7 +195,12 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
 
                 else if (currentKeyState[SDL_SCANCODE_D])
                 {
-                    if (m_player->isClimbing())
+                    if (m_player->getMovement() == Player::WALLSLIDE)
+                    {
+                        m_player->makeAirborne();
+                        m_player->addVel(-12.5, 0);
+                    }
+                    else if (m_player->isClimbing())
                     {
                         m_player->makeAirborne();
                         m_player->addVel(12.5, 0);
@@ -199,6 +224,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                     m_player->dodgeRight();
                 }
 
+                //default dodge in direction currently facing
                 else if (!m_player->isClimbing())
                 {
                     if (m_player->isFacingLeft())

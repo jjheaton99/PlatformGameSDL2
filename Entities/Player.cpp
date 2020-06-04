@@ -35,8 +35,6 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         //kill();
     }
 
-    motion();
-
     //edge check goes before map collision check to prevent vector subcript error when going off the edge
     if (edgeCheck(camera))
     {
@@ -46,10 +44,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
 
     bool collided{ sweepMapCollideCheck(map) };
 
-    //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
-    //std::cout << m_position.gety() << "   " << m_position.getx() << '\n';
-    //std::cout << m_collider.getHitBox().y << "   " << m_collider.getHitBox().x << '\n';
-
+    //only add velocity if there was no collision to prevent adding velocity twice
     if (!collided)
     {
         m_position.add(m_velocity);
@@ -59,6 +54,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     m_dstRect.x = static_cast<int>(m_position.getx());
     m_dstRect.y = static_cast<int>(m_position.gety());
 
+    motion();
     spriteAnimate();
     moveCamera(camera);
 
@@ -266,6 +262,17 @@ void Player::motion()
         setVel(0, m_climbSpeed);
         break;
 
+    case GroundedCharacter::WALLSLIDE:
+        if (m_floatingLeft)
+        {
+            setVel(-1.0, m_wallslideSpeed);
+        }
+        else if (m_floatingRight)
+        {
+            setVel(1.0, m_wallslideSpeed);
+        }
+        break;
+
     case GroundedCharacter::STOP:
         //deceleration when stopped moving
         m_velocity.xScale(0.7);
@@ -335,6 +342,10 @@ void Player::spriteAnimate()
             m_spriteIndex = 0;
         }
         cycleWalkAnimation();
+        break;
+
+    case GroundedCharacter::WALLSLIDE:
+        m_spriteIndex = 26;
         break;
 
     case GroundedCharacter::STOP:
@@ -562,4 +573,118 @@ void Player::floatRight()
     m_floatingRight = true;
     m_floatingLeft = false;
     m_facingLeft = false;
+}
+
+bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
+{
+    //character column and row variables are the position of the character in terms of map tiles
+    int characterColumn{ Tile::coordToMapIndex(m_collider.getHitBox().x) };
+    int characterRow{ Tile::coordToMapIndex(m_collider.getHitBox().y) };
+
+    //causes character to fall when stepping off platform or solid tile
+    if (!checkForGround(map, characterRow, characterColumn, m_collider.getHitBox()))
+    {
+        m_movement = AIRBORNE;
+    }
+
+    getCollideTiles(map, characterRow, characterColumn);
+    //sort by greatest overlaps
+    std::sort(m_solidColliders.begin(), m_solidColliders.end(), [&](const auto& a, const auto& b) {
+        return ((std::get<1>(a) > std::get<1>(b) && std::get<1>(a) > std::get<2>(b)) || (std::get<2>(a) > std::get<1>(b) && std::get<2>(a) > std::get<2>(b)));
+        }
+    );
+
+    bool xCollision{ false };
+    bool yCollision{ false };
+
+    Vector2D<double> tempVel{ m_velocity };
+
+    for (auto& sweptCollider : m_solidColliders)
+    {
+        //if we have had collision in both directions, skip
+        if (!xCollision || !yCollision)
+        {
+            auto result(m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, sweptCollider));
+
+            switch (result.first)
+            {
+            case Collider::TOP:
+                if (!yCollision)
+                {
+                    tempVel.yScale(result.second);
+                    m_velocity.yScale(0);
+                    m_movement = STOP;
+                    yCollision = true;
+                }
+                break;
+
+            case Collider::BOTTOM:
+                if (!yCollision)
+                {
+                    tempVel.yScale(result.second);
+                    m_velocity.yScale(0);
+                    yCollision = true;
+                }
+                break;
+
+            case Collider::LEFT:
+                if (!xCollision)
+                {
+                    tempVel.xScale(result.second);
+                    m_velocity.xScale(0);
+                    xCollision = true;
+                    if (m_movement == AIRBORNE && m_velocity.gety() > 0)
+                    {
+                        m_movement = WALLSLIDE;
+                    }
+                }
+                break;
+
+            case Collider::RIGHT:
+                if (!xCollision)
+                {
+                    tempVel.xScale(result.second);
+                    m_velocity.xScale(0);
+                    xCollision = true;
+                    if (m_movement == AIRBORNE && m_velocity.gety() > 0)
+                    {
+                        m_movement = WALLSLIDE;
+                    }
+                }
+                break;
+
+            case Collider::NONE:
+            default:
+                break;
+            }
+        }
+    }
+
+    for (auto& sweptCollider : m_platformColliders)
+    {
+        if (!yCollision)
+        {
+            auto result{ m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, sweptCollider) };
+
+            if (result.first == Collider::TOP && !m_crouched && !m_hasCrouched)
+            {
+                if (!yCollision)
+                {
+                    tempVel.yScale(result.second);
+                    m_velocity.yScale(0);
+                    m_movement = STOP;
+                    yCollision = true;
+                    //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
+                }
+            }
+        }
+    }
+
+    if (xCollision || yCollision)
+    {
+        m_position.add(tempVel);
+        setCollider();
+    }
+
+    return xCollision || yCollision;
 }

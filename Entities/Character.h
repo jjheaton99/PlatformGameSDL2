@@ -18,6 +18,8 @@ protected:
     double m_yMaxSpeed{ 0 };
     double m_xMaxSpeed{ 0 };
 
+    bool m_facingLeft{ false };
+
     int m_maxHitPoints;
     int m_hitPoints;
 

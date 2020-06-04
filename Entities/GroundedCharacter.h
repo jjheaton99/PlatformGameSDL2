@@ -15,6 +15,7 @@ public:
         CLIMB_STOP,
         CLIMB_UP,
         CLIMB_DOWN,
+        WALLSLIDE,
         STOP
     };
 

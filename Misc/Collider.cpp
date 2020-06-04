@@ -38,7 +38,6 @@ bool Collider::collideCheck(const Collider& collider) const
         && m_hitBox.y >(collider.getHitBox().y - m_hitBox.h));
 }
 
-//swept AABB collisions to prevent high speed going through
 Collider::sweptAABBresult_type Collider::sweptAABBCheck(const Vector2D<double>& colliderVel, const Vector2D<double>& obstacleVel, sweptObstacleTuple& obstacleTuple) const
 {
     //closest and furthest distances between colliders in x and y directions
@@ -97,7 +96,7 @@ Collider::sweptAABBresult_type Collider::sweptAABBCheck(const Vector2D<double>& 
     //no divide by zero
     if (colliderVel.getx() == 0.0)
     {
-        if ( xOverlap > 0.0)
+        if (xOverlap > 0.0)
         {
             xStartTime = -std::numeric_limits<double>::infinity();
         }
@@ -111,7 +110,7 @@ Collider::sweptAABBresult_type Collider::sweptAABBCheck(const Vector2D<double>& 
     {
         if (colliding)
         {
-            xStartTime = - xCloseDist / colliderVel.getx();
+            xStartTime = -xCloseDist / colliderVel.getx();
         }
         else
         {
@@ -136,7 +135,7 @@ Collider::sweptAABBresult_type Collider::sweptAABBCheck(const Vector2D<double>& 
     {
         if (colliding)
         {
-            yStartTime = - yCloseDist / colliderVel.gety();
+            yStartTime = -yCloseDist / colliderVel.gety();
         }
         else
         {
@@ -150,35 +149,8 @@ Collider::sweptAABBresult_type Collider::sweptAABBCheck(const Vector2D<double>& 
     //collision end time is shorter of x and y times
     double endTime{ std::min(xEndTime, yEndTime) };
 
-    //if colliders are overlapping
-    if (colliding)
-    {
-        //for situations where character is forced into colliding with block
-        if (yOverlap < xOverlap)
-        {
-            if (colliderVel.gety() > 0.0)
-            {
-                return { OVERLAP_TOP, startTime };
-            }
-            else
-            {
-                return { OVERLAP_BOTTOM, startTime };
-            }
-        }
-        else
-        {
-            if (colliderVel.getx() > 0.0)
-            {
-                return { OVERLAP_LEFT, startTime };
-            }
-            else
-            {
-                return { OVERLAP_RIGHT, startTime };
-            }
-        }
-    }
     //check collision occured in this frame
-    else if (startTime > endTime || xStartTime < 0.0 && yStartTime < 0.0 || xStartTime > 1.0 || yStartTime > 1.0)
+    if (startTime > endTime || xStartTime < 0.0 && yStartTime < 0.0 || xStartTime > 1.0 || yStartTime > 1.0)
     {
         return { NONE, startTime };
     }
@@ -243,49 +215,21 @@ bool Collider::sweptAABBDeflect(double deflectionFactor, Collider::sweptObstacle
     case Collider::TOP:
         velocity.yScale(-deflectionFactor);
         position.add(velocity);
-        //std::cout << "t" << '\n';
         return true;
 
     case Collider::BOTTOM:
         velocity.yScale(-deflectionFactor);
         position.add(velocity);
-        //std::cout << "b" << '\n';
         return true;
 
     case Collider::LEFT:
         velocity.xScale(-deflectionFactor);
         position.add(velocity);
-        //std::cout << "l" << '\n';
         return true;
 
     case Collider::RIGHT:
         velocity.xScale(-deflectionFactor);
         position.add(velocity);
-        //std::cout << "r" << '\n';
-        return true;
-
-    case Collider::OVERLAP_TOP:
-        velocity.yScale(-deflectionFactor);
-        position.add(velocity);
-        //std::cout << "ot" << '\n';
-        return true;
-
-    case Collider::OVERLAP_BOTTOM:
-        velocity.yScale(-deflectionFactor);
-        position.add(velocity);
-        //std::cout << "ob" << '\n';
-        return true;
-
-    case Collider::OVERLAP_LEFT:
-        velocity.xScale(-deflectionFactor);
-        position.add(velocity);
-        //std::cout << "ol" << '\n';
-        return true;
-
-    case Collider::OVERLAP_RIGHT:
-        velocity.xScale(-deflectionFactor);
-        position.add(velocity);
-        //std::cout << "or" << '\n';
         return true;
 
     case Collider::NONE:
