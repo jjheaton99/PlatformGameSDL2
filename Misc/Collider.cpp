@@ -213,20 +213,12 @@ bool Collider::sweptAABBDeflect(double deflectionFactor, Collider::sweptObstacle
     switch (collideResult.first)
     {
     case Collider::TOP:
-        velocity.yScale(-deflectionFactor);
-        position.add(velocity);
-        return true;
-
     case Collider::BOTTOM:
         velocity.yScale(-deflectionFactor);
         position.add(velocity);
         return true;
 
     case Collider::LEFT:
-        velocity.xScale(-deflectionFactor);
-        position.add(velocity);
-        return true;
-
     case Collider::RIGHT:
         velocity.xScale(-deflectionFactor);
         position.add(velocity);

@@ -168,7 +168,7 @@ bool PlayerBoomerang::enemyCollideCheck(std::vector<std::shared_ptr<Character>>&
             {
                 m_target.lock()->removeHP(m_damage);
                 m_target.lock()->addVel(0.3 * m_velocity);
-                m_velocity.scale(0.1);
+                m_velocity.scale(-1.0);
                 m_prevTarget = m_target;
                 m_target.reset();
                 return true;

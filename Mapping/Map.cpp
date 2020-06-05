@@ -389,6 +389,14 @@ Tile Map::getTileFromNumber(int number) const
         return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
     case 26:
         return Tile{ m_tileset, 32 * number, 0, Tile::SOLID };
+    case 27:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SPIKES };
+    case 28:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SPIKES };
+    case 29:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SPIKES };
+    case 30:
+        return Tile{ m_tileset, 32 * number, 0, Tile::SPIKES };
     default:
         return Tile{ m_tileset, 0, 0, Tile::BACKGROUND };
     }

@@ -49,14 +49,12 @@ bool FlyingEnemy::attackPlayer(Character& player)
         Collider::sweptObstacleTuple sweptCollider{ player.getCollider(), Collider::xOverlap(m_collider, player.getCollider()), Collider::yOverlap(m_collider, player.getCollider()) };
         if (m_collider.sweptAABBDeflect(1.5, sweptCollider, m_position, m_velocity, player.getVel()))
         {
-            player.removeHP(m_damage);
-            dynamic_cast<Player&>(player).startiFrames();
+            dynamic_cast<Player&>(player).removeHP(m_damage);
             return true;
         }
         else if (m_collider.collideCheck(player.getCollider()))
         {
-            player.removeHP(m_damage);
-            dynamic_cast<Player&>(player).startiFrames();
+            dynamic_cast<Player&>(player).removeHP(m_damage);
             m_velocity.scale(-1.5);
             return true;
         }

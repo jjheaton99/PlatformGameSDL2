@@ -25,6 +25,7 @@ protected:
 
     std::vector<Collider::sweptObstacleTuple> m_solidColliders;
     std::vector<Collider::sweptObstacleTuple> m_platformColliders;
+    std::vector<Collider::sweptObstacleTuple> m_spikeColliders;
     bool m_collidingWithLadder{ false };
     double m_ladderxPos{ 0.0 };
 
@@ -46,7 +47,7 @@ public:
     virtual void cameraDraw(const Camera& camera) const override;
 
     void addHP(int HP) { m_hitPoints += HP; }
-    void removeHP(int HP) { m_hitPoints -= HP; }
+    virtual void removeHP(int HP) { m_hitPoints -= HP; }
     int getHP() const { return m_hitPoints; }
 
     bool isDead() const { return m_dead; }
@@ -54,5 +55,8 @@ public:
 
     double getLadderxPos() const { return m_ladderxPos; }
     bool collidingWithLadder() const { return m_collidingWithLadder; }
+
+    void faceLeft() { m_facingLeft = true; }
+    void faceRight() { m_facingLeft = false; }
 };
 

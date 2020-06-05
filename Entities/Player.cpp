@@ -70,10 +70,14 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
 
     if (m_dodgingLeft || m_dodgingRight)
     {
+        if (m_movement == WALLSLIDE)
+        {
+            m_movement = AIRBORNE;
+        }
         if (m_dodgingLeft)
         {
             m_angle -= (360.0 / m_dodgeFrames);
-            if (m_movement != AIRBORNE && m_velocity.getx() > -m_minDodgeVel)
+            if ((m_movement == LEFT || m_movement == RIGHT || m_movement == STOP) && m_velocity.getx() > -m_minDodgeVel)
             {
                 setVel(-m_minDodgeVel, m_velocity.gety());
             }
@@ -81,7 +85,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         else if (m_dodgingRight)
         {
             m_angle += (360.0 / m_dodgeFrames);
-            if (m_movement != AIRBORNE && m_velocity.getx() < m_minDodgeVel)
+            if ((m_movement == LEFT || m_movement == RIGHT || m_movement == STOP) && m_velocity.getx() < m_minDodgeVel)
             {
                 setVel(m_minDodgeVel, m_velocity.gety());
             }
@@ -206,7 +210,7 @@ void Player::motion()
                 m_velocity.add(m_floatAccel, 0.0);
             }
         }
-        if (std::abs(m_velocity.getx()) > m_xMaxSpeed) 
+        if (std::abs(m_velocity.getx()) > 2.0 * m_xMaxSpeed) 
         {
             m_velocity.xScale(0.95);
             if (std::abs(m_velocity.getx()) < 0.0001)
@@ -218,6 +222,7 @@ void Player::motion()
         break;
 
     case GroundedCharacter::LEFT:
+        m_facingLeft = true;
         //velocity increased/decreased unless at max horizontal velocity
         if (m_velocity.getx() - m_walkAcceleration >= -m_xMaxSpeed)
         {
@@ -235,6 +240,7 @@ void Player::motion()
         break;
 
     case GroundedCharacter::RIGHT:
+        m_facingLeft = false;
         if (m_velocity.getx() + m_walkAcceleration <= m_xMaxSpeed)
         {
             m_velocity.add(m_walkAcceleration, 0);
@@ -327,20 +333,10 @@ void Player::spriteAnimate()
         break;
 
     case GroundedCharacter::LEFT:
-        if (m_facingLeft == false)
-        {
-            m_facingLeft = true;
-            m_spriteIndex = 0;
-        }
         cycleWalkAnimation();
         break;
 
     case GroundedCharacter::RIGHT:
-        if (m_facingLeft == true)
-        {
-            m_facingLeft = false;
-            m_spriteIndex = 0;
-        }
         cycleWalkAnimation();
         break;
 
@@ -458,10 +454,10 @@ void Player::attackLeft()
         m_facingLeft = true;
         m_sideAttack.faceLeft();
         m_sideAttack.attack();
-        if (m_movement == AIRBORNE)
+        /*if (m_movement == AIRBORNE)
         {
             m_velocity.add(-5.0, -5.0);
-        }
+        }*/
     }
 }
 
@@ -472,10 +468,10 @@ void Player::attackRight()
         m_facingLeft = false;
         m_sideAttack.faceRight();
         m_sideAttack.attack();
-        if (m_movement == AIRBORNE)
+        /*if (m_movement == AIRBORNE)
         {
             m_velocity.add(5.0, -5.0);
-        }
+        }*/
     }
 }
 
@@ -575,6 +571,16 @@ void Player::floatRight()
     m_facingLeft = false;
 }
 
+void Player::removeHP(int HP)
+{
+    if (!m_invincible)
+    {
+        m_hitPoints -= HP;
+        startiFrames();
+    }
+}
+
+
 bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
 {
     //character column and row variables are the position of the character in terms of map tiles
@@ -628,25 +634,13 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                 break;
 
             case Collider::LEFT:
-                if (!xCollision)
-                {
-                    tempVel.xScale(result.second);
-                    m_velocity.xScale(0);
-                    xCollision = true;
-                    if (m_movement == AIRBORNE && m_velocity.gety() > 0)
-                    {
-                        m_movement = WALLSLIDE;
-                    }
-                }
-                break;
-
             case Collider::RIGHT:
                 if (!xCollision)
                 {
                     tempVel.xScale(result.second);
                     m_velocity.xScale(0);
                     xCollision = true;
-                    if (m_movement == AIRBORNE && m_velocity.gety() > 0)
+                    if (m_movement == AIRBORNE && m_velocity.gety() > -15.0 && !isDodging())
                     {
                         m_movement = WALLSLIDE;
                     }
@@ -676,6 +670,19 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                     yCollision = true;
                     //std::cout << m_velocity.gety() << "   " << m_velocity.getx() << '\n';
                 }
+            }
+        }
+    }
+
+    for (auto& sweptCollider : m_spikeColliders)
+    {
+        //deflection factor is 1/1.5 to counter increased gravity when falling
+        if (m_collider.sweptAABBDeflect(1.0 / 1.5, sweptCollider, m_position, m_velocity))
+        {
+            removeHP(1);
+            if (m_dodgingLeft || m_dodgingRight)
+            {
+                dodgeCancel();
             }
         }
     }

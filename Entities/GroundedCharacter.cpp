@@ -123,14 +123,6 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
                 break;
 
             case Collider::LEFT:
-                if (!xCollision)
-                {
-                    tempVel.xScale(result.second);
-                    m_velocity.xScale(0);
-                    xCollision = true;
-                }
-                break;
-
             case Collider::RIGHT:
                 if (!xCollision)
                 {

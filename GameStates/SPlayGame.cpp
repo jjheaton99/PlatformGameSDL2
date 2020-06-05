@@ -2,7 +2,7 @@
 
 SPlayGame::SPlayGame(const char* mapFile)
 {
-    int pathLength{ 100 };
+    int pathLength{ 20 };
     m_map->loadMap(pathLength);
     double playerxSpawn{ ((1.0 * m_map->getPlayerSpawnChunk().getx()) * Constants::chunkWidth * Constants::tileSize) + 700.0 };
     double playerySpawn{ ((1.0 * m_map->getPlayerSpawnChunk().gety()) * Constants::chunkHeight * Constants::tileSize) + 700.0 };
@@ -123,11 +123,13 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                     {
                         m_player->setVel(wallJumpVel, - 1.5 * wallJumpVel);
                         m_player->makeAirborne();
+                        m_player->faceRight();
                     }
                     else
                     {
                         m_player->setVel(-wallJumpVel, -1.5 * wallJumpVel);
                         m_player->makeAirborne();
+                        m_player->faceLeft();
                     }
                 }
                 else if (m_player->isClimbing())
@@ -164,12 +166,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                 m_player->attackCancel();
                 if (currentKeyState[SDL_SCANCODE_A])
                 {
-                    if (m_player->getMovement() == Player::WALLSLIDE)
-                    {
-                        m_player->makeAirborne();
-                        m_player->addVel(12.5, 0);
-                    }
-                    else if (m_player->isClimbing())
+                    if (m_player->isClimbing())
                     {
                         m_player->makeAirborne();
                         m_player->addVel(-12.5, 0);
@@ -195,12 +192,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
 
                 else if (currentKeyState[SDL_SCANCODE_D])
                 {
-                    if (m_player->getMovement() == Player::WALLSLIDE)
-                    {
-                        m_player->makeAirborne();
-                        m_player->addVel(-12.5, 0);
-                    }
-                    else if (m_player->isClimbing())
+                    if (m_player->isClimbing())
                     {
                         m_player->makeAirborne();
                         m_player->addVel(12.5, 0);

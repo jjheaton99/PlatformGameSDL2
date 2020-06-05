@@ -16,6 +16,7 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
     //delete any existing hitboxes 
     m_solidColliders.clear();
     m_platformColliders.clear();
+    m_spikeColliders.clear();
 
     //in case no ladder collisions are found
     m_collidingWithLadder = false;
@@ -68,6 +69,7 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
                     Collider::yOverlap(m_collider, map[row][column].getCollider()),
                 });
                 break;
+
             case Tile::PLATFORM:
                 m_platformColliders.push_back({
                     map[row][column].getCollider(),
@@ -75,6 +77,15 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
                     Collider::yOverlap(m_collider, map[row][column].getCollider()),
                 });
                 break;
+
+            case Tile::SPIKES:
+                m_spikeColliders.push_back({
+                    map[row][column].getCollider(),
+                    Collider::xOverlap(m_collider, map[row][column].getCollider()),
+                    Collider::yOverlap(m_collider, map[row][column].getCollider()),
+                    });
+                break;
+
             case Tile::BACKGROUND:
             default:
                 break;

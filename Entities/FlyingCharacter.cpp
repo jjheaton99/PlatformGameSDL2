@@ -67,14 +67,6 @@ bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
             switch (result.first)
             {
             case Collider::TOP:
-                if (!yCollision)
-                {
-                    tempVel.yScale(result.second);
-                    m_velocity.yScale(-deflectionFactor);
-                    yCollision = true;
-                }
-                break;
-
             case Collider::BOTTOM:
                 if (!yCollision)
                 {
@@ -85,14 +77,6 @@ bool FlyingCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
                 break;
 
             case Collider::LEFT:
-                if (!xCollision)
-                {
-                    tempVel.xScale(result.second);
-                    m_velocity.xScale(-deflectionFactor);
-                    xCollision = true;
-                }
-                break;
-
             case Collider::RIGHT:
                 if (!xCollision)
                 {

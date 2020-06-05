@@ -116,8 +116,7 @@ void GroundedEnemy::attackPlayer(Character& player)
 {
     if (m_collider.collideCheck(dynamic_cast<Player&>(player).getCollider()) && !dynamic_cast<Player&>(player).isInvincible())
     {
-        player.removeHP(m_damage);
-        dynamic_cast<Player&>(player).startiFrames();
+        dynamic_cast<Player&>(player).removeHP(m_damage);
         m_velocity.scale(0);
         if (m_position.getx() < player.getPos().getx() + 50)
         {

@@ -99,6 +99,7 @@ public:
     void floatLeft();
     void floatRight();
 
+    void removeHP(int HP) override;
     bool isInvincible() const { return m_invincible; }
     void startiFrames();
 };

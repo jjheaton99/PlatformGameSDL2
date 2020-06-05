@@ -1,7 +1,7 @@
 #include "PlayerSideAttack.h"
 
 PlayerSideAttack::PlayerSideAttack(int damage, double xBase, double yBase)
-    : MeleeObject("Assets/Attacks/Weapons-4.png", damage, xBase, yBase, 50, 50, 0.3)
+    : MeleeObject("Assets/Attacks/Weapons-4.png", damage, xBase, yBase, 50, 50, 0.25)
 {
     m_srcRect = { 0, 0, 32, 50 };
 

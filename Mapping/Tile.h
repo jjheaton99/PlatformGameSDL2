@@ -11,7 +11,8 @@ public:
         BACKGROUND,
         SOLID,
         PLATFORM,
-        LADDER
+        LADDER,
+        SPIKES
     };
 
 private:

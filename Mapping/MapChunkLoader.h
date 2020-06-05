@@ -35,10 +35,10 @@ public:
 private:
     intMap_type m_chunkVector;
 
-    std::vector<std::string> m_Tfiles{ "Assets/Maps/MapChunks/BL/a35.csv" };
-    std::vector<std::string> m_Bfiles{ "Assets/Maps/MapChunks/BL/a35.csv" };
-    std::vector<std::string> m_Lfiles{ "Assets/Maps/MapChunks/BL/a35.csv" };
-    std::vector<std::string> m_Rfiles{ "Assets/Maps/MapChunks/BL/a35.csv" };
+    std::vector<std::string> m_Tfiles{ "Assets/Maps/MapChunks/TL/a35.csv" };
+    std::vector<std::string> m_Bfiles{ "Assets/Maps/MapChunks/TL/a35.csv" };
+    std::vector<std::string> m_Lfiles{ "Assets/Maps/MapChunks/TL/a35.csv" };
+    std::vector<std::string> m_Rfiles{ "Assets/Maps/MapChunks/TL/a35.csv" };
     std::vector<std::string> m_TBfiles{ "Assets/Maps/MapChunks/TBLR/a35.csv" };
     std::vector<std::string> m_TLfiles{ "Assets/Maps/MapChunks/TBLR/a35.csv" };
     std::vector<std::string> m_TRfiles{ "Assets/Maps/MapChunks/TBLR/a35.csv" };
