@@ -674,15 +674,52 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
         }
     }
 
+    std::sort(m_spikeColliders.begin(), m_spikeColliders.end(), [&](const auto& a, const auto& b) {
+        return ((std::get<1>(a) > std::get<1>(b) && std::get<1>(a) > std::get<2>(b)) || (std::get<2>(a) > std::get<1>(b) && std::get<2>(a) > std::get<2>(b)));
+        }
+    );
+
     for (auto& sweptCollider : m_spikeColliders)
     {
-        //deflection factor is 1/1.5 to counter increased gravity when falling
-        if (m_collider.sweptAABBDeflect(1.0 / 1.5, sweptCollider, m_position, m_velocity))
+        if (!xCollision || !yCollision)
         {
-            removeHP(1);
-            if (m_dodgingLeft || m_dodgingRight)
+            auto result(m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, sweptCollider));
+
+            switch (result.first)
             {
-                dodgeCancel();
+            case Collider::TOP:
+            case Collider::BOTTOM:
+                if (!yCollision)
+                {
+                    if (m_dodgingLeft || m_dodgingRight)
+                    {
+                        dodgeCancel();
+                    }
+                    tempVel.yScale(result.second);
+                    m_velocity.yScale(-1.0);
+                    yCollision = true;
+                    removeHP(1);
+                }
+                break;
+
+            case Collider::LEFT:
+            case Collider::RIGHT:
+                if (!xCollision)
+                {
+                    if (m_dodgingLeft || m_dodgingRight)
+                    {
+                        dodgeCancel();
+                    }
+                    tempVel.xScale(result.second);
+                    m_velocity.xScale(-1.0);
+                    xCollision = true;
+                    removeHP(1);
+                }
+                break;
+
+            case Collider::NONE:
+            default:
+                break;
             }
         }
     }

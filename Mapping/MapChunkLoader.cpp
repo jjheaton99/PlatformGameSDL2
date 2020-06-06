@@ -58,53 +58,69 @@ bool MapChunkLoader::readFileToChunkVector(const std::string& file)
 
 const MapChunkLoader::intMap_type& MapChunkLoader::loadAndGetChunk(ChunkEntrances entrances)
 {
+    int index{};
 	switch (entrances)
 	{
 	case MapChunkLoader::T:
+        //index = MTRandom::getRandomInt(0, static_cast<int>(m_Tfiles.size()) - 1);
         readFileToChunkVector(m_Tfiles[0]);
         break;
 	case MapChunkLoader::B:
+        //index = MTRandom::getRandomInt(0, static_cast<int>(m_Bfiles.size()) - 1);
         readFileToChunkVector(m_Bfiles[0]);
         break;
 	case MapChunkLoader::L:
+        //index = MTRandom::getRandomInt(0, static_cast<int>(m_Lfiles.size()) - 1);
         readFileToChunkVector(m_Lfiles[0]);
         break;
 	case MapChunkLoader::R:
+        //index = MTRandom::getRandomInt(0, static_cast<int>(m_Rfiles.size()) - 1);
         readFileToChunkVector(m_Rfiles[0]);
         break;
 	case MapChunkLoader::TB:
-        readFileToChunkVector(m_TBfiles[0]);
+        index = MTRandom::getRandomInt(0, static_cast<int>(m_TBfiles.size()) - 1);
+        readFileToChunkVector(m_TBfiles[index]);
         break;
 	case MapChunkLoader::TL:
-        readFileToChunkVector(m_TLfiles[0]);
+        index = MTRandom::getRandomInt(0, static_cast<int>(m_TLfiles.size()) - 1);
+        readFileToChunkVector(m_TLfiles[index]);
         break;
 	case MapChunkLoader::TR:
-        readFileToChunkVector(m_TRfiles[0]);
+        index = MTRandom::getRandomInt(0, static_cast<int>(m_TRfiles.size()) - 1);
+        readFileToChunkVector(m_TRfiles[index]);
         break;
 	case MapChunkLoader::BL:
-        readFileToChunkVector(m_BLfiles[0]);
+        index = MTRandom::getRandomInt(0, static_cast<int>(m_BLfiles.size()) - 1);
+        readFileToChunkVector(m_BLfiles[index]);
         break;
 	case MapChunkLoader::BR:
-        readFileToChunkVector(m_BRfiles[0]);
+        index = MTRandom::getRandomInt(0, static_cast<int>(m_BRfiles.size()) - 1);
+        readFileToChunkVector(m_BRfiles[index]);
         break;
 	case MapChunkLoader::LR:
-        readFileToChunkVector(m_LRfiles[0]);
+        index = MTRandom::getRandomInt(0, static_cast<int>(m_LRfiles.size()) - 1);
+        readFileToChunkVector(m_LRfiles[index]);
         break;
-	case MapChunkLoader::TBL:
-        readFileToChunkVector(m_TBLfiles[0]);
+	/*case MapChunkLoader::TBL:
+        index = MTRandom::getRandomInt(0, static_cast<int>(m_TBLfiles.size()) - 1);
+        readFileToChunkVector(m_TBLfiles[index]);
         break;
-	case MapChunkLoader::TBR:
-        readFileToChunkVector(m_TBRfiles[0]);
+    case MapChunkLoader::TBR:
+        index = MTRandom::getRandomInt(0, static_cast<int>(m_TBRfiles.size()) - 1);
+        readFileToChunkVector(m_TBRfiles[index]);
         break;
 	case MapChunkLoader::TLR:
-        readFileToChunkVector(m_TLRfiles[0]);
+        index = MTRandom::getRandomInt(0, static_cast<int>(m_TLRfiles.size()) - 1);
+        readFileToChunkVector(m_TLRfiles[index]);
         break;
 	case MapChunkLoader::BLR:
-        readFileToChunkVector(m_BLRfiles[0]);
+        index = MTRandom::getRandomInt(0, static_cast<int>(m_BLRfiles.size()) - 1);
+        readFileToChunkVector(m_BLRfiles[index]);
         break;
 	case MapChunkLoader::TBLR:
-        readFileToChunkVector(m_TBLRfiles[0]);
-        break;
+        index = MTRandom::getRandomInt(0, static_cast<int>(m_TBLRfiles.size()) - 1);
+        readFileToChunkVector(m_TBLRfiles[index]);
+        break;*/
     case MapChunkLoader::SOLID:
         readFileToChunkVector("Assets/Maps/MapChunks/solid.csv");
         break;

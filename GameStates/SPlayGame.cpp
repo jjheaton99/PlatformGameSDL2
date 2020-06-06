@@ -13,8 +13,8 @@ SPlayGame::SPlayGame(const char* mapFile)
 
     for (int i{ 0 }; i < 3; ++i)
     {
-        m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, playerxSpawn + 500.0 + 1.0 * i, playerySpawn + 500.0 + 1.0 * i);
-        m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, playerxSpawn - 500.0 - 1.0 * i, playerySpawn - 500.0 - 1.0 * i);
+        //m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, playerxSpawn + 500.0 + 1.0 * i, playerySpawn + 500.0 + 1.0 * i);
+        //m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, playerxSpawn - 500.0 - 1.0 * i, playerySpawn - 500.0 - 1.0 * i);
     }
 }
 
