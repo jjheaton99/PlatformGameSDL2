@@ -1,8 +1,8 @@
 #include "Slime.h"
 #include "Player.h"
 
-Slime::Slime(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int colliderWidth, int colliderHeight, int hitPoints, int damage)
-    : GroundedEnemy(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, damage)
+Slime::Slime(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int colliderWidth, int colliderHeight, int hitPoints, int spriteSheetCount, int damage)
+    : GroundedEnemy(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, spriteSheetCount, damage)
 {
     m_srcRect = { 0, 0, 32, 32 };
 
@@ -37,4 +37,9 @@ void Slime::enemyControls(Character& player)
             addVel(Vector2D<double>{0.0, -20.0});
         }
     }
+}
+
+void Slime::animateSprite()
+{
+    m_srcRect = { 0, 0, 32, 32 };
 }

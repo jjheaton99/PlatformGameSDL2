@@ -1,7 +1,7 @@
 #include "Character.h"
 
-Character::Character(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints)
-    : GameObject(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight), m_maxHitPoints{hitPoints}
+Character::Character(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints, int spriteSheetCount)
+    : GameObject(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight), m_maxHitPoints{ hitPoints }, m_spriteSheetCount{ spriteSheetCount }
 {
     m_hitPoints = m_maxHitPoints;
 }
@@ -99,9 +99,17 @@ void Character::cameraDraw(const Camera& camera) const
     //objects off the screen are not rendered
     if (m_collider.collideCheck(camera.getCollider()))
     {
-        SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
-        m_texture.draw(m_srcRect, relativeDstRect, 0, nullptr, SDL_FLIP_NONE);
+        //flip texture based on direction character is facing
+        SDL_RendererFlip flip{ SDL_FLIP_NONE };
+        if (m_facingLeft)
+        {
+            flip = SDL_FLIP_HORIZONTAL;
+        }
 
+        SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
+        m_texture.draw(m_srcRect, relativeDstRect, 0, nullptr, flip);
+
+        //for drawing health bar
         if (m_hitPoints < m_maxHitPoints)
         {
             double healthFraction{ (static_cast<double>(m_hitPoints) / m_maxHitPoints) };

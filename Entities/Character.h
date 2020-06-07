@@ -13,6 +13,11 @@
 class Character : public GameObject
 {
 protected:
+    const int m_spriteSheetCount;
+    int m_animationStep{ 0 };
+    std::vector<SDL_Rect> m_spriteRects;
+    std::vector<SDL_Rect>::size_type m_spriteIndex{ 0 };
+
     bool m_dead{ false };
 
     double m_yMaxSpeed{ 0 };
@@ -20,7 +25,7 @@ protected:
 
     bool m_facingLeft{ false };
 
-    int m_maxHitPoints;
+    const int m_maxHitPoints;
     int m_hitPoints;
 
     std::vector<Collider::sweptObstacleTuple> m_solidColliders;
@@ -37,9 +42,11 @@ protected:
 
     //for adjusting character velocity
     virtual void motion() = 0;
+    virtual void animateSprite() = 0;
 
 public:
-    Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0, int hitPoints = 0);
+    Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, 
+        int colliderWidth = 0, int colliderHeight = 0, int hitPoints = 0, int spriteSheetCount = 1);
     virtual ~Character();
 
     //for enemies

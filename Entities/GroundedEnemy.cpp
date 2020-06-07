@@ -1,8 +1,8 @@
 #include "GroundedEnemy.h"
 #include "Player.h"
 
-GroundedEnemy::GroundedEnemy(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints, int damage)
-    : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints), m_damage{ damage }
+GroundedEnemy::GroundedEnemy(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints, int spriteSheetCount, int damage)
+    : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, spriteSheetCount), m_damage{ damage }
 {}
 
 void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player)
@@ -37,6 +37,7 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
         m_dstRect.y = static_cast<int>(m_position.gety());
 
         motion();
+        animateSprite();
         attackPlayer(player);
     }
 }

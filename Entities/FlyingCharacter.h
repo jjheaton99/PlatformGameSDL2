@@ -10,7 +10,8 @@ protected:
     virtual bool edgeCheck(const Camera& camera) override;
 
 public:
-    FlyingCharacter(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, int colliderWidth = 0, int colliderHeight = 0, int hitPoints = 0);
+    FlyingCharacter(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, 
+        double yVel = 0, int colliderWidth = 0, int colliderHeight = 0, int hitPoints = 0, int spriteSheetCount = 1);
     virtual ~FlyingCharacter();
 };
 

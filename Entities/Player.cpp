@@ -2,23 +2,18 @@
 #include "GroundedEnemy.h"
 
 //Player collision hitBox width = 0.56 * collision hitBox height
-Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int hitPoints)
-    : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, 56, 82, hitPoints)
+Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int hitPoints, int spriteSheetCount)
+    : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, 56, 82, hitPoints, spriteSheetCount)
 {
     for (int i{ 0 }; i < m_spriteSheetCount; ++i)
     {
-        m_spriteRects[i].w = 32;
-        m_spriteRects[i].h = 32;
-        m_spriteRects[i].x = i * 32;
-        m_spriteRects[i].y = 0;
+        m_spriteRects.push_back({32 * i, 0, 32, 32});
     }
 
     m_yMaxSpeed = 50.0;
     m_xMaxSpeed = 12.0;
     m_walkAcceleration = 0.8;
     m_climbSpeed = 13.0;
-    
-    m_spriteIndex = 0;
 
     m_dstRect.w = 100;
     m_dstRect.h = 100;
@@ -55,7 +50,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     m_dstRect.y = static_cast<int>(m_position.gety());
 
     motion();
-    spriteAnimate();
+    animateSprite();
     moveCamera(camera);
 
     if (!isDodging() && m_invincible)
@@ -324,7 +319,7 @@ void Player::cycleIdleAnimation()
     }
 }
 
-void Player::spriteAnimate()
+void Player::animateSprite()
 {
     switch (m_movement)
     {

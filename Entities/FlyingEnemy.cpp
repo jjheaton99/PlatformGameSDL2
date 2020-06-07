@@ -1,8 +1,8 @@
 #include "FlyingEnemy.h"
 #include "Player.h"
 
-FlyingEnemy::FlyingEnemy(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints, int damage)
-    : FlyingCharacter(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints), m_damage{ damage }
+FlyingEnemy::FlyingEnemy(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints, int spriteSheetCount, int damage)
+    : FlyingCharacter(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, spriteSheetCount), m_damage{ damage }
 {}
 
 void FlyingEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player)
@@ -39,6 +39,8 @@ void FlyingEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera
 
         m_dstRect.x = static_cast<int>(m_position.getx());
         m_dstRect.y = static_cast<int>(m_position.gety());
+
+        animateSprite();
     }
 }
 
