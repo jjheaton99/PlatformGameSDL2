@@ -9,6 +9,13 @@ class GroundedEnemy : public GroundedCharacter
 protected:
     int m_damage;
 
+    //for animating jumping and landing
+    bool m_jumped{ false };
+    bool m_landed{ false };
+    virtual void cycleWalkAnimation() = 0;
+    virtual void cycleJumpAnimation() = 0;
+    virtual void cycleLandAnimation() = 0;
+
     virtual void enemyControls(Character& player) = 0;
     virtual void motion() override;
     virtual void attackPlayer(Character& player);

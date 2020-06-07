@@ -13,8 +13,8 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
     }
 
     //only update when within certain distance from camera for performance
-    if (m_position.getx() > 1.0*camera.getx() - 1000.0 && m_position.getx() < 1.0*camera.getx() + 1.0*camera.getw() + 1000.0
-        && m_position.gety() > 1.0*camera.gety() - 1000.0 && m_position.gety() < 1.0*camera.gety() + 1.0*camera.geth() + 1000.0)
+    if (m_position.getx() > 1.0 * camera.getx() - 1000.0 && m_position.getx() < 1.0 * camera.getx() + 1.0 * camera.getw() + 1000.0
+        && m_position.gety() > 1.0 * camera.gety() - 1000.0 && m_position.gety() < 1.0 * camera.gety() + 1.0 * camera.geth() + 1000.0)
     {
         enemyControls(player);
 
@@ -25,7 +25,15 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
             setCollider();
         }
 
+        bool airborne{ m_movement == AIRBORNE };
         bool collided{ sweepMapCollideCheck(map) };
+        bool landed{ m_movement != AIRBORNE };
+
+        //if enemy just landed from jumping
+        if (airborne && landed)
+        {
+            m_landed = true;
+        }
 
         if (!collided)
         {
