@@ -404,6 +404,8 @@ Tile Map::getTileFromNumber(int number) const
 
 void Map::loadMap(int totalChunks)
 {
+    m_enemySpawnPoints.clear();
+
     //Resize map based on generated chunks and size of chunks
     generateChunks(totalChunks);
     m_map.resize(Constants::chunkHeight * m_generatedChunks.size());
@@ -418,7 +420,21 @@ void Map::loadMap(int totalChunks)
     {
         for (int generatedChunksColumn{ 0 }; generatedChunksColumn < static_cast<int>(m_generatedChunks[0].size()); ++generatedChunksColumn)
         {
-            MapChunkLoader::intMap_type tileNumbers{ m_chunkLoader.loadAndGetChunk(m_generatedChunks[generatedChunksRow][generatedChunksColumn]) };
+            MapChunkLoader::MapChunkData chunkData{ m_chunkLoader.loadAndGetChunk(m_generatedChunks[generatedChunksRow][generatedChunksColumn]) };
+            for (auto& spawnPoint : chunkData.spawnPoints)
+            {
+                spawnPoint.scale(m_spawnPointFactor);
+                spawnPoint.add(1.0 * generatedChunksColumn * Constants::chunkWidth * Constants::tileSize,
+                    1.0 * generatedChunksRow * Constants::chunkHeight * Constants::tileSize);
+            }
+
+            m_enemySpawnPoints.insert(
+                m_enemySpawnPoints.end(),
+                std::make_move_iterator(chunkData.spawnPoints.begin()),
+                std::make_move_iterator(chunkData.spawnPoints.end())
+            );
+
+            MapChunkLoader::intMap_type tileNumbers{ chunkData.tiles };
             for (int chunkRow{ 0 }; chunkRow < Constants::chunkHeight; ++chunkRow)
             {
                 int row{ (generatedChunksRow * Constants::chunkHeight) + chunkRow };

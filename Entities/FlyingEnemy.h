@@ -7,6 +7,8 @@ class Player;
 class FlyingEnemy : public FlyingCharacter
 {
 protected:
+    double m_updateRange{ 1000.0 };
+
     int m_damage;
 
     virtual void enemyControls(const Character& player) = 0;

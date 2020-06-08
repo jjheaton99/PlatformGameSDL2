@@ -9,6 +9,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <iterator>
 
 //class for managing tilemapping
 class Map
@@ -21,6 +22,8 @@ private:
     MapChunkLoader m_chunkLoader{};
 
     std::vector<std::vector<MapChunkLoader::ChunkEntrances>> m_generatedChunks;
+    double m_spawnPointFactor{ Constants::tileSize / 32 };
+    std::vector<Vector2D<double>> m_enemySpawnPoints;
 
     std::shared_ptr<WTexture> m_tileset{ std::make_shared<WTexture>() };
 
@@ -49,8 +52,8 @@ public:
     const std::vector<std::vector<Tile>>& getMap() const { return m_map; }
     int getLevelWidth() const { return m_levelWidth; }
     int getLevelHeight() const { return m_levelHeight; }
-
     const Vector2D<int>& getPlayerSpawnChunk() const { return m_playerSpawnChunk; }
+    const std::vector<Vector2D<double>>& getEnemySpawnPoints() const { return m_enemySpawnPoints; }
 
     //for testing
     void printMap() const;

@@ -17,7 +17,8 @@ public:
     enum class Enemy
     {
         SLIME,
-        BAT
+        BAT,
+        MAX_ENEMIES
     };
 
     enum class Projectile
@@ -36,6 +37,7 @@ public:
     void cameraDraw(const Camera& camera) const;
 
     void newEnemy(Enemy type, double xPos, double yPos);
+    void newRandomEnemy(double xPos, double yPos);
     std::vector<std::shared_ptr<Character>>& getEnemies() { return m_enemies; }
 };
 

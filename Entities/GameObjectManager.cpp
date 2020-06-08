@@ -50,3 +50,20 @@ void GameObjectManager::newEnemy(Enemy type, double xPos, double yPos)
         break;
     }
 }
+
+void GameObjectManager::newRandomEnemy(double xPos, double yPos)
+{
+    Enemy type{ static_cast<Enemy>(MTRandom::getRandomInt(0, static_cast<int>(Enemy::MAX_ENEMIES) - 1)) };
+    
+    switch (type)
+    {
+    case GameObjectManager::Enemy::SLIME:
+        m_enemies.push_back(std::make_shared<Slime>(xPos, yPos));
+        break;
+    case GameObjectManager::Enemy::BAT:
+        m_enemies.push_back(std::make_shared<Bat>(xPos, yPos));
+        break;
+    default:
+        break;
+    }
+}

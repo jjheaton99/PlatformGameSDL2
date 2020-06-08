@@ -287,7 +287,11 @@ void Player::motion()
         break;
 
     case GroundedCharacter::WALLSLIDE:
-        if (m_floatingLeft)
+        if (isAttacking())
+        {
+            m_movement = AIRBORNE;
+        }
+        else if (m_floatingLeft)
         {
             setVel(-1.0, m_wallslideSpeed);
         }

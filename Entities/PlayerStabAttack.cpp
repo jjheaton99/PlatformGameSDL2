@@ -8,7 +8,7 @@ PlayerStabAttack::PlayerStabAttack(int damage, double xBase, double yBase)
     m_dstRect.w = 131;
     m_dstRect.h = 47;
 
-    m_offset = Vector2D<double>{ 9.0, 22.0 };
+    m_offset = Vector2D<double>{ -10.0, 22.0 };
 
     m_xoffsetUpdate = 200.0 / m_updateCount;
 }
@@ -25,11 +25,11 @@ bool PlayerStabAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
         {
             if (m_facingLeft)
             {
-                m_offset = Vector2D<double>{ 122.0, 22.0 };
+                m_offset = Vector2D<double>{ 141.0, 22.0 };
             }
             else
             {
-                m_offset = Vector2D<double>{ 9.0, 22.0 };
+                m_offset = Vector2D<double>{ -10.0, 22.0 };
             }
         }
 

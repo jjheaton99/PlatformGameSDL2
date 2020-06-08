@@ -5,7 +5,7 @@ MapChunkLoader::MapChunkLoader()
 
 bool MapChunkLoader::readFileToChunkVector(const std::string& file)
 {
-    m_chunkVector.clear();
+    m_chunkData.tiles.clear();
 
     std::ifstream chunkFile(file);
     if (!chunkFile.is_open())
@@ -47,7 +47,7 @@ bool MapChunkLoader::readFileToChunkVector(const std::string& file)
             tileRow.push_back(tileNumber);
 
             //adds the row to the overall chunk
-            m_chunkVector.push_back(tileRow);
+            m_chunkData.tiles.push_back(tileRow);
         }
 
         chunkFile.close();
@@ -56,50 +56,60 @@ bool MapChunkLoader::readFileToChunkVector(const std::string& file)
     }
 }
 
-const MapChunkLoader::intMap_type& MapChunkLoader::loadAndGetChunk(ChunkEntrances entrances)
+const MapChunkLoader::MapChunkData& MapChunkLoader::loadAndGetChunk(ChunkEntrances entrances)
 {
     int index{};
 	switch (entrances)
 	{
 	case MapChunkLoader::T:
         //index = MTRandom::getRandomInt(0, static_cast<int>(m_Tfiles.size()) - 1);
-        readFileToChunkVector(m_Tfiles[0]);
+        readFileToChunkVector(m_Tfiles[0].first);
+        m_chunkData.spawnPoints = m_Tfiles[0].second;
         break;
 	case MapChunkLoader::B:
         //index = MTRandom::getRandomInt(0, static_cast<int>(m_Bfiles.size()) - 1);
-        readFileToChunkVector(m_Bfiles[0]);
+        readFileToChunkVector(m_Bfiles[0].first);
+        m_chunkData.spawnPoints = m_Bfiles[0].second;
         break;
 	case MapChunkLoader::L:
         //index = MTRandom::getRandomInt(0, static_cast<int>(m_Lfiles.size()) - 1);
-        readFileToChunkVector(m_Lfiles[0]);
+        readFileToChunkVector(m_Lfiles[0].first);
+        m_chunkData.spawnPoints = m_Lfiles[0].second;
         break;
 	case MapChunkLoader::R:
         //index = MTRandom::getRandomInt(0, static_cast<int>(m_Rfiles.size()) - 1);
-        readFileToChunkVector(m_Rfiles[0]);
+        readFileToChunkVector(m_Rfiles[0].first);
+        m_chunkData.spawnPoints = m_Rfiles[0].second;
         break;
 	case MapChunkLoader::TB:
         index = MTRandom::getRandomInt(0, static_cast<int>(m_TBfiles.size()) - 1);
-        readFileToChunkVector(m_TBfiles[index]);
+        readFileToChunkVector(m_TBfiles[index].first);
+        m_chunkData.spawnPoints = m_TBfiles[index].second;
         break;
 	case MapChunkLoader::TL:
         index = MTRandom::getRandomInt(0, static_cast<int>(m_TLfiles.size()) - 1);
-        readFileToChunkVector(m_TLfiles[index]);
+        readFileToChunkVector(m_TLfiles[index].first);
+        m_chunkData.spawnPoints = m_TLfiles[index].second;
         break;
 	case MapChunkLoader::TR:
         index = MTRandom::getRandomInt(0, static_cast<int>(m_TRfiles.size()) - 1);
-        readFileToChunkVector(m_TRfiles[index]);
+        readFileToChunkVector(m_TRfiles[index].first);
+        m_chunkData.spawnPoints = m_TRfiles[index].second;
         break;
 	case MapChunkLoader::BL:
         index = MTRandom::getRandomInt(0, static_cast<int>(m_BLfiles.size()) - 1);
-        readFileToChunkVector(m_BLfiles[index]);
+        readFileToChunkVector(m_BLfiles[index].first);
+        m_chunkData.spawnPoints = m_BLfiles[index].second;
         break;
 	case MapChunkLoader::BR:
         index = MTRandom::getRandomInt(0, static_cast<int>(m_BRfiles.size()) - 1);
-        readFileToChunkVector(m_BRfiles[index]);
+        readFileToChunkVector(m_BRfiles[index].first);
+        m_chunkData.spawnPoints = m_BRfiles[index].second;
         break;
 	case MapChunkLoader::LR:
         index = MTRandom::getRandomInt(0, static_cast<int>(m_LRfiles.size()) - 1);
-        readFileToChunkVector(m_LRfiles[index]);
+        readFileToChunkVector(m_LRfiles[index].first);
+        m_chunkData.spawnPoints = m_LRfiles[index].second;
         break;
 	/*case MapChunkLoader::TBL:
         index = MTRandom::getRandomInt(0, static_cast<int>(m_TBLfiles.size()) - 1);
@@ -123,15 +133,16 @@ const MapChunkLoader::intMap_type& MapChunkLoader::loadAndGetChunk(ChunkEntrance
         break;*/
     case MapChunkLoader::SOLID:
         readFileToChunkVector("Assets/Maps/MapChunks/solid.csv");
+        m_chunkData.spawnPoints.clear();
         break;
 	}
-    return m_chunkVector;
+    return m_chunkData;
 }
 
 //for testing
 void MapChunkLoader::printChunkVector() const
 {
-    for (const auto& row : m_chunkVector)
+    for (const auto& row : m_chunkData.tiles)
     {
         for (int element : row)
         {

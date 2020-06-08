@@ -7,6 +7,8 @@ class Player;
 class GroundedEnemy : public GroundedCharacter
 {
 protected:
+    double m_updateRange{ 1000.0 };
+
     int m_damage;
 
     double m_stopDeceleration{ 0.7 };
