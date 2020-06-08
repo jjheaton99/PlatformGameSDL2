@@ -1,7 +1,7 @@
 #include "PlayerSwingAttack.h"
 
 PlayerSwingAttack::PlayerSwingAttack(int damage, double xBasePos, double yBasePos)
-    : MeleeObject("Assets/Attacks/axe.png", damage, xBasePos, yBasePos, 0.0, 0.0, 0.4)
+    : MeleeObject("Assets/Attacks/axe.png", damage, xBasePos, yBasePos, 1.0, 1.0, 0.25)
 {
     m_srcRect = { 0, 0, 32, 55 };
 
@@ -41,62 +41,11 @@ void PlayerSwingAttack::resetColliders()
     };
 }
 
-/*void PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
+bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
 {
     updateHitEnemies(enemies);
 
-    if (m_attacking)
-    {
-        if (m_counter == 0)
-        {
-            resetColliders();
-            if (m_facingLeft)
-            {
-                m_angle = 30.0;
-                rotateColliders(30.0);
-            }
-            else
-            {
-                m_angle = -30.0;
-                rotateColliders(-30.0);
-            }
-        }
-
-        m_totalPosition = m_position - m_offset;
-        m_dstRect.x = static_cast<int>(m_totalPosition.getx());
-        m_dstRect.y = static_cast<int>(m_totalPosition.gety());
-
-        double rotationAngle{ 140.0 / static_cast<int>(m_attackDuration / Constants::updateStep) };
-        if (m_facingLeft)
-        {
-            m_angle -= rotationAngle;
-            rotateColliders(-rotationAngle);
-        }
-
-        else
-        {
-            m_angle += rotationAngle;
-            rotateColliders(rotationAngle);
-        }
-
-        m_collider.setPosition(m_totalPosition);
-        m_multiCollider.setPositions(m_position, m_colliderOffsets);
-
-        collideCheck(enemies);
-
-        ++m_counter;
-        if (m_counter > static_cast<int>(m_attackDuration / Constants::updateStep))
-        {
-            m_attacking = false;
-            m_counter = 0;
-            resetHitEnemies();
-        }
-    }
-}*/
-
-void PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
-{
-    updateHitEnemies(enemies);
+    bool hit{ false };
 
     if (m_attacking)
     {
@@ -135,15 +84,27 @@ void PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
                 rotateColliders(angle);
             }
 
+            //still need to set normal collider so it is drawn by cameradraw
             m_collider.setPosition(m_totalPosition);
             m_multiCollider.setPositions(m_position, m_colliderOffsets);
 
-            collideCheck(enemies);
+            if (collideCheck(enemies, 25.0, 5.0))
+            {
+                hit = true;
+            }
         }
 
         else
         {
             ++m_counter;
+            m_collider.setPosition(m_totalPosition);
+            m_multiCollider.setPositions(m_position, m_colliderOffsets);
+
+            if (collideCheck(enemies, 25.0, 5.0))
+            {
+                hit = true;
+            }
+
             if (m_counter > m_updateCount + 7)
             {
                 m_attacking = false;
@@ -152,10 +113,14 @@ void PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
             }
         }
     }
+
+    return hit;
 }
 
-void PlayerSwingAttack::collideCheck(std::vector<std::shared_ptr<Character>>& enemies)
+bool PlayerSwingAttack::collideCheck(std::vector<std::shared_ptr<Character>>& enemies, double xKnockback, double yKnockback)
 {
+    bool hit{ false };
+
     for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
     {
         //if enemy is alive, hasnt been hit by attack and near weapon attack
@@ -163,19 +128,22 @@ void PlayerSwingAttack::collideCheck(std::vector<std::shared_ptr<Character>>& en
         {
             if (m_multiCollider.collideCheck(enemies[i]->getCollider()))
             {
+                hit = true;
                 enemies[i]->removeHP(m_damage);
                 if (m_facingLeft)
                 {
-                    enemies[i]->addVel(-20.0, -5.0);
+                    enemies[i]->addVel(-xKnockback, -yKnockback);
                 }
                 else
                 {
-                    enemies[i]->addVel(20.0, -5.0);
+                    enemies[i]->addVel(xKnockback, -yKnockback);
                 }
                 m_hitEnemies[i] = true;
             }
         }
     }
+
+    return hit;
 }
 
 //for testing positions of hitboxes

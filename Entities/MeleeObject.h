@@ -31,13 +31,12 @@ public:
     MeleeObject(const char* fileName, int damage, double xBasePos, double yBasePos, double colliderWidth, double colliderHeight, double attackDuration = 0);
     virtual ~MeleeObject();
 
-    virtual void update(std::vector<std::shared_ptr<Character>>& enemies) = 0;
-    virtual void collideCheck(std::vector<std::shared_ptr<Character>>& enemies);
+    virtual bool update(std::vector<std::shared_ptr<Character>>& enemies) = 0;
+    virtual bool collideCheck(std::vector<std::shared_ptr<Character>>& enemies, double xKnockback = 0, double yKnockback = 0);
 
     virtual void cameraDraw(const Camera& camera) const override;
-    void faceLeft() { m_facingLeft = true; }
-    void faceRight() { m_facingLeft = false; }
-    void attack() { m_attacking = true; }
+    void attackLeft();
+    void attackRight();
     void cancel() { m_counter = static_cast<int>(m_attackDuration / Constants::updateStep) + 1; }
     bool isAttacking() const { return m_attacking; }
 

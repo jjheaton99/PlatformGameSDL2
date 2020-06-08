@@ -12,7 +12,7 @@ Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, con
 
     m_yMaxSpeed = 50.0;
     m_xMaxSpeed = 12.0;
-    m_walkAcceleration = 0.8;
+    m_walkAcceleration = 1.5;
     m_climbSpeed = 13.0;
 
     m_dstRect.w = 100;
@@ -130,10 +130,19 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     }
 
     //attack texture position set with an offset from player position 
-    m_sideAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
-    m_sideAttack.update(enemies);
+    m_swingAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
+    m_swingAttack.update(enemies);
 
-    if (m_throwBoomerang)
+    m_stabAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
+    m_stabAttack.update(enemies);
+
+    m_downAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 90.0);
+    if (m_downAttack.update(enemies))
+    {
+        setVel(m_velocity.getx(), -30.0);
+    }
+
+    /*if (m_throwBoomerang)
     {
         if (m_facingLeft && !m_boomerang.isFlying())
         {
@@ -145,7 +154,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         }
         m_throwBoomerang = false;
     }
-    m_boomerang.update(map, camera, enemies, shared_from_this());
+    m_boomerang.update(map, camera, enemies, shared_from_this());*/
 }
 
 //adjusts velocity of player depending on state of motion
@@ -217,7 +226,7 @@ void Player::motion()
         break;
 
     case GroundedCharacter::LEFT:
-        if (isAttacking())
+        if (isSwingAttacking())
         {
             m_velocity.xScale(0.9);
         }
@@ -242,7 +251,7 @@ void Player::motion()
         break;
 
     case GroundedCharacter::RIGHT:
-        if (isAttacking())
+        if (isSwingAttacking())
         {
             m_velocity.xScale(0.9);
         }
@@ -362,9 +371,13 @@ void Player::animateSprite()
         break;
     }
 
-    if (m_sideAttack.isAttacking() || m_boomerang.isFlying())
+    if (m_swingAttack.isAttacking() || m_stabAttack.isAttacking() /*|| m_boomerang.isFlying()*/)
     {
         m_spriteIndex = 24;
+    }
+    else if (m_downAttack.isAttacking())
+    {
+        m_spriteIndex = 27;
     }
     else if (isDodging())
     {
@@ -396,8 +409,10 @@ void Player::cameraDraw(const Camera& camera) const
         m_texture.draw(m_srcRect, relativeDstRect, m_angle, nullptr, flip);
     }
 
-    m_sideAttack.cameraDraw(camera);
-    m_boomerang.cameraDraw(camera);
+    m_swingAttack.cameraDraw(camera);
+    m_stabAttack.cameraDraw(camera);
+    m_downAttack.cameraDraw(camera);
+    //m_boomerang.cameraDraw(camera);
 }
 
 void Player::moveCamera(Camera& camera)
@@ -456,31 +471,48 @@ void Player::moveCamera(Camera& camera)
     }
 }
 
-void Player::attackLeft()
+void Player::swingAttackLeft()
 {
-    if (!boomerangIsFlying())
-    {
-        m_facingLeft = true;
-        m_sideAttack.faceLeft();
-        m_sideAttack.attack();
-        /*if (m_movement == AIRBORNE)
-        {
-            m_velocity.add(-5.0, -5.0);
-        }*/
-    }
+    //if (!boomerangIsFlying())
+    //{
+    m_facingLeft = true;
+    m_swingAttack.attackLeft();
+    //}
 }
 
-void Player::attackRight()
+void Player::swingAttackRight()
 {
-    if (!boomerangIsFlying())
+    //if (!boomerangIsFlying())
+    //{
+    m_facingLeft = false;
+    m_swingAttack.attackRight();
+    //}
+}
+
+void Player::stabAttackLeft()
+{
+    m_facingLeft = true;
+    m_stabAttack.attackLeft();
+}
+
+void Player::stabAttackRight()
+{
+    m_facingLeft = false;
+    m_stabAttack.attackRight();
+}
+
+void Player::downAttack()
+{
+    m_downAttack.attackLeft();
+}
+
+void Player::attackCancel()
+{
+    if (isSwingAttacking() || isStabAttacking() || isDownAttacking())
     {
-        m_facingLeft = false;
-        m_sideAttack.faceRight();
-        m_sideAttack.attack();
-        /*if (m_movement == AIRBORNE)
-        {
-            m_velocity.add(5.0, -5.0);
-        }*/
+        m_swingAttack.cancel();
+        m_stabAttack.cancel();
+        m_downAttack.cancel();
     }
 }
 
@@ -503,14 +535,6 @@ void Player::dodgeCancel()
     if (isDodging())
     {
         m_dodgeStepCount = m_dodgeFrames + 1;
-    }
-}
-
-void Player::attackCancel()
-{
-    if (isAttacking())
-    {
-        m_sideAttack.cancel();
     }
 }
 
@@ -542,13 +566,13 @@ void Player::setCollider()
     }
 }
 
-void Player::throwBoomerang() 
+/*void Player::throwBoomerang() 
 { 
     if (!isAttacking())
     {
         m_throwBoomerang = true;
     }
-}
+}*/
 
 double Player::getDodgeCooldownFraction() const
 {

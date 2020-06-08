@@ -13,13 +13,13 @@ MeleeObject::~MeleeObject()
 
 void MeleeObject::cameraDraw(const Camera& camera) const
 {
-    SDL_RendererFlip flip{ SDL_FLIP_NONE };
-    if (!m_facingLeft)
-    {
-        flip = SDL_FLIP_HORIZONTAL;
-    }
     if (m_attacking && m_counter != 0)
     {
+        SDL_RendererFlip flip{ SDL_FLIP_NONE };
+        if (m_facingLeft)
+        {
+            flip = SDL_FLIP_HORIZONTAL;
+        }
         SDL_Point rotationPoint{ static_cast<int>(m_offset.getx()), static_cast<int>(m_offset.gety()) };
         if (m_collider.collideCheck(camera.getCollider()))
         {
@@ -42,8 +42,9 @@ void MeleeObject::resetHitEnemies()
     std::fill(m_hitEnemies.begin(), m_hitEnemies.end(), false);
 }
 
-void MeleeObject::collideCheck(std::vector<std::shared_ptr<Character>>& enemies)
+bool MeleeObject::collideCheck(std::vector<std::shared_ptr<Character>>& enemies, double xKnockback, double yKnockback)
 {
+    bool hit{ false };
     for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
     {
         //if enemy is alive, hasnt been hit by attack and near weapon attack
@@ -51,17 +52,32 @@ void MeleeObject::collideCheck(std::vector<std::shared_ptr<Character>>& enemies)
         {
             if (m_collider.collideCheck(enemies[i]->getCollider()))
             {
+                hit = true;
                 enemies[i]->removeHP(m_damage);
                 if (m_facingLeft)
                 {
-                    enemies[i]->addVel(-20.0, -5.0);
+                    enemies[i]->addVel(-xKnockback, -yKnockback);
                 }
                 else
                 {
-                    enemies[i]->addVel(20.0, -5.0);
+                    enemies[i]->addVel(xKnockback, -yKnockback);
                 }
                 m_hitEnemies[i] = true;
             }
         }
     }
+
+    return hit;
+}
+
+void MeleeObject::attackLeft()
+{ 
+    m_facingLeft = true;
+    m_attacking = true; 
+}
+
+void MeleeObject::attackRight()
+{ 
+    m_facingLeft = false;
+    m_attacking = true; 
 }

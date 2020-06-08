@@ -5,8 +5,8 @@ UserInterface::UserInterface(std::shared_ptr<Player> player)
 {
     updateHearts();
 
-    m_boomerangCooldown.alphaBlendOn();
-    m_boomerangCooldown.setSrcRect(0, 0, 32, 32);
+    //m_boomerangCooldown.alphaBlendOn();
+    //m_boomerangCooldown.setSrcRect(0, 0, 32, 32);
 
     m_dodgeCooldown.alphaBlendOn();
     m_dodgeCooldown.setSrcRect(0, 0, 32, 32);
@@ -15,7 +15,7 @@ UserInterface::UserInterface(std::shared_ptr<Player> player)
 UserInterface::~UserInterface()
 {
     m_hearts.destroy();
-    m_boomerangCooldown.destroy();
+    //m_boomerangCooldown.destroy();
     m_dodgeCooldown.destroy();
 }
 
@@ -37,8 +37,8 @@ void UserInterface::update()
 {
     updateHearts();
 
-    m_boomerangCooldown.setDstRect(20, g_screenHeight - 80, 60, 60);
-    m_dodgeCooldown.setDstRect(100, g_screenHeight - 80, 60, 60);
+    //m_boomerangCooldown.setDstRect(20, g_screenHeight - 80, 60, 60);
+    m_dodgeCooldown.setDstRect(20, g_screenHeight - 80, 60, 60);
 }
 
 void UserInterface::draw()
@@ -48,11 +48,11 @@ void UserInterface::draw()
     SDL_SetRenderDrawBlendMode(g_renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 200);
 
-    SDL_Rect boomerangCoolDownCover{ 22, g_screenHeight - 78, 56, static_cast<int>(m_player->getBoomerangCooldownFraction() * 56.0) };
+    /*SDL_Rect boomerangCoolDownCover{ 22, g_screenHeight - 78, 56, static_cast<int>(m_player->getBoomerangCooldownFraction() * 56.0) };
     m_boomerangCooldown.draw();
-    SDL_RenderFillRect(g_renderer, &boomerangCoolDownCover);
+    SDL_RenderFillRect(g_renderer, &boomerangCoolDownCover);*/
 
-    SDL_Rect dodgeCoolDownCover{ 102, g_screenHeight - 78, 56, static_cast<int>(m_player->getDodgeCooldownFraction() * 56.0) };
+    SDL_Rect dodgeCoolDownCover{ 22, g_screenHeight - 78, 56, static_cast<int>(m_player->getDodgeCooldownFraction() * 56.0) };
     m_dodgeCooldown.draw();
     SDL_RenderFillRect(g_renderer, &dodgeCoolDownCover);
 

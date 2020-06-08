@@ -3,7 +3,9 @@
 #include "GroundedCharacter.h"
 #include "Constants.h"
 #include "PlayerSwingAttack.h"
-#include "PlayerBoomerang.h"
+#include "PlayerStabAttack.h"
+#include "PlayerDownAttack.h"
+//#include "PlayerBoomerang.h"
 #include <array>
 #include <cmath>
 #include <cstdint>
@@ -14,9 +16,11 @@ class GroundedEnemy;
 class Player : public std::enable_shared_from_this<Character>, public GroundedCharacter
 {
 private:
-    PlayerSwingAttack m_sideAttack{};
-    PlayerBoomerang m_boomerang{};
-    bool m_throwBoomerang{ false };
+    PlayerSwingAttack m_swingAttack{};
+    PlayerStabAttack m_stabAttack{};
+    PlayerDownAttack m_downAttack{};
+    //PlayerBoomerang m_boomerang{};
+    //bool m_throwBoomerang{ false };
 
     //member variables for controlling dodge timing and animation
     const double m_dodgeDuration{ 0.25 };
@@ -59,7 +63,7 @@ private:
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player) override {};
 
 public:
-    Player(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/MrPix.png", int hitPoints = 50, int spriteSheetCount = 27);
+    Player(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/MrPix.png", int hitPoints = 50, int spriteSheetCount = 28);
     ~Player();
 
     void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::shared_ptr<Character>>& enemies);
@@ -74,13 +78,19 @@ public:
     void dodgeCancel();
     double getDodgeCooldownFraction() const;
 
-    void attackLeft();
-    void attackRight();
+    void swingAttackLeft();
+    void swingAttackRight();
+    void stabAttackLeft();
+    void stabAttackRight();
+    void downAttack();
     void attackCancel();
-    bool isAttacking() const { return m_sideAttack.isAttacking(); }
-    void throwBoomerang();
-    bool boomerangIsFlying() const { return m_boomerang.isFlying(); }
-    double getBoomerangCooldownFraction() const { return m_boomerang.getCooldownFraction(); }
+    bool isSwingAttacking() const { return m_swingAttack.isAttacking(); }
+    bool isStabAttacking() const { return m_stabAttack.isAttacking(); }
+    bool isDownAttacking() const { return m_downAttack.isAttacking(); }
+    bool isAttacking() const { return isSwingAttacking() || isStabAttacking() || isDownAttacking(); }
+    //void throwBoomerang();
+    //bool boomerangIsFlying() const { return m_boomerang.isFlying(); }
+    //double getBoomerangCooldownFraction() const { return m_boomerang.getCooldownFraction(); }
 
     bool isFacingLeft() const { return m_facingLeft; }
     

@@ -18,8 +18,8 @@ private:
 public:
     PlayerSwingAttack(int damage = 30, double xBasePos = 0, double yBasePos = 0);
 
-    void update(std::vector<std::shared_ptr<Character>>& enemies) override;
-    void collideCheck(std::vector<std::shared_ptr<Character>>& enemies) override;
+    bool update(std::vector<std::shared_ptr<Character>>& enemies) override;
+    bool collideCheck(std::vector<std::shared_ptr<Character>>& enemies, double xKnockback, double yKnockback) override;
     //void cameraDraw(const Camera& camera) const override;
 };
 

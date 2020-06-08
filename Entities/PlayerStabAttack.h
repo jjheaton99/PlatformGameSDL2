@@ -3,10 +3,15 @@
 
 class PlayerStabAttack : public MeleeObject
 {
-public:
-    PlayerStabAttack(int damage = 30, double xBase = 0, double yBase = 0);
+private:
+    double m_xoffsetUpdate;
 
-    void update(std::vector<std::shared_ptr<Character>>& enemies) override;
+    void setCollider();
+
+public:
+    PlayerStabAttack(int damage = 10, double xBase = 0, double yBase = 0);
+
+    bool update(std::vector<std::shared_ptr<Character>>& enemies) override;
     //void cameraDraw(const Camera& camera) const override;
 };
 

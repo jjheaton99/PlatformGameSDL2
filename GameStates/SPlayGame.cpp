@@ -114,7 +114,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
         switch (event.key.keysym.sym)
         {
         case SDLK_SPACE:
-            if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isAttacking())
+            if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isSwingAttacking())
             {
                 if (m_player->getMovement() == Player::WALLSLIDE)
                 {
@@ -273,33 +273,58 @@ void SPlayGame::playerControlsMouseClick(SDL_Event& event)
         switch (event.button.button)
         {
         case SDL_BUTTON_LEFT:
-            if (!m_player->isAttacking() && !m_player->isClimbing())
+            if (!m_player->isAttacking() && m_player->getMovement() == Player::AIRBORNE && currentKeyState[SDL_SCANCODE_S])
+            {
+                m_player->dodgeCancel();
+                m_player->downAttack();
+            }
+            else if (!m_player->isAttacking() && !m_player->isClimbing())
             {
                 m_player->dodgeCancel();
                 if (currentKeyState[SDL_SCANCODE_A])
                 {
-                    m_player->attackLeft();
+                    m_player->stabAttackLeft();
                 }
                 else if (currentKeyState[SDL_SCANCODE_D])
                 {
-                    m_player->attackRight();
+                    m_player->stabAttackRight();
                 }
                 else if (m_player->isFacingLeft())
                 {
-                    m_player->attackLeft();
+                    m_player->stabAttackLeft();
                 }
                 else
                 {
-                    m_player->attackRight();
+                    m_player->stabAttackRight();
                 }
             }
             break;
 
         case SDL_BUTTON_RIGHT:
-            if (!m_player->boomerangIsFlying())
+            if (!m_player->isAttacking() && !m_player->isClimbing())
+            {
+                m_player->dodgeCancel();
+                if (currentKeyState[SDL_SCANCODE_A])
+                {
+                    m_player->swingAttackLeft();
+                }
+                else if (currentKeyState[SDL_SCANCODE_D])
+                {
+                    m_player->swingAttackRight();
+                }
+                else if (m_player->isFacingLeft())
+                {
+                    m_player->swingAttackLeft();
+                }
+                else
+                {
+                    m_player->swingAttackRight();
+                }
+            }
+            /*if (!m_player->boomerangIsFlying())
             {
                 m_player->throwBoomerang();
-            }
+            }*/
             break;
 
         default:
@@ -370,7 +395,17 @@ GameState::State SPlayGame::update()
             }
 
             //add extra time in case logic update took too long to prevent slowing
-            m_timeAccumulator += m_updateTimer.getTicks() / 1000.0;
+            double updateTime{ m_updateTimer.getTicks() / 1000.0 };
+            if (updateTime < Constants::updateStep)
+            {
+                m_timeAccumulator += updateTime;
+            }
+            else
+            {
+                //prevent freezing by exceeding update timestep
+                m_timeAccumulator += Constants::updateStep;
+            }
+           
             m_updateTimer.stop();
         }
 
