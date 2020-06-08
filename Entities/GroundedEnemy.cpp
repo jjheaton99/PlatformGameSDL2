@@ -109,7 +109,7 @@ void GroundedEnemy::motion()
         break;
 
     case GroundedCharacter::STOP:
-        m_velocity.xScale(0.7);
+        m_velocity.xScale(m_stopDeceleration);
         if (std::abs(m_velocity.getx()) < 0.0001)
         {
             m_velocity.xScale(0);

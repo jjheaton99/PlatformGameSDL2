@@ -12,6 +12,7 @@ Slime::Slime(double xStartPos, double yStartPos, double xVel, double yVel, const
     m_yMaxSpeed = 30.0;
     m_xMaxSpeed = 6.0;
     m_walkAcceleration = 0.8;
+    m_stopDeceleration = 0.9;
 
     m_dstRect.w = 100;
     m_dstRect.h = 75;
@@ -47,7 +48,8 @@ void Slime::enemyControls(Character& player)
         if (!m_landed && MTRandom::getRandomInt(0, 99) < 1)
         {
             m_movement = AIRBORNE;
-            addVel(Vector2D<double>{0.0, -20.0});
+            //jumps with randomised velocity boost
+            addVel(Vector2D<double>{(m_velocity.getx() > 0.0 ? 1.0 : -1.0) * MTRandom::getRandomDouble(0.0, 10.0), -MTRandom::getRandomDouble(20.0, 30.0)});
             m_jumped = true;
             m_spriteIndex = 8;
         }

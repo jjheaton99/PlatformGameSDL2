@@ -26,10 +26,11 @@ protected:
     std::vector<bool> m_hitEnemies;
 
 public:
-    MeleeObject(const char* fileName, int damage, double xBase, double yBase, double colliderWidth, double colliderHeight, double attackDuration = 0);
+    MeleeObject(const char* fileName, int damage, double xBasePos, double yBasePos, double colliderWidth, double colliderHeight, double attackDuration = 0);
     virtual ~MeleeObject();
 
-    virtual void collideCheck(std::vector<std::shared_ptr<Character>>& enemies) = 0;
+    virtual void update(std::vector<std::shared_ptr<Character>>& enemies) = 0;
+    virtual void collideCheck(std::vector<std::shared_ptr<Character>>& enemies);
 
     virtual void cameraDraw(const Camera& camera) const override;
     void faceLeft() { m_facingLeft = true; }

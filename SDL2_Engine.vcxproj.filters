@@ -84,9 +84,6 @@
     <ClCompile Include="Entities\MeleeObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Entities\PlayerSideAttack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Misc\MultiCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -124,6 +121,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Misc\Random.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\PlayerSwingAttack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\PlayerDownAttack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\PlayerStabAttack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -197,9 +203,6 @@
     <ClInclude Include="Entities\MeleeObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Entities\PlayerSideAttack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Misc\MultiCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -240,6 +243,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Misc\Random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\PlayerSwingAttack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\PlayerDownAttack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\PlayerStabAttack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

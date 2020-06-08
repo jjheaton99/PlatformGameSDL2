@@ -9,6 +9,8 @@ class GroundedEnemy : public GroundedCharacter
 protected:
     int m_damage;
 
+    double m_stopDeceleration{ 0.7 };
+
     //for animating jumping and landing
     bool m_jumped{ false };
     bool m_landed{ false };

@@ -1,12 +1,10 @@
 #pragma once
 
 #include "MeleeObject.h"
-#include "Character.h"
-#include "GroundedEnemy.h"
 #include <vector>
 
 //the player's swinging side melee attack
-class PlayerSideAttack : public MeleeObject
+class PlayerSwingAttack : public MeleeObject
 {
 private:
     std::vector<Vector2D<double>> m_colliderOffsets;
@@ -16,10 +14,10 @@ private:
     void resetColliders();
 
 public:
-    PlayerSideAttack(int damage = 30, double xBase = 0, double yBase = 0);
+    PlayerSwingAttack(int damage = 30, double xBasePos = 0, double yBasePos = 0);
 
-    void update(std::vector<std::shared_ptr<Character>>& enemies);
-    void collideCheck(std::vector<std::shared_ptr<Character>>& enemies);
+    void update(std::vector<std::shared_ptr<Character>>& enemies) override;
+    void collideCheck(std::vector<std::shared_ptr<Character>>& enemies) override;
     //void cameraDraw(const Camera& camera) const override;
 };
 

@@ -1,27 +1,26 @@
-#include "PlayerSideAttack.h"
+#include "PlayerSwingAttack.h"
 
-PlayerSideAttack::PlayerSideAttack(int damage, double xBase, double yBase)
-    : MeleeObject("Assets/Attacks/Weapons-4.png", damage, xBase, yBase, 50, 50, 0.25)
+PlayerSwingAttack::PlayerSwingAttack(int damage, double xBasePos, double yBasePos)
+    : MeleeObject("Assets/Attacks/axe.png", damage, xBasePos, yBasePos, 0.0, 0.0, 0.35)
 {
-    m_srcRect = { 0, 0, 32, 50 };
+    m_srcRect = { 0, 0, 32, 55 };
 
     m_dstRect.w = 100;
-    m_dstRect.h = 157;
+    m_dstRect.h = 172;
 
-    m_offset = Vector2D<double>{ 50.0, 145.0 };
+    m_offset = Vector2D<double>{ 50.0, 160.0 };
 
     m_multiCollider = MultiCollider{ std::vector<Collider::DoubleRect>{
-            {0, 0, 8, 8},
-            {0, 0, 8, 8},
-            {0, 0, 8, 8},
-            {0, 0, 8, 8},
-            {0, 0, 8, 8},
-            {0, 0, 8, 8}
+            {0, 0, 5, 5},
+            {0, 0, 5, 5},
+            {0, 0, 5, 5},
+            {0, 0, 5, 5},
+            {0, 0, 5, 5}
         }
     };
 }
 
-void PlayerSideAttack::rotateColliders(double angle)
+void PlayerSwingAttack::rotateColliders(double angle)
 {
     for (auto& position : m_colliderOffsets)
     {
@@ -29,19 +28,18 @@ void PlayerSideAttack::rotateColliders(double angle)
     }
 }
 
-void PlayerSideAttack::resetColliders()
+void PlayerSwingAttack::resetColliders()
 {
     m_colliderOffsets = std::vector<Vector2D<double>>{
-        Vector2D<double>{0, - 37},
-        Vector2D<double>{0, - 55},
-        Vector2D<double>{0, - 73},
-        Vector2D<double>{0, - 91},
-        Vector2D<double>{0, - 109},
-        Vector2D<double>{0, - 127 }
+        Vector2D<double>{0, - 40},
+        Vector2D<double>{0, - 65},
+        Vector2D<double>{0, - 90},
+        Vector2D<double>{0, - 115},
+        Vector2D<double>{0, - 140 }
     };
 }
 
-void PlayerSideAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
+void PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
 {
     updateHitEnemies(enemies);
 
@@ -94,7 +92,7 @@ void PlayerSideAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
     }
 }
 
-void PlayerSideAttack::collideCheck(std::vector<std::shared_ptr<Character>>& enemies)
+void PlayerSwingAttack::collideCheck(std::vector<std::shared_ptr<Character>>& enemies)
 {
     for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
     {
@@ -120,24 +118,29 @@ void PlayerSideAttack::collideCheck(std::vector<std::shared_ptr<Character>>& ene
 
 //for testing positions of hitboxes
 /*
-void PlayerSideAttack::cameraDraw(const Camera& camera) const
+void PlayerSwingAttack::cameraDraw(const Camera& camera) const
 {
+    SDL_RendererFlip flip{ SDL_FLIP_NONE };
+    if (!m_facingLeft)
+    {
+        flip = SDL_FLIP_HORIZONTAL;
+    }
     if (m_attacking && m_counter != 0)
     {
         SDL_Point rotationPoint{ static_cast<int>(m_offset.getx()), static_cast<int>(m_offset.gety()) };
         if (m_collider.collideCheck(camera.getCollider()))
         {
             SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
-            m_texture.draw(m_srcRect, relativeDstRect, m_angle, &rotationPoint, SDL_FLIP_NONE);
+            m_texture.draw(m_srcRect, relativeDstRect, m_angle, &rotationPoint, flip);
         }
 
         SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 255);
         SDL_Rect rect;
         for (const auto& element : m_multiCollider.getColliders())
         {
-            rect = { element.getHitBox().x - camera.getx(), element.getHitBox().y - camera.gety(), element.getHitBox().w, element.getHitBox().h };
+            rect = { static_cast<int>(element.getHitBox().x - camera.getx()), static_cast<int>(element.getHitBox().y - camera.gety()), 
+                static_cast<int>(element.getHitBox().w), static_cast<int>(element.getHitBox().h) };
             SDL_RenderFillRect(g_renderer, &rect);
         }
     }
-}
-*/
+}*/

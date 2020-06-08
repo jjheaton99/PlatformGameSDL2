@@ -2,7 +2,7 @@
 
 #include "GroundedCharacter.h"
 #include "Constants.h"
-#include "PlayerSideAttack.h"
+#include "PlayerSwingAttack.h"
 #include "PlayerBoomerang.h"
 #include <array>
 #include <cmath>
@@ -14,7 +14,7 @@ class GroundedEnemy;
 class Player : public std::enable_shared_from_this<Character>, public GroundedCharacter
 {
 private:
-    PlayerSideAttack m_sideAttack{};
+    PlayerSwingAttack m_sideAttack{};
     PlayerBoomerang m_boomerang{};
     bool m_throwBoomerang{ false };
 
