@@ -81,3 +81,10 @@ void MeleeObject::attackRight()
     m_facingLeft = false;
     m_attacking = true; 
 }
+
+void MeleeObject::cancel()
+{
+    m_attacking = false;
+    m_counter = 0;
+    resetHitEnemies();
+}

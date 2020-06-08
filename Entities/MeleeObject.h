@@ -37,7 +37,7 @@ public:
     virtual void cameraDraw(const Camera& camera) const override;
     void attackLeft();
     void attackRight();
-    void cancel() { m_counter = static_cast<int>(m_attackDuration / Constants::updateStep) + 1; }
+    void cancel();
     bool isAttacking() const { return m_attacking; }
 
     void updateHitEnemies(const std::vector<std::shared_ptr<Character>>& enemies);

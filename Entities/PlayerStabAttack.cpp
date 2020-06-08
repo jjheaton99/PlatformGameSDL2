@@ -75,9 +75,7 @@ bool PlayerStabAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
 
         else
         {
-            m_attacking = false;
-            m_counter = 0;
-            resetHitEnemies();
+            cancel();
         }
     }
 

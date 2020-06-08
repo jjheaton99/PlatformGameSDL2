@@ -107,9 +107,7 @@ bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
 
             if (m_counter > m_updateCount + 7)
             {
-                m_attacking = false;
-                m_counter = 0;
-                resetHitEnemies();
+                cancel();
             }
         }
     }
