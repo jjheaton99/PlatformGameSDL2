@@ -9,7 +9,9 @@ class PlayerSwingAttack : public MeleeObject
 private:
     std::vector<Vector2D<double>> m_colliderOffsets;
     MultiCollider m_multiCollider;
-    
+
+    double m_updateAngle;
+
     void rotateColliders(double angle);
     void resetColliders();
 

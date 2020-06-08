@@ -1,7 +1,7 @@
 #include "PlayerSwingAttack.h"
 
 PlayerSwingAttack::PlayerSwingAttack(int damage, double xBasePos, double yBasePos)
-    : MeleeObject("Assets/Attacks/axe.png", damage, xBasePos, yBasePos, 0.0, 0.0, 0.35)
+    : MeleeObject("Assets/Attacks/axe.png", damage, xBasePos, yBasePos, 0.0, 0.0, 0.4)
 {
     m_srcRect = { 0, 0, 32, 55 };
 
@@ -9,6 +9,8 @@ PlayerSwingAttack::PlayerSwingAttack(int damage, double xBasePos, double yBasePo
     m_dstRect.h = 172;
 
     m_offset = Vector2D<double>{ 50.0, 160.0 };
+
+    m_updateAngle = (270.0) / (m_updateCount * (m_updateCount + 1.0));
 
     m_multiCollider = MultiCollider{ std::vector<Collider::DoubleRect>{
             {0, 0, 5, 5},
@@ -39,7 +41,7 @@ void PlayerSwingAttack::resetColliders()
     };
 }
 
-void PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
+/*void PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
 {
     updateHitEnemies(enemies);
 
@@ -88,6 +90,66 @@ void PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
             m_attacking = false;
             m_counter = 0;
             resetHitEnemies();
+        }
+    }
+}*/
+
+void PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
+{
+    updateHitEnemies(enemies);
+
+    if (m_attacking)
+    {
+        if (m_counter == 0)
+        {
+            resetColliders();
+            double startAngle{ 45.0 };
+            if (m_facingLeft)
+            {
+                m_angle = startAngle;
+                rotateColliders(startAngle);
+            }
+            else
+            {
+                m_angle = -startAngle;
+                rotateColliders(-startAngle);
+            }
+        }
+
+        m_totalPosition = m_position - m_offset;
+        m_dstRect.x = static_cast<int>(m_totalPosition.getx());
+        m_dstRect.y = static_cast<int>(m_totalPosition.gety());
+
+        if (m_counter < m_updateCount)
+        {
+            double angle{ m_updateAngle * static_cast<double>(++m_counter) };
+            if (m_facingLeft)
+            {
+                m_angle -= angle;
+                rotateColliders(-angle);
+            }
+
+            else
+            {
+                m_angle += angle;
+                rotateColliders(angle);
+            }
+
+            m_collider.setPosition(m_totalPosition);
+            m_multiCollider.setPositions(m_position, m_colliderOffsets);
+
+            collideCheck(enemies);
+        }
+
+        else
+        {
+            ++m_counter;
+            if (m_counter > m_updateCount + 7)
+            {
+                m_attacking = false;
+                m_counter = 0;
+                resetHitEnemies();
+            }
         }
     }
 }

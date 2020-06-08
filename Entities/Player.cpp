@@ -217,37 +217,51 @@ void Player::motion()
         break;
 
     case GroundedCharacter::LEFT:
-        m_facingLeft = true;
-        //velocity increased/decreased unless at max horizontal velocity
-        if (m_velocity.getx() - m_walkAcceleration >= -m_xMaxSpeed)
-        {
-            m_velocity.add(-m_walkAcceleration, 0);
-        }
-        else if (m_velocity.getx() < -m_xMaxSpeed)
+        if (isAttacking())
         {
             m_velocity.xScale(0.9);
         }
         else
         {
-            m_velocity.xScale(0.0);
-            m_velocity.add(-m_xMaxSpeed, 0);
+            m_facingLeft = true;
+            //velocity increased/decreased unless at max horizontal velocity
+            if (m_velocity.getx() - m_walkAcceleration >= -m_xMaxSpeed)
+            {
+                m_velocity.add(-m_walkAcceleration, 0);
+            }
+            else if (m_velocity.getx() < -m_xMaxSpeed)
+            {
+                m_velocity.xScale(0.9);
+            }
+            else
+            {
+                m_velocity.xScale(0.0);
+                m_velocity.add(-m_xMaxSpeed, 0);
+            }
         }
         break;
 
     case GroundedCharacter::RIGHT:
-        m_facingLeft = false;
-        if (m_velocity.getx() + m_walkAcceleration <= m_xMaxSpeed)
-        {
-            m_velocity.add(m_walkAcceleration, 0);
-        }
-        else if (m_velocity.getx() > m_xMaxSpeed)
+        if (isAttacking())
         {
             m_velocity.xScale(0.9);
         }
         else
         {
-            m_velocity.xScale(0.0);
-            m_velocity.add(m_xMaxSpeed, 0);
+            m_facingLeft = false;
+            if (m_velocity.getx() + m_walkAcceleration <= m_xMaxSpeed)
+            {
+                m_velocity.add(m_walkAcceleration, 0);
+            }
+            else if (m_velocity.getx() > m_xMaxSpeed)
+            {
+                m_velocity.xScale(0.9);
+            }
+            else
+            {
+                m_velocity.xScale(0.0);
+                m_velocity.add(m_xMaxSpeed, 0);
+            }
         }
         break;
 

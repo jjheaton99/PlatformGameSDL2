@@ -2,7 +2,9 @@
 
 MeleeObject::MeleeObject(const char* fileName, int damage, double xBasePos, double yBasePos, double colliderWidth, double colliderHeight, double attackDuration)
     : GameObject(fileName, xBasePos, yBasePos, colliderWidth, colliderHeight), m_damage{damage}, m_attackDuration{ attackDuration }
-{}
+{
+    m_updateCount = static_cast<int>(m_attackDuration / Constants::updateStep);
+}
 
 MeleeObject::~MeleeObject()
 {

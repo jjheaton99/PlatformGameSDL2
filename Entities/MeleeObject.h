@@ -17,6 +17,8 @@ protected:
     bool m_facingLeft{ false };
     bool m_attacking{ false };
     int m_counter{ 0 };
+    int m_updateCount;
+
     double m_angle{ 0.0 };
 
     //for offsetting weapon from base position
