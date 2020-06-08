@@ -39,8 +39,8 @@ private:
 
     bool m_floatingLeft{ false };
     bool m_floatingRight{ false };
-    double m_maxFloatSpeed{ 5.0 };
-    double m_floatAccel{ 0.8 };
+    double m_maxFloatSpeed{ 11.0 };
+    double m_floatAccel{ 1.1 };
 
     double m_wallslideSpeed{ 7.0 };
 

@@ -730,6 +730,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                     }
                     tempVel.yScale(result.second);
                     m_velocity.yScale(-1.0);
+                    m_velocity.add(0.0, -5.0);
                     yCollision = true;
                     removeHP(1);
                 }
@@ -745,6 +746,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                     }
                     tempVel.xScale(result.second);
                     m_velocity.xScale(-1.0);
+                    m_velocity.add(0.0, -5.0);
                     xCollision = true;
                     removeHP(1);
                 }

@@ -11,7 +11,7 @@ SPlayGame::SPlayGame(const char* mapFile)
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
-    for (int i{ 0 }; i < 1; ++i)
+    for (int i{ 0 }; i < 5; ++i)
     {
         m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, playerxSpawn + 500.0 + 1.0 * i, playerySpawn + 500.0 + 1.0 * i);
         m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, playerxSpawn - 500.0 - 1.0 * i, playerySpawn - 500.0 - 1.0 * i);
@@ -273,7 +273,7 @@ void SPlayGame::playerControlsMouseClick(SDL_Event& event)
         switch (event.button.button)
         {
         case SDL_BUTTON_LEFT:
-            if (!m_player->isAttacking() && m_player->getMovement() == Player::AIRBORNE && currentKeyState[SDL_SCANCODE_S])
+            if (!m_player->isAttacking() && currentKeyState[SDL_SCANCODE_S])
             {
                 m_player->dodgeCancel();
                 m_player->downAttack();
