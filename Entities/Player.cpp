@@ -27,7 +27,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     //std::cout << m_hitPoints << '\n';
     if (m_hitPoints <= 0)
     {
-        //kill();
+        kill();
     }
 
     //edge check goes before map collision check to prevent vector subcript error when going off the edge
@@ -232,7 +232,10 @@ void Player::motion()
         }
         else
         {
-            m_facingLeft = true;
+            if (!isStabAttacking())
+            {
+                m_facingLeft = true;
+            }
             //velocity increased/decreased unless at max horizontal velocity
             if (m_velocity.getx() - m_walkAcceleration >= -m_xMaxSpeed)
             {
@@ -257,7 +260,10 @@ void Player::motion()
         }
         else
         {
-            m_facingLeft = false;
+            if (!isStabAttacking())
+            {
+                m_facingLeft = false;
+            }
             if (m_velocity.getx() + m_walkAcceleration <= m_xMaxSpeed)
             {
                 m_velocity.add(m_walkAcceleration, 0);
