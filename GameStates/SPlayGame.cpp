@@ -2,7 +2,7 @@
 
 SPlayGame::SPlayGame(const char* mapFile)
 {
-    int pathLength{ 20 };
+    int pathLength{ 15 };
     m_map->loadMap(pathLength);
 
     double playerxSpawn{ ((1.0 * m_map->getPlayerSpawnChunk().getx()) * Constants::chunkWidth * Constants::tileSize) + 700.0 };

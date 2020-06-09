@@ -3,6 +3,8 @@
 Map::Map()
 {
     m_tileset->load("Assets/MapTiles/sciFiTiles.png");
+
+    m_spawnPointFactor = Constants::tileSize / 32.0;
 }
 
 Map::~Map()

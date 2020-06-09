@@ -73,10 +73,10 @@ private:
             Vector2D<double>{290, 680}
         }},
         {"Assets/Maps/MapChunks/TB/c35.csv", {
-            Vector2D<double>{160, 290},
-            Vector2D<double>{900, 280},
-            Vector2D<double>{130, 780},
-            Vector2D<double>{900, 780}
+            Vector2D<double>{128, 244},
+            Vector2D<double>{874, 246},
+            Vector2D<double>{126, 757},
+            Vector2D<double>{870, 773}
         }}
     };
     chunkInfo m_TLfiles{

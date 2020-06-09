@@ -22,7 +22,7 @@ private:
     MapChunkLoader m_chunkLoader{};
 
     std::vector<std::vector<MapChunkLoader::ChunkEntrances>> m_generatedChunks;
-    double m_spawnPointFactor{ Constants::tileSize / 32 };
+    double m_spawnPointFactor;
     std::vector<Vector2D<double>> m_enemySpawnPoints;
 
     std::shared_ptr<WTexture> m_tileset{ std::make_shared<WTexture>() };

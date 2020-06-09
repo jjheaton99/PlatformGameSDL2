@@ -62,22 +62,18 @@ const MapChunkLoader::MapChunkData& MapChunkLoader::loadAndGetChunk(ChunkEntranc
 	switch (entrances)
 	{
 	case MapChunkLoader::T:
-        //index = MTRandom::getRandomInt(0, static_cast<int>(m_Tfiles.size()) - 1);
         readFileToChunkVector(m_Tfiles[0].first);
         m_chunkData.spawnPoints = m_Tfiles[0].second;
         break;
 	case MapChunkLoader::B:
-        //index = MTRandom::getRandomInt(0, static_cast<int>(m_Bfiles.size()) - 1);
         readFileToChunkVector(m_Bfiles[0].first);
         m_chunkData.spawnPoints = m_Bfiles[0].second;
         break;
 	case MapChunkLoader::L:
-        //index = MTRandom::getRandomInt(0, static_cast<int>(m_Lfiles.size()) - 1);
         readFileToChunkVector(m_Lfiles[0].first);
         m_chunkData.spawnPoints = m_Lfiles[0].second;
         break;
 	case MapChunkLoader::R:
-        //index = MTRandom::getRandomInt(0, static_cast<int>(m_Rfiles.size()) - 1);
         readFileToChunkVector(m_Rfiles[0].first);
         m_chunkData.spawnPoints = m_Rfiles[0].second;
         break;
