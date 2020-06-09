@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClCompile Include="Entities\Bat.cpp" />
     <ClCompile Include="Entities\Character.cpp" />
+    <ClCompile Include="Entities\EnemyProjectile.cpp" />
+    <ClCompile Include="Entities\FloatingSkull.cpp" />
+    <ClCompile Include="Entities\FloatingSkullShot.cpp" />
     <ClCompile Include="Entities\FlyingCharacter.cpp" />
     <ClCompile Include="Entities\FlyingEnemy.cpp" />
     <ClCompile Include="Entities\GameObject.cpp" />
@@ -62,6 +65,9 @@
   <ItemGroup>
     <ClInclude Include="Entities\Bat.h" />
     <ClInclude Include="Entities\Character.h" />
+    <ClInclude Include="Entities\EnemyProjectile.h" />
+    <ClInclude Include="Entities\FloatingSkull.h" />
+    <ClInclude Include="Entities\FloatingSkullShot.h" />
     <ClInclude Include="Entities\FlyingCharacter.h" />
     <ClInclude Include="Entities\FlyingEnemy.h" />
     <ClInclude Include="Entities\GameObject.h" />

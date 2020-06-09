@@ -5,7 +5,7 @@ FlyingEnemy::FlyingEnemy(const char* fileName, double xStartPos, double yStartPo
     : FlyingCharacter(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, spriteSheetCount), m_damage{ damage }
 {}
 
-void FlyingEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player)
+void FlyingEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player)
 {
     if (m_hitPoints <= 0)
     {
@@ -45,19 +45,19 @@ void FlyingEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera
     }
 }
 
-bool FlyingEnemy::attackPlayer(Character& player)
+bool FlyingEnemy::attackPlayer(std::shared_ptr<Character> player)
 {
-    if (!dynamic_cast<Player&>(player).isInvincible() && (m_velocity.magnitude() < (m_position - player.getPos()).magnitude()))
+    if (!dynamic_cast<Player&>(*player).isInvincible() && (m_velocity.magnitude() < (m_position - player->getPos()).magnitude()))
     {
-        Collider::sweptObstacleTuple sweptCollider{ player.getCollider(), Collider::xOverlap(m_collider, player.getCollider()), Collider::yOverlap(m_collider, player.getCollider()) };
-        if (m_collider.sweptAABBDeflect(1.5, sweptCollider, m_position, m_velocity, player.getVel()))
+        Collider::sweptObstacleTuple sweptCollider{ player->getCollider(), Collider::xOverlap(m_collider, player->getCollider()), Collider::yOverlap(m_collider, player->getCollider()) };
+        if (m_collider.sweptAABBDeflect(1.5, sweptCollider, m_position, m_velocity, player->getVel()))
         {
-            dynamic_cast<Player&>(player).removeHP(m_damage);
+            dynamic_cast<Player&>(*player).removeHP(m_damage);
             return true;
         }
-        else if (m_collider.collideCheck(player.getCollider()))
+        else if (m_collider.collideCheck(player->getCollider()))
         {
-            dynamic_cast<Player&>(player).removeHP(m_damage);
+            dynamic_cast<Player&>(*player).removeHP(m_damage);
             m_velocity.scale(-1.5);
             return true;
         }

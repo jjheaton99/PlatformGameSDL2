@@ -12,10 +12,10 @@ protected:
 
     void motion() override {};
     void animateSprite() override;
-    void enemyControls(const Character& player) override;
+    void enemyControls(const std::shared_ptr<Character> player) override;
     void setCollider() override { m_collider.setPosition(m_position.getx() + 25.0, m_position.gety() + 25.0); }
 
 public:
     Bat(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/Enemies/blackBat.png", 
-        int colliderWidth = 40, int colliderHeight = 40, int hitPoints = 40, int spriteSheetCount = 10, int damage = 1);
+        int colliderWidth = 35, int colliderHeight = 35, int hitPoints = 40, int spriteSheetCount = 10, int damage = 1);
 };

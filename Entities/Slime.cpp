@@ -18,11 +18,11 @@ Slime::Slime(double xStartPos, double yStartPos, double xVel, double yVel, const
     m_dstRect.h = 75;
 }
 
-void Slime::enemyControls(Character& player)
+void Slime::enemyControls(std::shared_ptr<Character> player)
 {
     if (m_movement != AIRBORNE)
     {
-        if (m_position.getx() < player.getPos().getx() + 30 - m_collider.getHitBox().w)
+        if (m_position.getx() < player->getPos().getx() + 30 - m_collider.getHitBox().w)
         {
             m_movement = RIGHT;
             m_facingLeft = false;
@@ -31,7 +31,7 @@ void Slime::enemyControls(Character& player)
                 m_movement = STOP;
             }
         }
-        else if (m_position.getx() > player.getPos().getx() + 70)
+        else if (m_position.getx() > player->getPos().getx() + 70)
         {
             m_movement = LEFT;
             m_facingLeft = true;

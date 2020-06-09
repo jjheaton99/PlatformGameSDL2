@@ -37,6 +37,8 @@ protected:
     bool m_collidingWithLadder{ false };
     double m_ladderxPos{ 0.0 };
 
+    ProjectileType m_projectile{ ProjectileType::NONE };
+
     //for checking collisions with map tiles
     void getCollideTiles(const std::vector<std::vector<Tile>>& map, int characterRow, int characterColumn);
     virtual bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) = 0;
@@ -53,7 +55,7 @@ public:
     virtual ~Character();
 
     //for enemies
-    virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player) = 0;
+    virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player) = 0;
     virtual void cameraDraw(const Camera& camera) const override;
 
     void addHP(int HP) { m_hitPoints += HP; }
@@ -68,5 +70,7 @@ public:
 
     void faceLeft() { m_facingLeft = true; }
     void faceRight() { m_facingLeft = false; }
+
+    GameObject::ProjectileType getProjectile() const { return m_projectile; }
 };
 

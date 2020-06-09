@@ -60,7 +60,7 @@ private:
     void setCollider() override;
 
     bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) override;
-    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player) override {};
+    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player) override {};
 
 public:
     Player(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/MrPix.png", int hitPoints = 30, int spriteSheetCount = 28);

@@ -10,6 +10,22 @@
 //base class for gameplay objects
 class GameObject : public TextureObject
 {
+public:
+    enum class EnemyType
+    {
+        SLIME,
+        BAT,
+        FLOATING_SKULL,
+        MAX_ENEMIES
+    };
+
+public:
+    enum class ProjectileType
+    {
+        SKULL_PROJECTILE,
+        NONE
+    };
+
 protected:
     Collider m_collider;
 

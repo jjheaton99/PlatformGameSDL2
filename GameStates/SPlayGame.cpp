@@ -18,6 +18,8 @@ SPlayGame::SPlayGame(const char* mapFile)
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
+    m_objectManager->newEnemy(GameObject::EnemyType::FLOATING_SKULL, playerxSpawn + 500.0, playerySpawn + 900.0);
+
     /*for (int i{ 0 }; i < 100; ++i)
     {
         m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, playerxSpawn + 500.0 + 1.0 * i, playerySpawn + 500.0 + 1.0 * i);
@@ -393,7 +395,7 @@ GameState::State SPlayGame::update()
             //++updateCount;
             m_timeAccumulator -= Constants::updateStep;
             m_player->update(m_map->getMap(), m_camera, m_objectManager->getEnemies());
-            m_objectManager->update(m_map->getMap(), m_camera, *m_player);
+            m_objectManager->update(m_map->getMap(), m_camera, m_player);
             m_UI.update();
             m_map->update();
             if (m_player->isDead())

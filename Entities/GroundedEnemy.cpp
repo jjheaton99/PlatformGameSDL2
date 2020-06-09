@@ -5,7 +5,7 @@ GroundedEnemy::GroundedEnemy(const char* fileName, double xStartPos, double ySta
     : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, spriteSheetCount), m_damage{ damage }
 {}
 
-void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, Character& player)
+void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player)
 { 
     if (m_hitPoints <= 0)
     {
@@ -122,19 +122,19 @@ void GroundedEnemy::motion()
     }
 }
 
-void GroundedEnemy::attackPlayer(Character& player)
+void GroundedEnemy::attackPlayer(std::shared_ptr<Character> player)
 {
-    if (m_collider.collideCheck(dynamic_cast<Player&>(player).getCollider()) && !dynamic_cast<Player&>(player).isInvincible())
+    if (m_collider.collideCheck(dynamic_cast<Player&>(*player).getCollider()) && !dynamic_cast<Player&>(*player).isInvincible())
     {
-        dynamic_cast<Player&>(player).removeHP(m_damage);
+        dynamic_cast<Player&>(*player).removeHP(m_damage);
         m_velocity.scale(0);
-        if (m_position.getx() < player.getPos().getx() + 50)
+        if (m_position.getx() < player->getPos().getx() + 50)
         {
-            player.setVel(15.0, -5.0);
+            player->setVel(15.0, -5.0);
         }
-        else if (m_position.getx() > player.getPos().getx() + 50)
+        else if (m_position.getx() > player->getPos().getx() + 50)
         {
-            player.setVel(-15.0, -5.0);
+            player->setVel(-15.0, -5.0);
         }
     }
 }

@@ -52,3 +52,21 @@ void Projectile::getCollideTiles(const std::vector<std::vector<Tile>>& map, int 
         }
     }
 }
+
+bool Projectile::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
+{
+    int projectileColumn{ static_cast<int>(m_collider.getHitBox().x / Constants::tileSize) };
+    int projectileRow{ static_cast<int>(m_collider.getHitBox().y / Constants::tileSize) };
+
+    getCollideTiles(map, projectileRow, projectileColumn);
+
+    for (auto& sweptCollider : m_solidColliders)
+    {
+        if (m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, sweptCollider).first != Collider::NONE)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
