@@ -47,6 +47,7 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
         motion();
         animateSprite();
         attackPlayer(player);
+        cycleDamageFlash();
     }
 }
 

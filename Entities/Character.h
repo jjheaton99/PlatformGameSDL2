@@ -28,6 +28,9 @@ protected:
     const int m_maxHitPoints;
     int m_hitPoints;
 
+    int m_damageFlashCount{ 6 };
+    void cycleDamageFlash();
+
     std::vector<Collider::sweptObstacleTuple> m_solidColliders;
     std::vector<Collider::sweptObstacleTuple> m_platformColliders;
     std::vector<Collider::sweptObstacleTuple> m_spikeColliders;
@@ -54,7 +57,7 @@ public:
     virtual void cameraDraw(const Camera& camera) const override;
 
     void addHP(int HP) { m_hitPoints += HP; }
-    virtual void removeHP(int HP) { m_hitPoints -= HP; }
+    virtual void removeHP(int HP);
     int getHP() const { return m_hitPoints; }
 
     bool isDead() const { return m_dead; }

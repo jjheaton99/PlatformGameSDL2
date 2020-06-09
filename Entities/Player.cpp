@@ -52,6 +52,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     motion();
     animateSprite();
     moveCamera(camera);
+    cycleDamageFlash();
 
     if (!isDodging() && m_invincible)
     {
@@ -620,9 +621,10 @@ void Player::removeHP(int HP)
     {
         m_hitPoints -= HP;
         startiFrames();
+        m_texture.setColour(255, 100, 100);
+        m_damageFlashCount = 0;
     }
 }
-
 
 bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
 {

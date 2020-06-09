@@ -41,6 +41,7 @@ void FlyingEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera
         m_dstRect.y = static_cast<int>(m_position.gety());
 
         animateSprite();
+        cycleDamageFlash();
     }
 }
 

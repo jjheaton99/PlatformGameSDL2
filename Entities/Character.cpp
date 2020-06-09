@@ -156,3 +156,22 @@ void Character::cameraDraw(const Camera& camera) const
         }
     }
 }
+
+void Character::cycleDamageFlash()
+{
+    if (m_damageFlashCount >= 0 && m_damageFlashCount <= 5)
+    {
+        ++m_damageFlashCount;
+        if (m_damageFlashCount > 5)
+        {
+            m_texture.setColour(255, 255, 255);
+        }
+    }
+}
+
+void Character::removeHP(int HP)
+{
+    m_hitPoints -= HP;
+    m_texture.setColour(255, 100, 100);
+    m_damageFlashCount = 0;
+}
