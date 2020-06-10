@@ -1,7 +1,7 @@
 #include "PlayerDownAttack.h"
 
 PlayerDownAttack::PlayerDownAttack(int damage, double xBase, double yBase)
-    : MeleeObject("Assets/Attacks/downAttack.png", damage, xBase, yBase, 62.0, 66.0, 0.3)
+    : MeleeObject("Assets/Attacks/downAttack.png", damage, xBase, yBase, 62.0, 66.0, 0.2)
 {
     m_srcRect = { 0, 0, 20, 21 };
 
@@ -13,7 +13,7 @@ PlayerDownAttack::PlayerDownAttack(int damage, double xBase, double yBase)
     m_yoffsetUpdate = 100.0 / m_updateCount;
 }
 
-bool PlayerDownAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
+bool PlayerDownAttack::update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel)
 {
     updateHitEnemies(enemies);
 
@@ -36,19 +36,28 @@ bool PlayerDownAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
             m_offset.add(Vector2D<double>{ 0.0, -m_yoffsetUpdate});
 
             m_collider.setPosition(m_totalPosition);
-            if (collideCheck(enemies, 0.0, 20.0))
+            if (collideCheck(enemies, playerVel, 0.0, 20.0))
             {
                 hit = true;
             }
         }
 
-        else if (m_counter <= m_updateCount)
+        else if (m_counter <= (m_updateCount / 2) + 5)
+        {
+            m_collider.setPosition(m_totalPosition);
+            if (collideCheck(enemies, playerVel, 0.0, 20.0))
+            {
+                hit = true;
+            }
+        }
+
+        else if (m_counter <= m_updateCount + 5)
         {
             m_offset.add(Vector2D<double>{ 0.0, m_yoffsetUpdate });
             m_offset.add(Vector2D<double>{ 0.0, m_yoffsetUpdate });
 
             m_collider.setPosition(m_totalPosition);
-            if (collideCheck(enemies, 0.0, 20.0))
+            if (collideCheck(enemies, playerVel, 0.0, 20.0))
             {
                 hit = true;
             }

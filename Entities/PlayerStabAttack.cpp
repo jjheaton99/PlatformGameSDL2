@@ -1,19 +1,19 @@
 #include "PlayerStabAttack.h"
 
 PlayerStabAttack::PlayerStabAttack(int damage, double xBase, double yBase)
-    : MeleeObject("Assets/Attacks/sword3.png", damage, xBase, yBase, 62.0, 9.0, 0.16)
+    : MeleeObject("Assets/Attacks/sword3.png", damage, xBase, yBase, 131.0, 22.0, 0.16)
 {
     m_srcRect = { 0, 0, 42, 15 };
 
     m_dstRect.w = 131;
     m_dstRect.h = 47;
 
-    m_offset = Vector2D<double>{ 40.0, 22.0 };
+    m_offset = Vector2D<double>{ 20.0, 22.0 };
 
     m_xoffsetUpdate = 150.0 / m_updateCount;
 }
 
-bool PlayerStabAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
+bool PlayerStabAttack::update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel)
 {
     updateHitEnemies(enemies);
 
@@ -40,7 +40,7 @@ bool PlayerStabAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
         if (m_counter <= m_delayCount)
         {
             setCollider();
-            if (collideCheck(enemies, 0.0, 0.0))
+            if (collideCheck(enemies, playerVel, 0.0, 0.0))
             {
                 hit = true;
             }
@@ -58,7 +58,7 @@ bool PlayerStabAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
             }
 
             setCollider();
-            if (collideCheck(enemies, 10.0, 0.0))
+            if (collideCheck(enemies, playerVel, 10.0, 0.0))
             {
                 hit = true;
             }
@@ -76,7 +76,7 @@ bool PlayerStabAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
             }
 
             setCollider();
-            if (collideCheck(enemies, 10.0, 0.0))
+            if (collideCheck(enemies, playerVel, 10.0, 0.0))
             {
                 hit = true;
             }
@@ -95,10 +95,10 @@ void PlayerStabAttack::setCollider()
 {
     if (m_facingLeft)
     {
-        m_collider.setPosition(m_totalPosition.getx(), m_totalPosition.gety() + 19.0);
+        m_collider.setPosition(m_totalPosition.getx(), m_totalPosition.gety() + 12.5);
     }
     else
     {
-        m_collider.setPosition(m_totalPosition.getx() + 69.0, m_totalPosition.gety() + 19.0);
+        m_collider.setPosition(m_totalPosition.getx(), m_totalPosition.gety() + 12.5);
     }
 }

@@ -31,8 +31,8 @@ public:
     MeleeObject(const char* fileName, int damage, double xBasePos, double yBasePos, double colliderWidth, double colliderHeight, double attackDuration = 0);
     virtual ~MeleeObject();
 
-    virtual bool update(std::vector<std::shared_ptr<Character>>& enemies) = 0;
-    virtual bool collideCheck(std::vector<std::shared_ptr<Character>>& enemies, double xKnockback = 0, double yKnockback = 0);
+    virtual bool update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel) = 0;
+    virtual bool collideCheck(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel, double xKnockback = 0, double yKnockback = 0);
 
     virtual void cameraDraw(const Camera& camera) const override;
     void attackLeft();

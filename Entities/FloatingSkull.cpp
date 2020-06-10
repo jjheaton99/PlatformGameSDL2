@@ -67,7 +67,7 @@ void FloatingSkull::update(const std::vector<std::vector<Tile>>& map, const Came
         {
             m_projectile = ProjectileType::NONE;
         }
-        if (++m_projectileCount > 90)
+        if (++m_projectileCount > 150)
         {
             m_projectileCount = 0;
             m_projectile = ProjectileType::SKULL_PROJECTILE;

@@ -132,13 +132,13 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
 
     //attack texture position set with an offset from player position 
     m_swingAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
-    m_swingAttack.update(enemies);
+    m_swingAttack.update(enemies, m_velocity);
 
     m_stabAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
-    m_stabAttack.update(enemies);
+    m_stabAttack.update(enemies, m_velocity);
 
     m_downAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 90.0);
-    if (m_downAttack.update(enemies))
+    if (m_downAttack.update(enemies, m_velocity))
     {
         setVel(m_velocity.getx(), -30.0);
     }

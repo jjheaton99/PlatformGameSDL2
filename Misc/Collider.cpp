@@ -33,9 +33,9 @@ bool Collider::collideCheck(const Collider& collider) const
 {
     //checks for overlap of both x and y axes between the colliders 
     return (m_hitBox.x < (collider.getHitBox().x + collider.getHitBox().w)
-        && m_hitBox.x >(collider.getHitBox().x - m_hitBox.w)
+        && m_hitBox.x > (collider.getHitBox().x - m_hitBox.w)
         && m_hitBox.y < (collider.getHitBox().y + collider.getHitBox().h)
-        && m_hitBox.y >(collider.getHitBox().y - m_hitBox.h));
+        && m_hitBox.y > (collider.getHitBox().y - m_hitBox.h));
 }
 
 Collider::sweptAABBresult_type Collider::sweptAABBCheck(const Vector2D<double>& colliderVel, const Vector2D<double>& obstacleVel, sweptObstacleTuple& obstacleTuple) const

@@ -41,7 +41,7 @@ void PlayerSwingAttack::resetColliders()
     };
 }
 
-bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
+bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel)
 {
     updateHitEnemies(enemies);
 
@@ -88,7 +88,7 @@ bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
             m_collider.setPosition(m_totalPosition);
             m_multiCollider.setPositions(m_position, m_colliderOffsets);
 
-            if (collideCheck(enemies, 25.0, 5.0))
+            if (collideCheck(enemies, playerVel, 25.0, 5.0))
             {
                 hit = true;
             }
@@ -100,7 +100,7 @@ bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
             m_collider.setPosition(m_totalPosition);
             m_multiCollider.setPositions(m_position, m_colliderOffsets);
 
-            if (collideCheck(enemies, 25.0, 5.0))
+            if (collideCheck(enemies, playerVel, 25.0, 5.0))
             {
                 hit = true;
             }
@@ -115,7 +115,7 @@ bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies)
     return hit;
 }
 
-bool PlayerSwingAttack::collideCheck(std::vector<std::shared_ptr<Character>>& enemies, double xKnockback, double yKnockback)
+bool PlayerSwingAttack::collideCheck(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel, double xKnockback, double yKnockback)
 {
     bool hit{ false };
 

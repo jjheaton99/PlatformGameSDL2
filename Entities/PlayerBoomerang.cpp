@@ -35,7 +35,9 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
             if (sweepMapCollideCheck(map))
             {
                 ++m_collisionCount;
-                m_prevTarget.reset();
+                //allow boomerang to find new target
+                m_prevTarget = m_target;
+                m_target.reset();
                 if (m_collisionCount >= m_maxCollisions)
                 {
                     returnToPlayer(player);
@@ -170,11 +172,11 @@ bool PlayerBoomerang::aquireTargetEnemy(const std::vector<std::shared_ptr<Charac
 
 bool PlayerBoomerang::enemyCollideCheck(std::vector<std::shared_ptr<Character>>& enemies)
 {
+    bool hit{ false };
     if (!m_returningToPlayer)
     {
         aquireTargetEnemy(enemies);
 
-        bool hit{ false };
         if (m_target.lock())
         {
             if (m_collider.collideCheck(m_target.lock()->getCollider()))
@@ -197,11 +199,10 @@ bool PlayerBoomerang::enemyCollideCheck(std::vector<std::shared_ptr<Character>>&
                 m_target.lock()->addVel(0.5 * m_velocity);
                 m_prevTarget = m_target;
                 m_target.reset();
-                return true;
             }
         }
     }
-    return false;
+    return hit;
 }
 
 void PlayerBoomerang::motion()
