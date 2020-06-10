@@ -1,6 +1,6 @@
 # PlatformGameSDL2
-My first attempt at making a game using SDL2
+My first attempt at making a game, using SDL2.
 
-A game I am developing primarily to improve my C++ and programming ability in general.
+This project is primarily for improvement of my C++ skills and programming ability in general.
 
-To play the latest installer version of the game please download and run SDLGameSetup.msi.
+To play the latest downloadable version of the game please download and run SDLGameSetup.msi.
