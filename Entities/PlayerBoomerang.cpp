@@ -91,6 +91,8 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
                 m_isCooling = true;
                 m_target.reset();
                 setPos(player->getPos().getx() + 20.0, player->getPos().gety() + 20.0);
+                m_distanceTravelled = 0.0;
+                m_collisionCount = 0;
             }
         }
 
@@ -120,8 +122,6 @@ void PlayerBoomerang::returnToPlayer(std::shared_ptr<Character> player)
     m_returningToPlayer = true;
     m_target = player;
     m_prevTarget.reset();
-    m_collisionCount = 0;
-    m_distanceTravelled = 0.0;
 }
 
 bool PlayerBoomerang::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
