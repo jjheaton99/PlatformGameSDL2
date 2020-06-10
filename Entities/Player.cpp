@@ -131,30 +131,15 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     }
 
     //attack texture position set with an offset from player position 
-    m_swingAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
-    m_swingAttack.update(enemies, m_velocity);
+    m_meleeAttack->setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
+    m_meleeAttack->update(enemies, m_velocity);
 
-    m_stabAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
-    m_stabAttack.update(enemies, m_velocity);
-
-    m_downAttack.setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 90.0);
-    if (m_downAttack.update(enemies, m_velocity))
+    m_downAttack->setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 90.0);
+    if (m_downAttack->update(enemies, m_velocity))
     {
         setVel(m_velocity.getx(), -30.0);
     }
 
-    if (m_throwBoomerang)
-    {
-        if (m_facingLeft && !m_boomerang.isFlying())
-        {
-            m_boomerang.throwLeft(enemies);
-        }
-        else if (!m_facingLeft && !m_boomerang.isFlying())
-        {
-            m_boomerang.throwRight(enemies);
-        }
-        m_throwBoomerang = false;
-    }
     m_boomerang.update(map, camera, enemies, shared_from_this());
 }
 
@@ -227,16 +212,14 @@ void Player::motion()
         break;
 
     case GroundedCharacter::LEFT:
-        if (isSwingAttacking())
+        if (m_meleeAttack->isAttacking())
         {
             m_velocity.xScale(0.9);
         }
         else
         {
-            if (!isStabAttacking())
-            {
-                m_facingLeft = true;
-            }
+            m_facingLeft = true;
+
             //velocity increased/decreased unless at max horizontal velocity
             if (m_velocity.getx() - m_walkAcceleration >= -m_xMaxSpeed)
             {
@@ -255,16 +238,14 @@ void Player::motion()
         break;
 
     case GroundedCharacter::RIGHT:
-        if (isSwingAttacking())
+        if (m_meleeAttack->isAttacking())
         {
             m_velocity.xScale(0.9);
         }
         else
         {
-            if (!isStabAttacking())
-            {
-                m_facingLeft = false;
-            }
+            m_facingLeft = false;
+
             if (m_velocity.getx() + m_walkAcceleration <= m_xMaxSpeed)
             {
                 m_velocity.add(m_walkAcceleration, 0);
@@ -294,7 +275,7 @@ void Player::motion()
         break;
 
     case GroundedCharacter::WALLSLIDE:
-        if (isAttacking())
+        if (m_meleeAttack->isAttacking() || m_downAttack->isAttacking())
         {
             m_movement = AIRBORNE;
         }
@@ -382,11 +363,11 @@ void Player::animateSprite()
         break;
     }
 
-    if (m_swingAttack.isAttacking() || m_stabAttack.isAttacking() /*|| m_boomerang.isFlying()*/)
+    if (m_meleeAttack->isAttacking())
     {
         m_spriteIndex = 24;
     }
-    else if (m_downAttack.isAttacking())
+    else if (m_downAttack->isAttacking())
     {
         m_spriteIndex = 27;
     }
@@ -420,9 +401,10 @@ void Player::cameraDraw(const Camera& camera) const
         m_texture.draw(m_srcRect, relativeDstRect, m_angle, nullptr, flip);
     }
 
-    m_swingAttack.cameraDraw(camera);
-    m_stabAttack.cameraDraw(camera);
-    m_downAttack.cameraDraw(camera);
+    /*m_swingAttack.cameraDraw(camera);
+    m_stabAttack.cameraDraw(camera);*/
+    m_meleeAttack->cameraDraw(camera);
+    m_downAttack->cameraDraw(camera);
     m_boomerang.cameraDraw(camera);
 }
 
@@ -482,49 +464,33 @@ void Player::moveCamera(Camera& camera)
     }
 }
 
-void Player::swingAttackLeft()
+void Player::meleeAttackLeft()
 {
-    //if (!boomerangIsFlying())
-    //{
+    m_downAttack->cancel();
     m_facingLeft = true;
-    m_swingAttack.attackLeft();
-    //}
+    m_meleeAttack->attackLeft();
 }
 
-void Player::swingAttackRight()
+void Player::meleeAttackRight()
 {
-    //if (!boomerangIsFlying())
-    //{
+    m_downAttack->cancel();
     m_facingLeft = false;
-    m_swingAttack.attackRight();
-    //}
-}
-
-void Player::stabAttackLeft()
-{
-    m_facingLeft = true;
-    m_stabAttack.attackLeft();
-}
-
-void Player::stabAttackRight()
-{
-    m_facingLeft = false;
-    m_stabAttack.attackRight();
+    m_meleeAttack->attackRight();
 }
 
 void Player::downAttack()
 {
-    m_downAttack.attackLeft();
+    if (m_movement == AIRBORNE)
+    {
+        m_meleeAttack->cancel();
+        m_downAttack->attackLeft();
+    }
 }
 
 void Player::attackCancel()
 {
-    if (isSwingAttacking() || isStabAttacking() || isDownAttacking())
-    {
-        m_swingAttack.cancel();
-        m_stabAttack.cancel();
-        m_downAttack.cancel();
-    }
+    m_meleeAttack->cancel();
+    m_downAttack->cancel();
 }
 
 void Player::dodgeLeft()
@@ -577,11 +543,19 @@ void Player::setCollider()
     }
 }
 
-void Player::throwBoomerang() 
-{ 
-    if (!isAttacking())
+void Player::throwBoomerangLeft()
+{
+    if (!m_meleeAttack->isAttacking() && !m_downAttack->isAttacking())
     {
-        m_throwBoomerang = true;
+        m_boomerang.throwLeft();
+    }
+}
+
+void Player::throwBoomerangRight()
+{
+    if (!m_meleeAttack->isAttacking() && !m_downAttack->isAttacking())
+    {
+        m_boomerang.throwRight();
     }
 }
 

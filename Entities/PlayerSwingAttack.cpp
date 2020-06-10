@@ -97,13 +97,13 @@ bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies,
         else
         {
             ++m_counter;
-            m_collider.setPosition(m_totalPosition);
+            /*m_collider.setPosition(m_totalPosition);
             m_multiCollider.setPositions(m_position, m_colliderOffsets);
 
             if (collideCheck(enemies, playerVel, 25.0, 5.0))
             {
                 hit = true;
-            }
+            }*/
 
             if (m_counter > m_updateCount + 7)
             {

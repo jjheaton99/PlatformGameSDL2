@@ -2,6 +2,7 @@
 
 #include "GroundedCharacter.h"
 #include "Constants.h"
+#include "MeleeObject.h"
 #include "PlayerSwingAttack.h"
 #include "PlayerStabAttack.h"
 #include "PlayerDownAttack.h"
@@ -16,11 +17,9 @@ class GroundedEnemy;
 class Player : public std::enable_shared_from_this<Character>, public GroundedCharacter
 {
 private:
-    PlayerSwingAttack m_swingAttack{};
-    PlayerStabAttack m_stabAttack{};
-    PlayerDownAttack m_downAttack{};
+    std::unique_ptr<MeleeObject> m_meleeAttack{ std::make_unique<PlayerSwingAttack>() };
+    std::unique_ptr<MeleeObject> m_downAttack{ std::make_unique<PlayerDownAttack>() };
     PlayerBoomerang m_boomerang{};
-    bool m_throwBoomerang{ false };
 
     //member variables for controlling dodge timing and animation
     const double m_dodgeDuration{ 0.25 };
@@ -78,17 +77,14 @@ public:
     void dodgeCancel();
     double getDodgeCooldownFraction() const;
 
-    void swingAttackLeft();
-    void swingAttackRight();
-    void stabAttackLeft();
-    void stabAttackRight();
+    void meleeAttackLeft();
+    void meleeAttackRight();
     void downAttack();
     void attackCancel();
-    bool isSwingAttacking() const { return m_swingAttack.isAttacking(); }
-    bool isStabAttacking() const { return m_stabAttack.isAttacking(); }
-    bool isDownAttacking() const { return m_downAttack.isAttacking(); }
-    bool isAttacking() const { return isSwingAttacking() || isStabAttacking() || isDownAttacking(); }
-    void throwBoomerang();
+    bool isAttacking() const { return m_meleeAttack->isAttacking() || m_downAttack->isAttacking(); }
+
+    void throwBoomerangLeft();
+    void throwBoomerangRight();
     bool boomerangIsFlying() const { return m_boomerang.isFlying(); }
     double getBoomerangCooldownFraction() const { return m_boomerang.getCooldownFraction(); }
 

@@ -28,54 +28,70 @@ bool SPaused::pausedControls(SDL_Event& event)
 {
     if (event.type == SDL_KEYDOWN)
     {
-        switch (event.key.keysym.sym)
+        if (m_currentSelection == NONE && (event.key.keysym.sym == SDLK_w
+            || event.key.keysym.sym == SDLK_s || event.key.keysym.sym == SDLK_UP
+            || event.key.keysym.sym == SDLK_DOWN))
         {
-        case SDLK_w:
-            if (m_currentSelection != RESUME)
+            m_currentSelection = RESUME;
+        }
+
+        else
+        {
+            switch (event.key.keysym.sym)
             {
-                m_currentSelection = static_cast<PausedSelection>(static_cast<int>(m_currentSelection) - 1);
+            case SDLK_w:
+                if (m_currentSelection != RESUME)
+                {
+                    m_currentSelection = static_cast<PausedSelection>(static_cast<int>(m_currentSelection) - 1);
+                }
+                else
+                {
+                    m_currentSelection = QUIT;
+                }
+                return false;
+            case SDLK_UP:
+                if (m_currentSelection != RESUME)
+                {
+                    m_currentSelection = static_cast<PausedSelection>(static_cast<int>(m_currentSelection) - 1);
+                }
+                else
+                {
+                    m_currentSelection = QUIT;
+                }
+                return false;
+            case SDLK_s:
+                if (m_currentSelection != QUIT)
+                {
+                    m_currentSelection = static_cast<PausedSelection>(static_cast<int>(m_currentSelection) + 1);
+                }
+                else
+                {
+                    m_currentSelection = RESUME;
+                }
+                return false;
+            case SDLK_DOWN:
+                if (m_currentSelection != QUIT)
+                {
+                    m_currentSelection = static_cast<PausedSelection>(static_cast<int>(m_currentSelection) + 1);
+                }
+                else
+                {
+                    m_currentSelection = RESUME;
+                }
+                return false;
+            case SDLK_RETURN:
+                if (m_currentSelection != NONE)
+                {
+                    return true;
+                }
+            case SDLK_SPACE:
+                if (m_currentSelection != NONE)
+                {
+                    return true;
+                }
+            default:
+                return false;
             }
-            else
-            {
-                m_currentSelection = QUIT;
-            }
-            return false;
-        case SDLK_UP:
-            if (m_currentSelection != RESUME)
-            {
-                m_currentSelection = static_cast<PausedSelection>(static_cast<int>(m_currentSelection) - 1);
-            }
-            else
-            {
-                m_currentSelection = QUIT;
-            }
-            return false;
-        case SDLK_s:
-            if (m_currentSelection != QUIT)
-            {
-                m_currentSelection = static_cast<PausedSelection>(static_cast<int>(m_currentSelection) + 1);
-            }
-            else
-            {
-                m_currentSelection = RESUME;
-            }
-            return false;
-        case SDLK_DOWN:
-            if (m_currentSelection != QUIT)
-            {
-                m_currentSelection = static_cast<PausedSelection>(static_cast<int>(m_currentSelection) + 1);
-            }
-            else
-            {
-                m_currentSelection = RESUME;
-            }
-            return false;
-        case SDLK_RETURN:
-            return true;
-        case SDLK_SPACE:
-            return true;
-        default:
-            return false;
         }
     }
 
@@ -172,6 +188,7 @@ GameState::State SPaused::update()
         m_settings.deselect();
         m_quit.select();
         break;
+    case NONE:
     default:
         break;
     }

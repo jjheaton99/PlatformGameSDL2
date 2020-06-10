@@ -11,7 +11,8 @@ public:
     {
         RESUME,
         SETTINGS,
-        QUIT
+        QUIT,
+        NONE
     };
 
 private:
@@ -19,7 +20,7 @@ private:
     MenuButton m_settings;
     MenuButton m_quit;
 
-    PausedSelection m_currentSelection{ RESUME };
+    PausedSelection m_currentSelection{ NONE };
 
     TextureObject m_pausedTexture{ "Assets/MiscTextures/paused.png" };
 

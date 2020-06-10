@@ -18,8 +18,6 @@ SPlayGame::SPlayGame(const char* mapFile)
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
-    m_objectManager->newEnemy(GameObject::EnemyType::FLOATING_SKULL, playerxSpawn + 500.0, playerySpawn + 900.0);
-
     /*for (int i{ 0 }; i < 100; ++i)
     {
         m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, playerxSpawn + 500.0 + 1.0 * i, playerySpawn + 500.0 + 1.0 * i);
@@ -123,7 +121,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
         switch (event.key.keysym.sym)
         {
         case SDLK_SPACE:
-            if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isSwingAttacking())
+            if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isAttacking())
             {
                 if (m_player->getMovement() == Player::WALLSLIDE)
                 {
@@ -259,13 +257,6 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
             }
             break;
 
-        case SDLK_f:
-            if (!m_player->boomerangIsFlying())
-            {
-                m_player->throwBoomerang();
-            }
-            break;
-
         default:
             break;
         }
@@ -289,53 +280,50 @@ void SPlayGame::playerControlsMouseClick(SDL_Event& event)
         switch (event.button.button)
         {
         case SDL_BUTTON_LEFT:
-            if (!m_player->isAttacking() && currentKeyState[SDL_SCANCODE_S])
+            if (currentKeyState[SDL_SCANCODE_S])
             {
                 m_player->dodgeCancel();
                 m_player->downAttack();
             }
-            else if (!m_player->isAttacking() && !m_player->isClimbing())
+            else if (!m_player->isClimbing())
             {
                 m_player->dodgeCancel();
                 if (currentKeyState[SDL_SCANCODE_A])
                 {
-                    m_player->stabAttackLeft();
+                    m_player->meleeAttackLeft();
                 }
                 else if (currentKeyState[SDL_SCANCODE_D])
                 {
-                    m_player->stabAttackRight();
+                    m_player->meleeAttackRight();
                 }
                 else if (m_player->isFacingLeft())
                 {
-                    m_player->stabAttackLeft();
+                    m_player->meleeAttackLeft();
                 }
                 else
                 {
-                    m_player->stabAttackRight();
+                    m_player->meleeAttackRight();
                 }
             }
             break;
 
         case SDL_BUTTON_RIGHT:
-            if (!m_player->isAttacking() && !m_player->isClimbing())
+            m_player->dodgeCancel();
+            if (currentKeyState[SDL_SCANCODE_A])
             {
-                m_player->dodgeCancel();
-                if (currentKeyState[SDL_SCANCODE_A])
-                {
-                    m_player->swingAttackLeft();
-                }
-                else if (currentKeyState[SDL_SCANCODE_D])
-                {
-                    m_player->swingAttackRight();
-                }
-                else if (m_player->isFacingLeft())
-                {
-                    m_player->swingAttackLeft();
-                }
-                else
-                {
-                    m_player->swingAttackRight();
-                }
+                m_player->throwBoomerangLeft();
+            }
+            else if (currentKeyState[SDL_SCANCODE_D])
+            {
+                m_player->throwBoomerangRight();
+            }
+            else if (m_player->isFacingLeft())
+            {
+                m_player->throwBoomerangLeft();
+            }
+            else
+            {
+                m_player->throwBoomerangRight();
             }
             break;
 

@@ -155,11 +155,11 @@ void Character::cameraDraw(const Camera& camera) const
             SDL_RenderFillRect(g_renderer, &healthBar);
         }
         //for testing hitbox
-        SDL_SetRenderDrawColor(g_renderer, 255, 255, 0, 255);
+        /*SDL_SetRenderDrawColor(g_renderer, 255, 255, 0, 255);
         SDL_Rect rect;
         rect = { static_cast<int>(m_collider.getHitBox().x - camera.getx()), static_cast<int>(m_collider.getHitBox().y - camera.gety()),
             static_cast<int>(m_collider.getHitBox().w), static_cast<int>(m_collider.getHitBox().h) };
-        SDL_RenderFillRect(g_renderer, &rect);
+        SDL_RenderFillRect(g_renderer, &rect);*/
     }
 }
 

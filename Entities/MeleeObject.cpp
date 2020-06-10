@@ -27,11 +27,11 @@ void MeleeObject::cameraDraw(const Camera& camera) const
             m_texture.draw(m_srcRect, relativeDstRect, m_angle, &rotationPoint, flip);
         }
         //for testing hitbox
-        SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 255);
+        /*SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 255);
         SDL_Rect rect;
         rect = { static_cast<int>(m_collider.getHitBox().x - camera.getx()), static_cast<int>(m_collider.getHitBox().y - camera.gety()),
         static_cast<int>(m_collider.getHitBox().w), static_cast<int>(m_collider.getHitBox().h) };
-        SDL_RenderFillRect(g_renderer, &rect);
+        SDL_RenderFillRect(g_renderer, &rect);*/
     }
 }
 
@@ -60,7 +60,6 @@ bool MeleeObject::collideCheck(std::vector<std::shared_ptr<Character>>& enemies,
             if (m_collider.collideCheck(enemies[i]->getCollider()))
             {
                 hit = true;
-                std::cout << i << "overlap\n";
             }
             else
             {
@@ -69,14 +68,12 @@ bool MeleeObject::collideCheck(std::vector<std::shared_ptr<Character>>& enemies,
                 if (m_collider.sweptAABBCheck(playerVel, enemies[i]->getVel(), sweptCollider).first != Collider::NONE)
                 {
                     hit = true;
-                    std::cout << i << "swept\n";
                 }
             }
 
             if (hit)
             {
                 enemies[i]->removeHP(m_damage);
-                std::cout << i << "damage\n";
                 if (m_facingLeft)
                 {
                     enemies[i]->addVel(-xKnockback, -yKnockback);
@@ -95,14 +92,20 @@ bool MeleeObject::collideCheck(std::vector<std::shared_ptr<Character>>& enemies,
 
 void MeleeObject::attackLeft()
 { 
-    m_facingLeft = true;
-    m_attacking = true; 
+    if (!m_attacking)
+    {
+        m_facingLeft = true;
+        m_attacking = true;
+    }
 }
 
 void MeleeObject::attackRight()
 { 
-    m_facingLeft = false;
-    m_attacking = true; 
+    if (!m_attacking)
+    {
+        m_facingLeft = false;
+        m_attacking = true;
+    }
 }
 
 void MeleeObject::cancel()

@@ -13,6 +13,8 @@ private:
     int m_maxCollisions{ 3 };
     int m_collisionCount{ 0 };
 
+    bool m_throwLeft{ false };
+    bool m_throwRight{ false };
     bool m_flying{ false };
     bool m_returningToPlayer{ false };
     double m_coolDown{ 3.0 };
@@ -43,8 +45,8 @@ public:
     bool isReturning() const { return m_returningToPlayer; }
     bool isFlying() const { return m_flying; }
 
-    void throwLeft(const std::vector<std::shared_ptr<Character>>& enemies);
-    void throwRight(const std::vector<std::shared_ptr<Character>>& enemies);
+    void throwLeft();
+    void throwRight();
 
     double getCooldownFraction() const;
 };

@@ -10,7 +10,8 @@ public:
     enum SettingsSelection
     {
         FULLSCREEN,
-        BACK
+        BACK,
+        NONE
     };
 
 private:
@@ -18,7 +19,7 @@ private:
     MenuButton m_fullscreenOn;
     MenuButton m_back;
 
-    SettingsSelection m_currentSelection{ BACK };
+    SettingsSelection m_currentSelection{ NONE };
 
     int m_buttonWidth;
     int m_buttonHeight;

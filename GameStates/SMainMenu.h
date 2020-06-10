@@ -11,7 +11,8 @@ public:
     {
         PLAY,
         SETTINGS,
-        QUIT
+        QUIT,
+        NONE
     };
 
 private:
@@ -19,7 +20,7 @@ private:
     MenuButton m_settings;
     MenuButton m_quit;
 
-    MenuSelection m_currentSelection{ PLAY };
+    MenuSelection m_currentSelection{ NONE };
 
     int m_buttonWidth;
     int m_buttonHeight;

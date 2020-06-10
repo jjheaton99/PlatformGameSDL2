@@ -11,6 +11,21 @@ PlayerBoomerang::PlayerBoomerang(double xPos, double yPos, double xVel, double y
 
 void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::vector<std::shared_ptr<Character>>& enemies, std::shared_ptr<Character> player)
 {
+    if (m_throwLeft)
+    {
+        m_flying = true;
+        m_throwLeft = false;
+        aquireTargetEnemy(enemies);
+        m_velocity = Vector2D<double>{ -m_maxSpeed, 0.0 };
+    }
+    else if (m_throwRight)
+    {
+        m_flying = true;
+        m_throwRight = false;
+        aquireTargetEnemy(enemies);
+        m_velocity = Vector2D<double>{ m_maxSpeed, 0.0 };
+    }
+
     if (m_flying)
     {
         motion();
@@ -106,6 +121,7 @@ void PlayerBoomerang::returnToPlayer(std::shared_ptr<Character> player)
     m_target = player;
     m_prevTarget.reset();
     m_collisionCount = 0;
+    m_distanceTravelled = 0.0;
 }
 
 bool PlayerBoomerang::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
@@ -252,7 +268,7 @@ void PlayerBoomerang::cameraDraw(const Camera& camera) const
     }
 }
 
-void PlayerBoomerang::throwLeft(const std::vector<std::shared_ptr<Character>>& enemies)
+/*void PlayerBoomerang::throwLeft(const std::vector<std::shared_ptr<Character>>& enemies)
 {
     if (!m_isCooling)
     {
@@ -287,6 +303,22 @@ void PlayerBoomerang::throwRight(const std::vector<std::shared_ptr<Character>>& 
         {
             m_velocity = Vector2D<double>{ m_maxSpeed, 0.0 };
         }
+    }
+}*/
+
+void PlayerBoomerang::throwLeft()
+{
+    if (!m_isCooling && !m_flying)
+    {
+        m_throwLeft = true;
+    }
+}
+
+void PlayerBoomerang::throwRight()
+{
+    if (!m_isCooling && !m_flying)
+    {
+        m_throwRight = true;
     }
 }
 
