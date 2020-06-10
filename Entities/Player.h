@@ -5,7 +5,7 @@
 #include "PlayerSwingAttack.h"
 #include "PlayerStabAttack.h"
 #include "PlayerDownAttack.h"
-//#include "PlayerBoomerang.h"
+#include "PlayerBoomerang.h"
 #include <array>
 #include <cmath>
 #include <cstdint>
@@ -19,8 +19,8 @@ private:
     PlayerSwingAttack m_swingAttack{};
     PlayerStabAttack m_stabAttack{};
     PlayerDownAttack m_downAttack{};
-    //PlayerBoomerang m_boomerang{};
-    //bool m_throwBoomerang{ false };
+    PlayerBoomerang m_boomerang{};
+    bool m_throwBoomerang{ false };
 
     //member variables for controlling dodge timing and animation
     const double m_dodgeDuration{ 0.25 };
@@ -88,9 +88,9 @@ public:
     bool isStabAttacking() const { return m_stabAttack.isAttacking(); }
     bool isDownAttacking() const { return m_downAttack.isAttacking(); }
     bool isAttacking() const { return isSwingAttacking() || isStabAttacking() || isDownAttacking(); }
-    //void throwBoomerang();
-    //bool boomerangIsFlying() const { return m_boomerang.isFlying(); }
-    //double getBoomerangCooldownFraction() const { return m_boomerang.getCooldownFraction(); }
+    void throwBoomerang();
+    bool boomerangIsFlying() const { return m_boomerang.isFlying(); }
+    double getBoomerangCooldownFraction() const { return m_boomerang.getCooldownFraction(); }
 
     bool isFacingLeft() const { return m_facingLeft; }
     

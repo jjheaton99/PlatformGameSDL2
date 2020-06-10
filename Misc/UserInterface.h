@@ -13,7 +13,7 @@ private:
     TextureObject m_hearts{ "Assets/UITextures/hearts.png" };
     void updateHearts();
 
-    //TextureObject m_boomerangCooldown{ "Assets/UITextures/boomerang.png" };
+    TextureObject m_boomerangCooldown{ "Assets/UITextures/boomerang.png" };
     TextureObject m_dodgeCooldown{ "Assets/UITextures/dodge.png" };
 
 public:

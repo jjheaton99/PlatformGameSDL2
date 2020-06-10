@@ -27,7 +27,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     //std::cout << m_hitPoints << '\n';
     if (m_hitPoints <= 0)
     {
-        kill();
+        //kill();
     }
 
     //edge check goes before map collision check to prevent vector subcript error when going off the edge
@@ -143,7 +143,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         setVel(m_velocity.getx(), -30.0);
     }
 
-    /*if (m_throwBoomerang)
+    if (m_throwBoomerang)
     {
         if (m_facingLeft && !m_boomerang.isFlying())
         {
@@ -155,7 +155,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         }
         m_throwBoomerang = false;
     }
-    m_boomerang.update(map, camera, enemies, shared_from_this());*/
+    m_boomerang.update(map, camera, enemies, shared_from_this());
 }
 
 //adjusts velocity of player depending on state of motion
@@ -423,7 +423,7 @@ void Player::cameraDraw(const Camera& camera) const
     m_swingAttack.cameraDraw(camera);
     m_stabAttack.cameraDraw(camera);
     m_downAttack.cameraDraw(camera);
-    //m_boomerang.cameraDraw(camera);
+    m_boomerang.cameraDraw(camera);
 }
 
 void Player::moveCamera(Camera& camera)
@@ -577,13 +577,13 @@ void Player::setCollider()
     }
 }
 
-/*void Player::throwBoomerang() 
+void Player::throwBoomerang() 
 { 
     if (!isAttacking())
     {
         m_throwBoomerang = true;
     }
-}*/
+}
 
 double Player::getDodgeCooldownFraction() const
 {

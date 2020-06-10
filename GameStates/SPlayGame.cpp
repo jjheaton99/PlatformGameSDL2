@@ -259,6 +259,13 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
             }
             break;
 
+        case SDLK_f:
+            if (!m_player->boomerangIsFlying())
+            {
+                m_player->throwBoomerang();
+            }
+            break;
+
         default:
             break;
         }
@@ -330,10 +337,6 @@ void SPlayGame::playerControlsMouseClick(SDL_Event& event)
                     m_player->swingAttackRight();
                 }
             }
-            /*if (!m_player->boomerangIsFlying())
-            {
-                m_player->throwBoomerang();
-            }*/
             break;
 
         default:

@@ -16,6 +16,7 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
         motion();
         m_distanceTravelled += m_velocity.magnitude();
 
+        //for rotating animation
         m_angle += 20.0;
 
         //put enemy collide check before map to ensure it hits
@@ -24,10 +25,7 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
             ++m_collisionCount;
             if (m_collisionCount >= m_maxCollisions)
             {
-                m_returningToPlayer = true;
-                m_target = player;
-                m_prevTarget.reset();
-                m_collisionCount = 0;
+                returnToPlayer(player);
             }
         }
 
@@ -37,12 +35,10 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
             if (sweepMapCollideCheck(map))
             {
                 ++m_collisionCount;
+                m_prevTarget.reset();
                 if (m_collisionCount >= m_maxCollisions)
                 {
-                    m_returningToPlayer = true;
-                    m_target = player;
-                    m_prevTarget.reset();
-                    m_collisionCount = 0;
+                    returnToPlayer(player);
                 }
             }
         }
@@ -50,18 +46,28 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
         //limits distance boomerang can travel
         if (m_distanceTravelled > m_range && !m_returningToPlayer)
         {
-            m_returningToPlayer = true;
-            m_target = player;
-            m_prevTarget.reset();
-            m_collisionCount = 0;
+            returnToPlayer(player);
         }
 
         //when returning needs to collide check with player
         if (m_target.lock() == player)
         {
-            Collider::sweptObstacleTuple sweptCollider{ m_target.lock()->getCollider(), Collider::xOverlap(m_collider, m_target.lock()->getCollider()),
-                Collider::yOverlap(m_collider, m_target.lock()->getCollider()) };
-            if (m_collider.sweptAABBCheck(m_velocity, m_target.lock()->getVel(), sweptCollider).first != Collider::NONE)
+            bool hit{ false };
+            if (m_collider.collideCheck(m_target.lock()->getCollider()))
+            {
+                hit = true;
+            }
+            else
+            {
+                Collider::sweptObstacleTuple sweptCollider{ m_target.lock()->getCollider(), Collider::xOverlap(m_collider, m_target.lock()->getCollider()),
+                    Collider::yOverlap(m_collider, m_target.lock()->getCollider()) };
+                if (m_collider.sweptAABBCheck(m_velocity, m_target.lock()->getVel(), sweptCollider).first != Collider::NONE)
+                {
+                    hit = true;
+                }
+            }
+
+            if (hit)
             {
                 m_flying = false;
                 m_returningToPlayer = false;
@@ -90,6 +96,14 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
             }
         }
     }
+}
+
+void PlayerBoomerang::returnToPlayer(std::shared_ptr<Character> player)
+{
+    m_returningToPlayer = true;
+    m_target = player;
+    m_prevTarget.reset();
+    m_collisionCount = 0;
 }
 
 bool PlayerBoomerang::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
@@ -129,7 +143,7 @@ bool PlayerBoomerang::aquireTargetEnemy(const std::vector<std::shared_ptr<Charac
 
         for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
         {
-            if (enemies[i] && enemies[i] != m_prevTarget.lock())
+            if (enemies[i] && m_prevTarget.lock() != enemies[i])
             {
                 enemyDistance = (enemies[i]->getPos() - m_position).magnitude();
                 if (enemyDistance < closestEnemyDistance)
@@ -160,14 +174,27 @@ bool PlayerBoomerang::enemyCollideCheck(std::vector<std::shared_ptr<Character>>&
     {
         aquireTargetEnemy(enemies);
 
+        bool hit{ false };
         if (m_target.lock())
         {
-            Collider::sweptObstacleTuple sweptCollider{ m_target.lock()->getCollider(), Collider::xOverlap(m_collider, m_target.lock()->getCollider()),
-                Collider::yOverlap(m_collider, m_target.lock()->getCollider()) };
-            if (m_collider.sweptAABBCheck(m_velocity, m_target.lock()->getVel(), sweptCollider).first != Collider::NONE)
+            if (m_collider.collideCheck(m_target.lock()->getCollider()))
+            {
+                hit = true;
+            }
+            else
+            {
+                Collider::sweptObstacleTuple sweptCollider{ m_target.lock()->getCollider(), Collider::xOverlap(m_collider, m_target.lock()->getCollider()),
+                    Collider::yOverlap(m_collider, m_target.lock()->getCollider()) };
+                if (m_collider.sweptAABBCheck(m_velocity, m_target.lock()->getVel(), sweptCollider).first != Collider::NONE)
+                {
+                    hit = true;
+                }
+            }
+
+            if (hit)
             {
                 m_target.lock()->removeHP(m_damage);
-                m_target.lock()->addVel(0.3 * m_velocity);
+                m_target.lock()->addVel(0.5 * m_velocity);
                 m_prevTarget = m_target;
                 m_target.reset();
                 return true;
@@ -183,8 +210,8 @@ void PlayerBoomerang::motion()
     double velMag{};
     if (m_target.lock())
     {
-        Vector2D<double> relPos{ m_target.lock()->getPos() + Vector2D<double>{m_target.lock()->getCollider().getHitBox().w / 2.0 - m_dstRect.w / 2.0, 
-            m_target.lock()->getCollider().getHitBox().h / 2.0 - m_dstRect.h / 2.0} - m_position };
+        Vector2D<double> relPos{ Vector2D<double>{m_target.lock()->getCollider().getHitBox().x, 
+            m_target.lock()->getCollider().getHitBox().y} - m_position };
         scaleFactor = m_acceleration / relPos.magnitude();
         m_velocity.add(scaleFactor * relPos);
         velMag = m_velocity.magnitude();

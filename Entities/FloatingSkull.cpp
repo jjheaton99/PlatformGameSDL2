@@ -77,9 +77,22 @@ void FloatingSkull::update(const std::vector<std::vector<Tile>>& map, const Came
 
 void FloatingSkull::enemyControls(const std::shared_ptr<Character> player)
 {
-    /*Vector2D<double> relPos{ player.getPos() + Vector2D<double>{25, 25} - m_position };
+    Vector2D<double> relPos{ player->getPos() + Vector2D<double>{50, 50} - m_position };
     double scaleFactor{ m_acceleration / relPos.magnitude() };
-    m_velocity.add(scaleFactor * relPos);
+
+    if (relPos.magnitude() > 600.0)
+    {
+        m_velocity.add(scaleFactor * relPos);
+    }
+    else if (relPos.magnitude() < 450.0)
+    {
+        m_velocity.subtract(scaleFactor * relPos);
+    }
+    else
+    {
+        m_velocity.scale(0.8);
+    }
+
     double velMag{ m_velocity.magnitude() };
 
     //remove excess speed
@@ -96,7 +109,7 @@ void FloatingSkull::enemyControls(const std::shared_ptr<Character> player)
     else
     {
         m_facingLeft = true;
-    }*/
+    }
 }
 
 void FloatingSkull::animateSprite()

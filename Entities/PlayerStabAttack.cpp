@@ -1,7 +1,7 @@
 #include "PlayerStabAttack.h"
 
 PlayerStabAttack::PlayerStabAttack(int damage, double xBase, double yBase)
-    : MeleeObject("Assets/Attacks/sword3.png", damage, xBase, yBase, 62.0, 9.0, 0.2)
+    : MeleeObject("Assets/Attacks/sword3.png", damage, xBase, yBase, 62.0, 9.0, 0.16)
 {
     m_srcRect = { 0, 0, 42, 15 };
 

@@ -6,7 +6,8 @@ class Player;
 class FloatingSkull : public FlyingEnemy
 {
 protected:
-    double m_maxSpeed{ 12.0 };
+    double m_acceleration{ 0.1 };
+    double m_maxSpeed{ 6.0 };
 
     int m_projectileCount{ 0 };
 
