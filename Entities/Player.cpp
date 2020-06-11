@@ -707,6 +707,22 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
             switch (result.first)
             {
             case Collider::TOP:
+                if (!yCollision)
+                {
+                    if (m_dodgingLeft || m_dodgingRight)
+                    {
+                        dodgeCancel();
+                    }
+                    tempVel.yScale(result.second);
+                    /*m_velocity.yScale(-1.0);
+                    m_velocity.add(0.0, -5.0);*/
+                    setVel(30.0, 0.0);
+                    m_velocity.rotate(MTRandom::getRandomDouble(250.0, 290.0));
+                    yCollision = true;
+                    removeHP(1);
+                }
+                break;
+
             case Collider::BOTTOM:
                 if (!yCollision)
                 {
@@ -715,14 +731,27 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                         dodgeCancel();
                     }
                     tempVel.yScale(result.second);
-                    m_velocity.yScale(-1.0);
-                    m_velocity.add(0.0, -5.0);
+                    setVel(30.0, 0.0);
+                    m_velocity.rotate(MTRandom::getRandomDouble(70.0, 110.0));
                     yCollision = true;
                     removeHP(1);
                 }
                 break;
 
             case Collider::LEFT:
+                if (!xCollision)
+                {
+                    if (m_dodgingLeft || m_dodgingRight)
+                    {
+                        dodgeCancel();
+                    }
+                    tempVel.xScale(result.second);
+                    setVel(30.0, 0.0);
+                    m_velocity.rotate(MTRandom::getRandomDouble(160.0, 200.0));
+                    xCollision = true;
+                    removeHP(1);
+                }
+                break;
             case Collider::RIGHT:
                 if (!xCollision)
                 {
@@ -731,8 +760,8 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                         dodgeCancel();
                     }
                     tempVel.xScale(result.second);
-                    m_velocity.xScale(-1.0);
-                    m_velocity.add(0.0, -5.0);
+                    setVel(30.0, 0.0);
+                    m_velocity.rotate(MTRandom::getRandomDouble(-20.0, 20.0));
                     xCollision = true;
                     removeHP(1);
                 }

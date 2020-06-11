@@ -23,6 +23,9 @@ FloatingSkull::FloatingSkull(double xStartPos, double yStartPos, double xVel, do
 
     m_dstRect.w = 140;
     m_dstRect.h = 140;
+
+    m_texture.setBlendingMode(SDL_BLENDMODE_BLEND);
+    m_texture.setAlpha(120);
 }
 
 void FloatingSkull::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player)
@@ -90,7 +93,12 @@ void FloatingSkull::enemyControls(const std::shared_ptr<Character> player)
     }
     else
     {
-        m_velocity.scale(0.8);
+        if (MTRandom::getRandomInt(0, 99) < 1)
+        {
+            setVel(m_maxSpeed / 2.0, 0.0);
+            m_velocity.rotate(MTRandom::getRandomDouble(0.0, 360.0));
+        }
+        m_velocity.scale(0.99);
     }
 
     double velMag{ m_velocity.magnitude() };

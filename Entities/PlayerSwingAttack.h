@@ -11,12 +11,13 @@ private:
     MultiCollider m_multiCollider;
 
     double m_updateAngle;
+    bool m_delaying{ true };
 
     void rotateColliders(double angle);
     void resetColliders();
 
 public:
-    PlayerSwingAttack(int damage = 30, double xBasePos = 0, double yBasePos = 0);
+    PlayerSwingAttack(int damage = 40, double xBasePos = 0, double yBasePos = 0);
 
     bool update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel) override;
     bool collideCheck(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel, double xKnockback, double yKnockback) override;

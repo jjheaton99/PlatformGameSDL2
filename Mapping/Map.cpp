@@ -3,6 +3,7 @@
 Map::Map()
 {
     m_tileset->load("Assets/MapTiles/sciFiTiles.png");
+    m_tileset->setBlendingMode(SDL_BLENDMODE_BLEND);
 
     m_spawnPointFactor = Constants::tileSize / 32.0;
 }

@@ -69,7 +69,17 @@ bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies,
         m_dstRect.x = static_cast<int>(m_totalPosition.getx());
         m_dstRect.y = static_cast<int>(m_totalPosition.gety());
 
-        if (m_counter < m_updateCount)
+        if (m_delaying)
+        {
+            m_collider.setPosition(m_totalPosition);
+            if (++m_counter > 5)
+            {
+                m_delaying = false;
+                m_counter = 1;
+            }
+        }
+
+        else if (m_counter < m_updateCount)
         {
             double angle{ m_updateAngle * static_cast<double>(++m_counter) };
             if (m_facingLeft)
@@ -97,8 +107,8 @@ bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies,
         else
         {
             ++m_counter;
-            /*m_collider.setPosition(m_totalPosition);
-            m_multiCollider.setPositions(m_position, m_colliderOffsets);
+            m_collider.setPosition(m_totalPosition);
+            /*m_multiCollider.setPositions(m_position, m_colliderOffsets);
 
             if (collideCheck(enemies, playerVel, 25.0, 5.0))
             {
@@ -108,6 +118,7 @@ bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies,
             if (m_counter > m_updateCount + 7)
             {
                 cancel();
+                m_delaying = true;
             }
         }
     }
