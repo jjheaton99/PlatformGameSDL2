@@ -44,6 +44,7 @@ private:
     double m_wallslideSpeed{ 7.0 };
 
     int m_crouchStepCount{ 0 };
+    bool m_drop{ false };
 
     const double m_iDuration{ 0.25 };
     const int m_iFrames{ static_cast<int>(m_iDuration / Constants::updateStep) };
@@ -93,6 +94,9 @@ public:
     void jumpHigher() { m_jumpingHigher = true; }
     void stopJumpingHigher() { m_jumpingHigher = false; }
     bool isJumpingHigher() { return m_jumpingHigher; }
+
+    bool isCrouched() const { return m_crouched; }
+    void dropThroughPlatform() { m_drop = true; }
 
     void floatLeft();
     void floatRight();

@@ -121,7 +121,12 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
         switch (event.key.keysym.sym)
         {
         case SDLK_SPACE:
-            if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isAttacking())
+            if (m_player->isCrouched())
+            {
+                m_player->dropThroughPlatform();
+            }
+
+            else if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isAttacking())
             {
                 if (m_player->getMovement() == Player::WALLSLIDE)
                 {

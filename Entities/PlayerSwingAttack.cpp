@@ -17,6 +17,7 @@ PlayerSwingAttack::PlayerSwingAttack(int damage, double xBasePos, double yBasePo
             {0, 0, 5, 5},
             {0, 0, 5, 5},
             {0, 0, 5, 5},
+            {0, 0, 5, 5},
             {0, 0, 5, 5}
         }
     };
@@ -32,12 +33,14 @@ void PlayerSwingAttack::rotateColliders(double angle)
 
 void PlayerSwingAttack::resetColliders()
 {
+    double reflect{ static_cast<double>(m_facingLeft ? -1.0 : 1.0) };
     m_colliderOffsets = std::vector<Vector2D<double>>{
-        Vector2D<double>{0, - 40},
-        Vector2D<double>{0, - 65},
-        Vector2D<double>{0, - 90},
-        Vector2D<double>{0, - 115},
-        Vector2D<double>{0, - 140 }
+        Vector2D<double>{reflect * 20.0, - 40},
+        Vector2D<double>{reflect * 25.0, - 65},
+        Vector2D<double>{reflect * 28.0, - 90},
+        Vector2D<double>{reflect * 33.0, - 115},
+        Vector2D<double>{reflect * 30.0, - 140 },
+        Vector2D<double>{reflect * 20.0, - 160 }
     };
 }
 
@@ -72,6 +75,8 @@ bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies,
         if (m_delaying)
         {
             m_collider.setPosition(m_totalPosition);
+            m_multiCollider.setPositions(m_position, m_colliderOffsets);
+
             if (++m_counter > 5)
             {
                 m_delaying = false;
@@ -106,16 +111,15 @@ bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies,
 
         else
         {
-            ++m_counter;
             m_collider.setPosition(m_totalPosition);
-            /*m_multiCollider.setPositions(m_position, m_colliderOffsets);
+            m_multiCollider.setPositions(m_position, m_colliderOffsets);
 
-            if (collideCheck(enemies, playerVel, 25.0, 5.0))
+            /*if (collideCheck(enemies, playerVel, 25.0, 5.0))
             {
                 hit = true;
             }*/
 
-            if (m_counter > m_updateCount + 7)
+            if (++m_counter > m_updateCount + 7)
             {
                 cancel();
                 m_delaying = true;
@@ -156,11 +160,10 @@ bool PlayerSwingAttack::collideCheck(std::vector<std::shared_ptr<Character>>& en
 }
 
 //for testing positions of hitboxes
-/*
-void PlayerSwingAttack::cameraDraw(const Camera& camera) const
+/*void PlayerSwingAttack::cameraDraw(const Camera& camera) const
 {
     SDL_RendererFlip flip{ SDL_FLIP_NONE };
-    if (!m_facingLeft)
+    if (m_facingLeft)
     {
         flip = SDL_FLIP_HORIZONTAL;
     }

@@ -145,7 +145,7 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
         {
             auto result{ m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, sweptCollider) };
 
-            if (result.first == Collider::TOP && !m_crouched && !m_hasCrouched)
+            if (result.first == Collider::TOP)
             {
                 if (!yCollision)
                 {
@@ -166,10 +166,4 @@ bool GroundedCharacter::sweepMapCollideCheck(const std::vector<std::vector<Tile>
     }
 
     return xCollision || yCollision;
-}
-
-void GroundedCharacter::crouch() 
-{ 
-    m_crouched = true;
-    m_hasCrouched = true;
 }

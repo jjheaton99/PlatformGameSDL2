@@ -24,7 +24,6 @@ protected:
     double m_walkAcceleration{ 0 };
     double m_climbSpeed{ 0 };
     bool m_crouched{ false };
-    bool m_hasCrouched{ false };
 
     //tilemap collision handlers
     virtual bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) override;
@@ -49,7 +48,7 @@ public:
     void climbDown() { m_movement = CLIMB_DOWN; }
     bool isClimbing() const { return (m_movement == CLIMB_STOP || m_movement == CLIMB_UP || m_movement == CLIMB_DOWN); }
 
-    void crouch();
+    void crouch() { m_crouched = true; }
     void uncrouch() { m_crouched = false; }
 };
 

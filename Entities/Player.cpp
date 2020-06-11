@@ -17,6 +17,8 @@ Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, con
 
     m_dstRect.w = 100;
     m_dstRect.h = 100;
+
+    m_texture.setBlendingMode(SDL_BLENDMODE_BLEND);
 }
 
 Player::~Player()
@@ -110,12 +112,12 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         }
     }
 
-    if (m_hasCrouched)
+    if (m_drop)
     {
         ++m_crouchStepCount;
         if (m_crouchStepCount > static_cast<int>(std::sqrt((2 * Constants::tileSize) / Constants::g)))
         {
-            m_hasCrouched = false;
+            m_drop = false;
             m_crouchStepCount = 0;
         }
     }
@@ -141,23 +143,20 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     }
 
     m_boomerang.update(map, camera, enemies, shared_from_this());
+
+    if (isInvincible())
+    {
+        m_texture.setAlpha(120);
+    }
+    else
+    {
+        m_texture.setAlpha(255);
+    }
 }
 
 //adjusts velocity of player depending on state of motion
 void Player::motion()
 {
-    if (m_crouched)
-    {
-        m_movement = AIRBORNE;
-        m_velocity.xScale(0.8);
-        {
-            if (std::abs(m_velocity.getx()) < 0.0001)
-            {
-                m_velocity.xScale(0);
-            }
-        }
-    }
-
     double fallAccel;
     if (m_velocity.gety() > 0)
     {
@@ -300,6 +299,12 @@ void Player::motion()
 
     default:
         break;
+    }
+
+    if (m_crouched)
+    {
+        m_movement = AIRBORNE;
+        m_velocity.xScale(0.95);
     }
 
     m_floatingLeft = false;
@@ -679,7 +684,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
         {
             auto result{ m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, sweptCollider) };
 
-            if (result.first == Collider::TOP && !m_crouched && !m_hasCrouched)
+            if (result.first == Collider::TOP && !m_drop)
             {
                 if (!yCollision)
                 {
@@ -703,6 +708,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
         if (!xCollision || !yCollision)
         {
             auto result(m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, sweptCollider));
+            double recoilVel{ 10.0 };
 
             switch (result.first)
             {
@@ -716,7 +722,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                     tempVel.yScale(result.second);
                     /*m_velocity.yScale(-1.0);
                     m_velocity.add(0.0, -5.0);*/
-                    setVel(30.0, 0.0);
+                    setVel(2.5 * recoilVel, 0.0);
                     m_velocity.rotate(MTRandom::getRandomDouble(250.0, 290.0));
                     yCollision = true;
                     removeHP(1);
@@ -731,7 +737,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                         dodgeCancel();
                     }
                     tempVel.yScale(result.second);
-                    setVel(30.0, 0.0);
+                    setVel(recoilVel / 3.0, 0.0);
                     m_velocity.rotate(MTRandom::getRandomDouble(70.0, 110.0));
                     yCollision = true;
                     removeHP(1);
@@ -746,7 +752,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                         dodgeCancel();
                     }
                     tempVel.xScale(result.second);
-                    setVel(30.0, 0.0);
+                    setVel(recoilVel, 0.0);
                     m_velocity.rotate(MTRandom::getRandomDouble(160.0, 200.0));
                     xCollision = true;
                     removeHP(1);
@@ -760,7 +766,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                         dodgeCancel();
                     }
                     tempVel.xScale(result.second);
-                    setVel(30.0, 0.0);
+                    setVel(recoilVel, 0.0);
                     m_velocity.rotate(MTRandom::getRandomDouble(-20.0, 20.0));
                     xCollision = true;
                     removeHP(1);
