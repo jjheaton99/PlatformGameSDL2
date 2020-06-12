@@ -14,6 +14,7 @@ public:
     enum class EnemyType
     {
         SLIME,
+        SPIDER,
         BAT,
         FLOATING_SKULL,
         MAX_ENEMIES

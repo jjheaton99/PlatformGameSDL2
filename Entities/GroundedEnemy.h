@@ -16,9 +16,6 @@ protected:
     //for animating jumping and landing
     bool m_jumped{ false };
     bool m_landed{ false };
-    virtual void cycleWalkAnimation() = 0;
-    virtual void cycleJumpAnimation() = 0;
-    virtual void cycleLandAnimation() = 0;
 
     virtual void enemyControls(std::shared_ptr<Character> player) = 0;
     virtual void motion() override;

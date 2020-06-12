@@ -17,6 +17,7 @@ protected:
     int m_animationStep{ 0 };
     std::vector<SDL_Rect> m_spriteRects;
     std::vector<SDL_Rect>::size_type m_spriteIndex{ 0 };
+    double m_angle{ 0.0 };
 
     bool m_dead{ false };
 

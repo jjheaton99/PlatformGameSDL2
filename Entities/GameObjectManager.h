@@ -7,6 +7,7 @@
 #include "FlyingEnemy.h"
 #include "Player.h"
 #include "Slime.h"
+#include "Spider.h"
 #include "Bat.h"
 #include "FloatingSkull.h"
 #include "Projectile.h"

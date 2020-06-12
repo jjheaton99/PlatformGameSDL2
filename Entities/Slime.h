@@ -10,9 +10,9 @@ protected:
     void enemyControls(std::shared_ptr<Character> player) override;
 
     void animateSprite() override;
-    void cycleWalkAnimation() override;
-    void cycleJumpAnimation() override;
-    void cycleLandAnimation() override;
+    void cycleWalkAnimation();
+    void cycleJumpAnimation();
+    void cycleLandAnimation();
 
     void setCollider() override { m_collider.setPosition(m_position.getx() + 15.0, m_position.gety() + 15.0); }
     

@@ -107,7 +107,7 @@ void Character::cameraDraw(const Camera& camera) const
         }
 
         SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
-        m_texture.draw(m_srcRect, relativeDstRect, 0, nullptr, flip);
+        m_texture.draw(m_srcRect, relativeDstRect, m_angle, nullptr, flip);
 
         //for drawing health bar
         if (m_hitPoints < m_maxHitPoints)

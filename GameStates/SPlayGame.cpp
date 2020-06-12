@@ -18,11 +18,7 @@ SPlayGame::SPlayGame(const char* mapFile)
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
-    /*for (int i{ 0 }; i < 100; ++i)
-    {
-        m_objectManager->newEnemy(GameObjectManager::Enemy::SLIME, playerxSpawn + 500.0 + 1.0 * i, playerySpawn + 500.0 + 1.0 * i);
-        m_objectManager->newEnemy(GameObjectManager::Enemy::BAT, playerxSpawn - 500.0 - 1.0 * i, playerySpawn - 500.0 - 1.0 * i);
-    }*/
+    //m_objectManager->newEnemy(GameObject::EnemyType::SPIDER, playerxSpawn + 500.0, playerySpawn + 500.0);
 }
 
 SPlayGame::~SPlayGame()
@@ -31,6 +27,15 @@ SPlayGame::~SPlayGame()
 void SPlayGame::playerControlsKeyHold()
 {
     const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
+
+    if (m_player->isJumpingHigher() && currentKeyState[SDL_SCANCODE_SPACE])
+    {
+        m_player->jumpHigher();
+    }
+    else
+    {
+        m_player->stopJumpingHigher();
+    }
 
     if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isClimbing() && !(m_player->getMovement() == Player::WALLSLIDE))
     {
@@ -264,14 +269,6 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
 
         default:
             break;
-        }
-    }
-
-    if (event.type == SDL_KEYUP)
-    {
-        if (event.key.keysym.sym == SDLK_SPACE && m_player->isJumpingHigher())
-        {
-            m_player->stopJumpingHigher();
         }
     }
 }

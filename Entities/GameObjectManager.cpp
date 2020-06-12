@@ -57,6 +57,9 @@ void GameObjectManager::newEnemy(GameObject::EnemyType type, double xPos, double
     case GameObject::EnemyType::SLIME:
         m_enemies.push_back(std::make_shared<Slime>(xPos, yPos));
         break;
+    case GameObject::EnemyType::SPIDER:
+        m_enemies.push_back(std::make_shared<Spider>(xPos, yPos));
+        break;
     case GameObject::EnemyType::BAT:
         m_enemies.push_back(std::make_shared<Bat>(xPos, yPos));
         break;
@@ -72,16 +75,37 @@ void GameObjectManager::newRandomEnemy(double xPos, double yPos)
 {
     GameObject::EnemyType type{ static_cast<GameObject::EnemyType>(MTRandom::getRandomInt(0, static_cast<int>(GameObject::EnemyType::MAX_ENEMIES) - 1)) };
     
-    switch (type)
+    /*switch (type)
     {
     case GameObject::EnemyType::SLIME:
         m_enemies.push_back(std::make_shared<Slime>(xPos, yPos));
+        break;
+    case GameObject::EnemyType::SPIDER:
+        m_enemies.push_back(std::make_shared<Spider>(xPos, yPos));
         break;
     case GameObject::EnemyType::BAT:
         m_enemies.push_back(std::make_shared<Bat>(xPos, yPos));
         break;
     case GameObject::EnemyType::FLOATING_SKULL:
         m_enemies.push_back(std::make_shared<FloatingSkull>(xPos, yPos));
+        break;
+    default:
+        break;
+    }*/
+
+    switch (type)
+    {
+    case GameObject::EnemyType::SLIME:
+        m_enemies.push_back(std::make_shared<Spider>(xPos, yPos));
+        break;
+    case GameObject::EnemyType::SPIDER:
+        m_enemies.push_back(std::make_shared<Spider>(xPos, yPos));
+        break;
+    case GameObject::EnemyType::BAT:
+        m_enemies.push_back(std::make_shared<Spider>(xPos, yPos));
+        break;
+    case GameObject::EnemyType::FLOATING_SKULL:
+        m_enemies.push_back(std::make_shared<Spider>(xPos, yPos));
         break;
     default:
         break;
