@@ -24,7 +24,7 @@ protected:
 
 public:
     Spider(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/Enemies/spider.png",
-        int colliderWidth = 50, int colliderHeight = 30, int hitPoints = 20, int spriteSheetCount = 11, int damage = 1);
+        double colliderWidth = 50, double colliderHeight = 30, int hitPoints = 20, int spriteSheetCount = 11, int damage = 1);
 
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player) override;
 };

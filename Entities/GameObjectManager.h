@@ -11,6 +11,7 @@
 #include "Bat.h"
 #include "FloatingSkull.h"
 #include "Projectile.h"
+#include "SpiderShot.h"
 #include "FloatingSkullShot.h"
 #include <vector>
 #include <memory>
@@ -29,7 +30,8 @@ public:
     ~GameObjectManager();
 
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player);
-    void cameraDraw(const Camera& camera) const;
+    void cameraDrawEnemies(const Camera& camera) const;
+    void cameraDrawProjectiles(const Camera& camera) const;
 
     void newEnemy(GameObject::EnemyType type, double xPos, double yPos);
     void newRandomEnemy(double xPos, double yPos);

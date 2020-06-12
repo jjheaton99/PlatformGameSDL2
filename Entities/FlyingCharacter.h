@@ -11,7 +11,7 @@ protected:
 
 public:
     FlyingCharacter(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, 
-        double yVel = 0, int colliderWidth = 0, int colliderHeight = 0, int hitPoints = 0, int spriteSheetCount = 1);
+        double yVel = 0, double colliderWidth = 0, double colliderHeight = 0, int hitPoints = 0, int spriteSheetCount = 1);
     virtual ~FlyingCharacter();
 };
 

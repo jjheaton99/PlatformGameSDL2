@@ -10,6 +10,7 @@ class TextureObject
 protected:
     //double position vector used for precision over int
     Vector2D<double> m_position;
+    double m_angle{ 0.0 };
 
     WTexture m_texture;
     SDL_Rect m_srcRect;

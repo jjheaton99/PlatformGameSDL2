@@ -1,6 +1,6 @@
 #include "Character.h"
 
-Character::Character(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints, int spriteSheetCount)
+Character::Character(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, double colliderWidth, double colliderHeight, int hitPoints, int spriteSheetCount)
     : GameObject(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight), m_maxHitPoints{ hitPoints }, m_spriteSheetCount{ spriteSheetCount }
 {
     m_hitPoints = m_maxHitPoints;

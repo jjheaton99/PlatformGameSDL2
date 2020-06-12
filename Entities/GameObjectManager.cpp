@@ -33,7 +33,7 @@ void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const 
     }
 }
 
-void GameObjectManager::cameraDraw(const Camera& camera) const
+void GameObjectManager::cameraDrawEnemies(const Camera& camera) const
 {
     for (auto& enemy : m_enemies)
     {
@@ -42,7 +42,10 @@ void GameObjectManager::cameraDraw(const Camera& camera) const
             enemy->cameraDraw(camera);
         }
     }
+}
 
+void GameObjectManager::cameraDrawProjectiles(const Camera& camera) const
+{
     for (auto& projectile : m_projectiles)
     {
         projectile->cameraDraw(camera);
@@ -116,7 +119,10 @@ void GameObjectManager::newProjectile(GameObject::ProjectileType type, std::shar
 {
     switch (type)
     {
-    case GameObject::ProjectileType::SKULL_PROJECTILE:
+    case GameObject::ProjectileType::SPIDER:
+        m_projectiles.push_back(std::make_unique<SpiderShot>(enemy, player));
+        break;
+    case GameObject::ProjectileType::SKULL:
         m_projectiles.push_back(std::make_unique<FloatingSkullShot>(enemy, player));
         break;
     case GameObject::ProjectileType::NONE:

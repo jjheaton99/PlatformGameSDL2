@@ -1,7 +1,7 @@
 #include "Spider.h"
 #include "Player.h"
 
-Spider::Spider(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int colliderWidth, int colliderHeight, int hitPoints, int spriteSheetCount, int damage)
+Spider::Spider(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, double colliderWidth, double colliderHeight, int hitPoints, int spriteSheetCount, int damage)
     : GroundedEnemy(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, spriteSheetCount, damage)
 {
     for (int i{ 0 }; i < m_spriteSheetCount; ++i)
@@ -61,6 +61,16 @@ void Spider::update(const std::vector<std::vector<Tile>>& map, const Camera& cam
         motion();
         animateSprite();
         cycleDamageFlash();
+
+        if (m_projectile == ProjectileType::SPIDER)
+        {
+            m_projectile = ProjectileType::NONE;
+        }
+        if (++m_projectileCount > 100)
+        {
+            m_projectileCount = 0;
+            m_projectile = ProjectileType::SPIDER;
+        }
     }
 }
 

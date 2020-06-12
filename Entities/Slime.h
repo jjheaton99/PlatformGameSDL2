@@ -18,6 +18,6 @@ protected:
     
 public:
     Slime(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/Enemies/slime.png", 
-        int colliderWidth = 70, int colliderHeight = 60, int hitPoints = 100, int spriteSheetCount = 19, int damage = 1);
+        double colliderWidth = 70, double colliderHeight = 60, int hitPoints = 100, int spriteSheetCount = 19, int damage = 1);
 };
 

@@ -39,6 +39,7 @@
     <ClCompile Include="Entities\Projectile.cpp" />
     <ClCompile Include="Entities\Slime.cpp" />
     <ClCompile Include="Entities\Spider.cpp" />
+    <ClCompile Include="Entities\SpiderShot.cpp" />
     <ClCompile Include="Entities\TextureObject.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameStates\SGameOver.cpp" />
@@ -84,6 +85,7 @@
     <ClInclude Include="Entities\Projectile.h" />
     <ClInclude Include="Entities\Slime.h" />
     <ClInclude Include="Entities\Spider.h" />
+    <ClInclude Include="Entities\SpiderShot.h" />
     <ClInclude Include="Entities\TextureObject.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameStates\GameState.h" />

@@ -1,7 +1,7 @@
 #include "FloatingSkull.h"
 #include "Player.h"
 
-FloatingSkull::FloatingSkull(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int colliderWidth, int colliderHeight, int hitPoints, int spriteSheetCount, int damage)
+FloatingSkull::FloatingSkull(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, double colliderWidth, double colliderHeight, int hitPoints, int spriteSheetCount, int damage)
     : FlyingEnemy(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, spriteSheetCount, damage)
 {
     m_spriteRects.push_back({ 0, 0, 40, 40 });
@@ -66,14 +66,14 @@ void FloatingSkull::update(const std::vector<std::vector<Tile>>& map, const Came
         animateSprite();
         cycleDamageFlash();
 
-        if (m_projectile == ProjectileType::SKULL_PROJECTILE)
+        if (m_projectile == ProjectileType::SKULL)
         {
             m_projectile = ProjectileType::NONE;
         }
         if (++m_projectileCount > 150)
         {
             m_projectileCount = 0;
-            m_projectile = ProjectileType::SKULL_PROJECTILE;
+            m_projectile = ProjectileType::SKULL;
         }
     }
 }

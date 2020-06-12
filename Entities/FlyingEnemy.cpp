@@ -1,7 +1,7 @@
 #include "FlyingEnemy.h"
 #include "Player.h"
 
-FlyingEnemy::FlyingEnemy(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints, int spriteSheetCount, int damage)
+FlyingEnemy::FlyingEnemy(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, double colliderWidth, double colliderHeight, int hitPoints, int spriteSheetCount, int damage)
     : FlyingCharacter(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, spriteSheetCount), m_damage{ damage }
 {}
 

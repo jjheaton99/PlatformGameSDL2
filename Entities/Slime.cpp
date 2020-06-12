@@ -1,7 +1,7 @@
 #include "Slime.h"
 #include "Player.h"
 
-Slime::Slime(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int colliderWidth, int colliderHeight, int hitPoints, int spriteSheetCount, int damage)
+Slime::Slime(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, double colliderWidth, double colliderHeight, int hitPoints, int spriteSheetCount, int damage)
     : GroundedEnemy(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, spriteSheetCount, damage)
 {
     for (int i{ 0 }; i < m_spriteSheetCount; ++i)

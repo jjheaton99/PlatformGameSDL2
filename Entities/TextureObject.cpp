@@ -15,7 +15,7 @@ TextureObject::~TextureObject()
 
 void TextureObject::draw() const
 {
-    m_texture.draw(m_srcRect, m_dstRect, 0, nullptr, SDL_FLIP_NONE);
+    m_texture.draw(m_srcRect, m_dstRect, m_angle, nullptr, SDL_FLIP_NONE);
 }
 
 void TextureObject::destroy()

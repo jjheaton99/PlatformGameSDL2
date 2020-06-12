@@ -436,8 +436,9 @@ GameState::State SPlayGame::update()
 void SPlayGame::render()
 {
     m_map->drawMap(m_camera);
-    m_objectManager->cameraDraw(m_camera);
+    m_objectManager->cameraDrawEnemies(m_camera);
     m_player->cameraDraw(m_camera);
+    m_objectManager->cameraDrawProjectiles(m_camera);
     m_UI.draw();
 }
 

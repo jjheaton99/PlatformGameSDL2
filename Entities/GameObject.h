@@ -23,7 +23,8 @@ public:
 public:
     enum class ProjectileType
     {
-        SKULL_PROJECTILE,
+        SPIDER,
+        SKULL,
         NONE
     };
 

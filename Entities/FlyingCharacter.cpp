@@ -1,7 +1,7 @@
 #include "FlyingCharacter.h"
 
 
-FlyingCharacter::FlyingCharacter(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, int colliderWidth, int colliderHeight, int hitPoints, int spriteSheetCount)
+FlyingCharacter::FlyingCharacter(const char* fileName, double xStartPos, double yStartPos, double xVel, double yVel, double colliderWidth, double colliderHeight, int hitPoints, int spriteSheetCount)
     : Character(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, spriteSheetCount)
 {}
 

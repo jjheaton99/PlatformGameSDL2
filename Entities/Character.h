@@ -17,7 +17,6 @@ protected:
     int m_animationStep{ 0 };
     std::vector<SDL_Rect> m_spriteRects;
     std::vector<SDL_Rect>::size_type m_spriteIndex{ 0 };
-    double m_angle{ 0.0 };
 
     bool m_dead{ false };
 
@@ -52,7 +51,7 @@ protected:
 
 public:
     Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, 
-        int colliderWidth = 0, int colliderHeight = 0, int hitPoints = 0, int spriteSheetCount = 1);
+        double colliderWidth = 0, double colliderHeight = 0, int hitPoints = 0, int spriteSheetCount = 1);
     virtual ~Character();
 
     //for enemies
