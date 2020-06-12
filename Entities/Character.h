@@ -25,7 +25,7 @@ protected:
 
     bool m_facingLeft{ false };
 
-    const int m_maxHitPoints;
+    int m_maxHitPoints;
     int m_hitPoints;
 
     int m_damageFlashCount{ 6 };
@@ -60,6 +60,7 @@ public:
 
     void addHP(int HP) { m_hitPoints += HP; }
     virtual void removeHP(int HP);
+    int getMaxHP() const { return m_maxHitPoints; }
     int getHP() const { return m_hitPoints; }
 
     bool isDead() const { return m_dead; }

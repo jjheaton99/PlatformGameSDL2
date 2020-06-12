@@ -21,7 +21,7 @@ private:
     void setCollider() override { m_collider.setPosition(m_position.getx() + 33.33, m_position.gety() + 33.33); }
 
 public:
-    SpiderShot(std::shared_ptr<Character> spider, std::shared_ptr<Character> player);
+    SpiderShot(std::shared_ptr<Character> spider, std::shared_ptr<Player> player);
 
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera) override;
 };

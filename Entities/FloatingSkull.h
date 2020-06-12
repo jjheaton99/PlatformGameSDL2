@@ -16,7 +16,7 @@ protected:
 
 public:
     FloatingSkull(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, const char* fileName = "Assets/Enemies/skull.png",
-        double colliderWidth = 40, double colliderHeight = 40, int hitPoints = 40, int spriteSheetCount = 16, int damage = 1);
+        double colliderWidth = 40, double colliderHeight = 40, int hitPoints = 40, int spriteSheetCount = 16, int damage = 0);
 
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player);
 };

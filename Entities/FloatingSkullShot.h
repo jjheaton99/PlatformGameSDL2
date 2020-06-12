@@ -1,7 +1,6 @@
 #pragma once
-#include "EnemyProjectile.h"
 
-class Player;
+#include "EnemyProjectile.h"
 
 class FloatingSkullShot : public EnemyProjectile
 {
@@ -13,6 +12,6 @@ private:
     void motion() override;
 
 public:
-    FloatingSkullShot(std::shared_ptr<Character> skull, std::shared_ptr<Character> player);
+    FloatingSkullShot(std::shared_ptr<Character> skull, std::shared_ptr<Player> player);
 };
 

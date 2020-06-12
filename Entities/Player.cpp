@@ -52,6 +52,18 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     m_dstRect.y = static_cast<int>(m_position.gety());
 
     motion();
+
+    if (m_slowDebuff)
+    {
+        m_texture.setColour(50, 50, 50);
+        m_velocity.scale(0.7);
+        if (++m_slowDebuffCount > 60)
+        {
+            m_texture.setColour(255, 255, 255);
+            m_slowDebuff = false;
+        }
+    }
+
     animateSprite();
     moveCamera(camera);
     cycleDamageFlash();
@@ -709,6 +721,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
         {
             auto result(m_collider.sweptAABBCheck(m_velocity, Vector2D<double>{0.0, 0.0}, sweptCollider));
             double recoilVel{ 10.0 };
+            int spikeDamage{ 10 };
 
             switch (result.first)
             {
@@ -725,7 +738,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                     setVel(2.5 * recoilVel, 0.0);
                     m_velocity.rotate(MTRandom::getRandomDouble(250.0, 290.0));
                     yCollision = true;
-                    removeHP(1);
+                    removeHP(spikeDamage);
                 }
                 break;
 
@@ -740,7 +753,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                     setVel(recoilVel / 3.0, 0.0);
                     m_velocity.rotate(MTRandom::getRandomDouble(70.0, 110.0));
                     yCollision = true;
-                    removeHP(1);
+                    removeHP(spikeDamage);
                 }
                 break;
 
@@ -755,7 +768,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                     setVel(recoilVel, 0.0);
                     m_velocity.rotate(MTRandom::getRandomDouble(160.0, 200.0));
                     xCollision = true;
-                    removeHP(1);
+                    removeHP(spikeDamage);
                 }
                 break;
             case Collider::RIGHT:
@@ -769,7 +782,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                     setVel(recoilVel, 0.0);
                     m_velocity.rotate(MTRandom::getRandomDouble(-20.0, 20.0));
                     xCollision = true;
-                    removeHP(1);
+                    removeHP(spikeDamage);
                 }
                 break;
 

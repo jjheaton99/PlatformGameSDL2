@@ -23,13 +23,13 @@ private:
     std::vector<std::shared_ptr<Character>> m_enemies{};
     std::vector<std::unique_ptr<Projectile>> m_projectiles{};
 
-    void newProjectile(GameObject::ProjectileType type, std::shared_ptr<Character> enemy, std::shared_ptr<Character> player);
+    void newProjectile(GameObject::ProjectileType type, std::shared_ptr<Character> enemy, std::shared_ptr<Player> player);
 
 public:
     GameObjectManager();
     ~GameObjectManager();
 
-    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player);
+    void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Player> player);
     void cameraDrawEnemies(const Camera& camera) const;
     void cameraDrawProjectiles(const Camera& camera) const;
 

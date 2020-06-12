@@ -1,6 +1,7 @@
 #include "EnemyProjectile.h"
+#include "Player.h"
 
-EnemyProjectile::EnemyProjectile(std::shared_ptr<Character> enemy, Vector2D<double> relStartPos, std::shared_ptr<Character> player, 
+EnemyProjectile::EnemyProjectile(std::shared_ptr<Character> enemy, Vector2D<double> relStartPos, std::shared_ptr<Player> player, 
     double xVel, double yVel, double colliderWidth, double colliderHeight, int damage, const char* fileName)
     : Projectile(fileName, enemy->getPos().getx() + relStartPos.getx(), enemy->getPos().gety() + relStartPos.gety(), xVel, yVel, colliderWidth, colliderHeight, damage)
 {
@@ -19,7 +20,7 @@ void EnemyProjectile::update(const std::vector<std::vector<Tile>>& map, const Ca
     else if (playerCollideCheck())
     {
         m_terminated = true;
-        m_player.lock()->removeHP(m_damage);
+        m_player->removeHP(m_damage);
     }
 
     m_position.add(m_velocity);
@@ -31,16 +32,16 @@ void EnemyProjectile::update(const std::vector<std::vector<Tile>>& map, const Ca
 
 bool EnemyProjectile::playerCollideCheck()
 {
-    if (m_collider.collideCheck(m_player.lock()->getCollider()))
+    if (m_collider.collideCheck(m_player->getCollider()))
     {
         return true;
     }
     else
     {
-        double xOverlap{ Collider::xOverlap(m_collider, m_player.lock()->getCollider()) };
-        double yOverlap{ Collider::yOverlap(m_collider, m_player.lock()->getCollider()) };
-        Collider::sweptObstacleTuple sweptCollider{ m_player.lock()->getCollider(), xOverlap, yOverlap };
-        if (m_collider.sweptAABBCheck(m_velocity, m_player.lock()->getVel(), sweptCollider).first != Collider::NONE)
+        double xOverlap{ Collider::xOverlap(m_collider, m_player->getCollider()) };
+        double yOverlap{ Collider::yOverlap(m_collider, m_player->getCollider()) };
+        Collider::sweptObstacleTuple sweptCollider{ m_player->getCollider(), xOverlap, yOverlap };
+        if (m_collider.sweptAABBCheck(m_velocity, m_player->getVel(), sweptCollider).first != Collider::NONE)
         {
             return true;
         }

@@ -1,8 +1,8 @@
 #include "SpiderShot.h"
 #include "Player.h"
 
-SpiderShot::SpiderShot(std::shared_ptr<Character> spider, std::shared_ptr<Character> player)
-    : EnemyProjectile(spider, Vector2D<double>{-15.0, -15.0}, player, 0.0, 0.0, 13.33, 13.33, 1, "Assets/Projectiles/spiderShot.png")
+SpiderShot::SpiderShot(std::shared_ptr<Character> spider, std::shared_ptr<Player> player)
+    : EnemyProjectile(spider, Vector2D<double>{-15.0, -15.0}, player, 0.0, 0.0, 13.33, 13.33, 8, "Assets/Projectiles/spiderShot.png")
 {
     for (int i{ 0 }; i < m_spriteSheetCount; ++i)
     {
@@ -31,7 +31,7 @@ void SpiderShot::update(const std::vector<std::vector<Tile>>& map, const Camera&
         else if (playerCollideCheck())
         {
             m_collidedPlayer = true;
-            m_player.lock()->removeHP(m_damage);
+            m_player->removeHP(m_damage);
         }
 
         m_position.add(m_velocity);
@@ -40,7 +40,8 @@ void SpiderShot::update(const std::vector<std::vector<Tile>>& map, const Camera&
 
     else if (m_collidedPlayer)
     {
-        m_position = m_player.lock()->getPos() + Vector2D<double>{10.0, 20.0};
+        m_position = m_player->getPos() + Vector2D<double>{10.0, 20.0};
+        m_player->inflictSlow();
     }
 
     m_dstRect.x = static_cast<int>(m_position.getx());
