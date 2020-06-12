@@ -12,7 +12,8 @@ private:
 
     const double m_speed{ 20.0 };
 
-    bool m_collided{ false };
+    bool m_collidedMap{ false };
+    bool m_collidedPlayer{ false };
     void animateShot();
 
     void motion() override {};

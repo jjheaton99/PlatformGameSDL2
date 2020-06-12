@@ -7,7 +7,7 @@ class Player;
 class Spider : public GroundedEnemy
 {
 protected:
-    double m_runAwayRange{ 450.0 };
+    double m_runAwayRange{ MTRandom::getRandomDouble(400.0, 600.0) };
 
     void enemyControls(std::shared_ptr<Character> player) override;
 

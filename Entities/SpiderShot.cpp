@@ -21,16 +21,16 @@ SpiderShot::SpiderShot(std::shared_ptr<Character> spider, std::shared_ptr<Charac
 
 void SpiderShot::update(const std::vector<std::vector<Tile>>& map, const Camera& camera)
 {
-    if (!m_collided)
+    if (!m_collidedMap && !m_collidedPlayer)
     {
         if (sweepMapCollideCheck(map))
         {
-            m_collided = true;
+            m_collidedMap = true;
         }
 
         else if (playerCollideCheck())
         {
-            m_collided = true;
+            m_collidedPlayer = true;
             m_player.lock()->removeHP(m_damage);
         }
 
@@ -38,7 +38,7 @@ void SpiderShot::update(const std::vector<std::vector<Tile>>& map, const Camera&
         setCollider();
     }
 
-    else
+    else if (m_collidedPlayer)
     {
         m_position = m_player.lock()->getPos() + Vector2D<double>{10.0, 20.0};
     }
@@ -51,7 +51,7 @@ void SpiderShot::update(const std::vector<std::vector<Tile>>& map, const Camera&
 
 void SpiderShot::animateShot()
 {
-    if (m_collided)
+    if (m_collidedMap || m_collidedPlayer)
     {
         ++m_animationStep;
         if (m_animationStep >= 6)
