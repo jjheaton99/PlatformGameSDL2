@@ -59,6 +59,7 @@
     <ClCompile Include="Misc\MenuButton.cpp" />
     <ClCompile Include="Misc\MultiCollider.cpp" />
     <ClCompile Include="Misc\Random.cpp" />
+    <ClCompile Include="Misc\SoundEffect.cpp" />
     <ClCompile Include="Misc\UserInterface.cpp" />
     <ClCompile Include="Wrappers\WTexture.cpp" />
     <ClCompile Include="Wrappers\WTimer.cpp" />
@@ -105,6 +106,7 @@
     <ClInclude Include="Misc\MenuButton.h" />
     <ClInclude Include="Misc\MultiCollider.h" />
     <ClInclude Include="Misc\Random.h" />
+    <ClInclude Include="Misc\SoundEffect.h" />
     <ClInclude Include="Misc\UserInterface.h" />
     <ClInclude Include="Misc\Vector2D.h" />
     <ClInclude Include="Wrappers\WTexture.h" />

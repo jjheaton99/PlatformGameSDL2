@@ -147,6 +147,9 @@
     <ClCompile Include="Entities\SpiderShot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Misc\SoundEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -282,6 +285,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Entities\SpiderShot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Misc\SoundEffect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

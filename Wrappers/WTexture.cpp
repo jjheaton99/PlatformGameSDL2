@@ -16,7 +16,7 @@ void WTexture::load(std::string fileName)
     SDL_Surface* tmpSurface{ IMG_Load(fileName.c_str()) };
     if (tmpSurface == nullptr)
     {
-        std::cout << "Unable to load image! SDL_Error: " << SDL_GetError() << '\n';
+        std::cout << "Unable to load image! IMG_Error: " << IMG_GetError() << '\n';
     }
 
     m_texture = SDL_CreateTextureFromSurface(g_renderer, tmpSurface);
@@ -38,12 +38,15 @@ void WTexture::loadText(std::string text, SDL_Color textColour)
         std::cout << "Unable to load text! SDL_Error: " << SDL_GetError() << '\n';
     }
 
-    m_texture = SDL_CreateTextureFromSurface(g_renderer, textSurface);
-    m_textDimensions.x = textSurface->w;
-    m_textDimensions.y = textSurface->h;
-    SDL_FreeSurface(textSurface);
+    else
+    {
+        m_texture = SDL_CreateTextureFromSurface(g_renderer, textSurface);
+        m_textDimensions.x = textSurface->w;
+        m_textDimensions.y = textSurface->h;
+        SDL_FreeSurface(textSurface);
 
-    m_text = true;
+        m_text = true;
+    }
 }
 
 void WTexture::draw(const SDL_Rect& srcRect, const SDL_Rect& dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip) const

@@ -33,6 +33,9 @@ private:
 
     bool m_paused{ false };
 
+    //sounds effects
+    SoundEffect m_jumpSound{ "Assets/Sounds/PlayerSounds/jump.wav" };
+
 public:
     SPlayGame(std::string mapFile = "Assets/Maps/sideScroller.txt");
     ~SPlayGame();

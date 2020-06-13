@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TextureObject.h"
+#include "SoundEffect.h"
 #include "Collider.h"
 #include "Camera.h"
 #include "Random.h"

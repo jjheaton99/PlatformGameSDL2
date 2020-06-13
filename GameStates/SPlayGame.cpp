@@ -139,15 +139,15 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                     if (m_player->isFacingLeft())
                     {
                         m_player->setVel(wallJumpVel, - 1.5 * wallJumpVel);
-                        m_player->makeAirborne();
                         m_player->faceRight();
                     }
                     else
                     {
                         m_player->setVel(-wallJumpVel, -1.5 * wallJumpVel);
-                        m_player->makeAirborne();
                         m_player->faceLeft();
                     }
+                    m_player->makeAirborne();
+                    m_jumpSound.play();
                 }
                 else if (m_player->isClimbing())
                 {
@@ -158,6 +158,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                     double jumpVel{ 20.0 };
                     double maxJumpxVel{ 15.0 };
 
+                    m_jumpSound.play();
                     m_player->jumpHigher();
                     m_player->dodgeCancel();
                     if (std::abs(m_player->getVel().getx()) < maxJumpxVel)
