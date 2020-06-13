@@ -267,6 +267,10 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
             }
             break;
 
+        case SDLK_f:
+            m_player->drinkHealthPotion();
+            break;
+
         default:
             break;
         }

@@ -31,8 +31,6 @@ private:
     const double m_minDodgeVel{ 25.0 };
     int m_dodgeStepCount{ 0 };
 
-    double m_angle{ 0.0 };
-
     bool m_jumpingHigher{ false };
     int m_jumpHigherCount{ 0 };
 
@@ -53,6 +51,8 @@ private:
 
     bool m_slowDebuff{ false };
     int m_slowDebuffCount{ 0 };
+
+    int m_healthPotions{ 3 };
 
     void cycleWalkAnimation();
     void cycleIdleAnimation();
@@ -109,4 +109,6 @@ public:
     void startiFrames();
 
     void inflictSlow() { m_slowDebuff = true; }
+
+    void drinkHealthPotion();
 };

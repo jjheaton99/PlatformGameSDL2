@@ -58,7 +58,7 @@ public:
     virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player) = 0;
     virtual void cameraDraw(const Camera& camera) const override;
 
-    void addHP(int HP) { m_hitPoints += HP; }
+    void addHP(int HP);
     virtual void removeHP(int HP);
     int getMaxHP() const { return m_maxHitPoints; }
     int getHP() const { return m_hitPoints; }

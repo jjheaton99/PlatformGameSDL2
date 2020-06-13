@@ -175,6 +175,18 @@ void Character::cycleDamageFlash()
     }
 }
 
+void Character::addHP(int HP)
+{ 
+    if (m_hitPoints + HP > m_maxHitPoints)
+    {
+        m_hitPoints = m_maxHitPoints;
+    }
+    else
+    {
+        m_hitPoints += HP;
+    }
+}
+
 void Character::removeHP(int HP)
 {
     m_hitPoints -= HP;

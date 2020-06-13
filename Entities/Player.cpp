@@ -56,7 +56,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     if (m_slowDebuff)
     {
         m_texture.setColour(50, 50, 50);
-        m_velocity.scale(0.7);
+        m_velocity.xScale(0.6);
         if (++m_slowDebuffCount > 60)
         {
             m_texture.setColour(255, 255, 255);
@@ -800,4 +800,13 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
     }
 
     return xCollision || yCollision;
+}
+
+void Player::drinkHealthPotion()
+{
+    if (m_healthPotions > 0)
+    {
+        --m_healthPotions;
+        addHP(100);
+    }
 }

@@ -5,6 +5,8 @@ UserInterface::UserInterface(std::shared_ptr<Player> player)
 {
     updateHealthBar();
 
+    m_healthPotion.setSrcRect(0, 0, 32, 32);
+
     m_boomerangCooldown.alphaBlendOn();
     m_boomerangCooldown.setSrcRect(0, 0, 32, 32);
 
@@ -15,6 +17,7 @@ UserInterface::UserInterface(std::shared_ptr<Player> player)
 UserInterface::~UserInterface()
 {
     m_healthBar.destroy();
+    m_healthPotion.destroy();
     m_boomerangCooldown.destroy();
     m_dodgeCooldown.destroy();
 }
@@ -27,10 +30,10 @@ void UserInterface::updateHealthBar()
     }
     else
     {
-        m_healthBarDstRect.w = static_cast<int>((1.0 * m_player->getHP() / m_player->getMaxHP()) * 230.0);
+        m_healthBarDstRect.w = static_cast<int>((1.0 * m_player->getHP() / m_player->getMaxHP()) * 345);
     }
-    m_healthBarBackgroundDstRect.y = g_screenHeight - 60;
-    m_healthBarDstRect.y = g_screenHeight - 55;
+    m_healthBarBackgroundDstRect.y = g_screenHeight - 80;
+    m_healthBarDstRect.y = g_screenHeight - 72;
 }
 
 void UserInterface::drawHealthBar()
@@ -48,6 +51,8 @@ void UserInterface::update()
 {
     updateHealthBar();
 
+    m_healthPotion.setDstRect(m_healthBarBackgroundDstRect.x + m_healthBarBackgroundDstRect.w + 20,
+        g_screenHeight - 80, 60, 60);
     m_boomerangCooldown.setDstRect(g_screenWidth - 80, g_screenHeight - 80, 60, 60);
     m_dodgeCooldown.setDstRect(g_screenWidth - 160, g_screenHeight - 80, 60, 60);
 }
@@ -55,6 +60,7 @@ void UserInterface::update()
 void UserInterface::draw()
 {
     drawHealthBar();
+    m_healthPotion.draw();
 
     SDL_SetRenderDrawBlendMode(g_renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 200);
