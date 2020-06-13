@@ -20,6 +20,7 @@ public:
     //fileName is the name of the texture png file to load
     TextureObject(std::string fileName, double xPos = 0, double yPos = 0);
     TextureObject(double xPos = 0, double yPos = 0);
+    TextureObject(SDL_Color textColour, std::string text, double xPos = 0, double yPos = 0);
     virtual ~TextureObject();
 
     virtual void draw() const;
@@ -34,5 +35,8 @@ public:
 
     void alphaBlendOn() { m_texture.setBlendingMode(SDL_BLENDMODE_BLEND); }
     void setAlpha(Uint8 alpha) { m_texture.setAlpha(alpha); }
+
+    void loadText(std::string text, SDL_Color colour);
+    const SDL_Point& getTextDimensions() const { return m_texture.getTextDimensions(); }
 };
 

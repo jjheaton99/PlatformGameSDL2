@@ -3,9 +3,13 @@
 UserInterface::UserInterface(std::shared_ptr<Player> player)
     : m_player{player}
 {
+    m_playerHealthValue = player->getHP();
+    m_healthBarValues.loadText(std::to_string(m_playerHealthValue) + " / " + std::to_string(player->getMaxHP()), m_textColour);
     updateHealthBar();
 
     m_healthPotion.setSrcRect(0, 0, 32, 32);
+    m_playerPotionCount = player->getPotionCount();
+    m_potionCount.loadText(std::to_string(m_playerPotionCount), m_textColour);
 
     m_boomerangCooldown.alphaBlendOn();
     m_boomerangCooldown.setSrcRect(0, 0, 32, 32);
@@ -24,16 +28,24 @@ UserInterface::~UserInterface()
 
 void UserInterface::updateHealthBar()
 {
-    if (m_player->getHP() <= 0)
+    if (m_playerHealthValue != m_player->getHP())
     {
-        m_healthBarDstRect.w = 0;
-    }
-    else
-    {
-        m_healthBarDstRect.w = static_cast<int>((1.0 * m_player->getHP() / m_player->getMaxHP()) * 345);
+        m_playerHealthValue = m_player->getHP();
+
+        if (m_playerHealthValue <= 0)
+        {
+            m_healthBarDstRect.w = 0;
+        }
+        else
+        {
+            m_healthBarDstRect.w = static_cast<int>((1.0 * m_playerHealthValue / m_player->getMaxHP()) * 345);
+        }
+
+        m_healthBarValues.loadText(std::to_string(m_playerHealthValue) + " / " + std::to_string(m_player->getMaxHP()), m_textColour);
     }
     m_healthBarBackgroundDstRect.y = g_screenHeight - 80;
     m_healthBarDstRect.y = g_screenHeight - 72;
+    m_healthBarValues.setDstRect(90, g_screenHeight - 59, 2 * m_healthBarValues.getTextDimensions().x, 2 * m_healthBarValues.getTextDimensions().y);
 }
 
 void UserInterface::drawHealthBar()
@@ -45,6 +57,8 @@ void UserInterface::drawHealthBar()
     m_healthBar.setSrcRect(m_healthBarSrcRect);
     m_healthBar.setDstRect(m_healthBarDstRect);
     m_healthBar.draw();
+
+    m_healthBarValues.draw();
 }
 
 void UserInterface::update()
@@ -53,6 +67,14 @@ void UserInterface::update()
 
     m_healthPotion.setDstRect(m_healthBarBackgroundDstRect.x + m_healthBarBackgroundDstRect.w + 20,
         g_screenHeight - 80, 60, 60);
+    m_potionCount.setDstRect(m_healthBarBackgroundDstRect.x + m_healthBarBackgroundDstRect.w + 28,
+        g_screenHeight - 72, 2 * m_potionCount.getTextDimensions().x, 2 * m_potionCount.getTextDimensions().y);
+    if (m_playerPotionCount != m_player->getPotionCount())
+    {
+        m_playerPotionCount = m_player->getPotionCount();
+        m_potionCount.loadText(std::to_string(m_playerPotionCount), m_textColour);
+    }
+
     m_boomerangCooldown.setDstRect(g_screenWidth - 80, g_screenHeight - 80, 60, 60);
     m_dodgeCooldown.setDstRect(g_screenWidth - 160, g_screenHeight - 80, 60, 60);
 }
@@ -61,6 +83,7 @@ void UserInterface::draw()
 {
     drawHealthBar();
     m_healthPotion.draw();
+    m_potionCount.draw();
 
     SDL_SetRenderDrawBlendMode(g_renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 200);

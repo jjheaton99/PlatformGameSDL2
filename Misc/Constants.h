@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SDL.h"
+#include "SDL_ttf.h"
 
 namespace Constants
 {
@@ -18,3 +19,4 @@ extern int g_screenWidth;
 extern int g_screenHeight;
 //convenient to have a global renderer that any object can use
 extern SDL_Renderer* g_renderer;
+extern TTF_Font* g_font;

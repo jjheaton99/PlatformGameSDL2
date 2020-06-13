@@ -69,7 +69,7 @@ void WWindow::fullscreenOnOff()
 void WWindow::destroy()
 {
     SDL_DestroyWindow(m_window);
-    //doesnt like me deleting window pointer
+    m_window = nullptr;
 }
 
 void WWindow::setMouseCentre()

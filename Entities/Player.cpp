@@ -610,7 +610,14 @@ void Player::removeHP(int HP)
 {
     if (!m_invincible)
     {
-        m_hitPoints -= HP;
+        if (m_hitPoints - HP < 0)
+        {
+            m_hitPoints = 0;
+        }
+        else
+        {
+            m_hitPoints -= HP;
+        }
         startiFrames();
         m_texture.setColour(255, 100, 100);
         m_damageFlashCount = 0;
@@ -804,7 +811,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
 
 void Player::drinkHealthPotion()
 {
-    if (m_healthPotions > 0)
+    if (m_healthPotions > 0 && m_hitPoints != m_maxHitPoints)
     {
         --m_healthPotions;
         addHP(100);

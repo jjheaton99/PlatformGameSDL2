@@ -10,6 +10,12 @@ TextureObject::TextureObject(double xPos, double yPos)
     : m_position{ xPos, yPos }
 {}
 
+TextureObject::TextureObject(SDL_Color textColour, std::string text, double xPos, double yPos)
+    : m_position{ xPos, yPos }
+{
+    loadText(text, textColour);
+}
+
 TextureObject::~TextureObject()
 {}
 
@@ -21,4 +27,9 @@ void TextureObject::draw() const
 void TextureObject::destroy()
 {
     m_texture.destroy();
+}
+
+void TextureObject::loadText(std::string text, SDL_Color colour)
+{
+    m_texture.loadText(text, colour);
 }

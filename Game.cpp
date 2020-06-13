@@ -15,6 +15,18 @@ bool Game::init()
         return false;
     }
 
+    else if (!IMG_Init(IMG_INIT_PNG))
+    {
+        std::cout << "IMG initialisation unsuccessful! IMG_Error: " << IMG_GetError() << '\n';
+        return false;
+    }
+
+    else if (TTF_Init() == -1)
+    {
+        std::cout << "TTF initialisation unsuccessful! TTF_Error: " << TTF_GetError() << '\n';
+        return false;
+    }
+
     else
     {
         if (!g_window.init())
@@ -26,9 +38,17 @@ bool Game::init()
         else
         {
             g_renderer = g_window.createRenderer();
-            if (g_renderer == nullptr)
+            g_font = TTF_OpenFont("Assets/Fonts/pixelFont.ttf", 24);
+
+            if (!g_renderer)
             {
-                std::cout << "Window could not be initialised! SDL_Error: " << SDL_GetError() << '\n';
+                std::cout << "Renderer could not be initialised! SDL_Error: " << SDL_GetError() << '\n';
+                return false;
+            }
+
+            else if (!g_font)
+            {
+                std::cout << "Font could not be initialised! SDL_Error: " << TTF_GetError() << '\n';
                 return false;
             }
 
@@ -46,9 +66,14 @@ bool Game::init()
 void Game::close()
 {
     SDL_DestroyRenderer(g_renderer);
+    g_renderer = nullptr;
 
     g_window.destroy();
 
+    TTF_CloseFont(g_font);
+    g_font = nullptr;
+
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
 }

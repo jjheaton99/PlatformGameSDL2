@@ -52,7 +52,7 @@ private:
     bool m_slowDebuff{ false };
     int m_slowDebuffCount{ 0 };
 
-    int m_healthPotions{ 3 };
+    int m_healthPotions{ 20 };
 
     void cycleWalkAnimation();
     void cycleIdleAnimation();
@@ -111,4 +111,5 @@ public:
     void inflictSlow() { m_slowDebuff = true; }
 
     void drinkHealthPotion();
+    int getPotionCount() const { return m_healthPotions; }
 };
