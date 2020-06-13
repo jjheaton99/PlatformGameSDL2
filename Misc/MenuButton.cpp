@@ -1,6 +1,6 @@
 #include "MenuButton.h"
 
-MenuButton::MenuButton(const char* fileName, const char* selectedTextureFileName, int width, int height, int xPos, int yPos)
+MenuButton::MenuButton(std::string fileName, std::string selectedTextureFileName, int width, int height, int xPos, int yPos)
     : TextureObject(fileName, xPos, yPos)
 {
     m_srcRect = { 0, 0, width, height };

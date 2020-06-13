@@ -23,7 +23,7 @@ protected:
     virtual void attackPlayer(std::shared_ptr<Character> player);
 
 public:
-    GroundedEnemy(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, 
+    GroundedEnemy(std::string fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, 
         double yVel = 0, double colliderWidth = 0, double colliderHeight = 0, int hitPoints = 5, int spriteSheetCount = 1, int damage = 1);
 
     virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player) override;

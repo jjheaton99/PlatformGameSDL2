@@ -50,7 +50,7 @@ protected:
     virtual void animateSprite() = 0;
 
 public:
-    Character(const char* fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, 
+    Character(std::string fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, 
         double colliderWidth = 0, double colliderHeight = 0, int hitPoints = 0, int spriteSheetCount = 1);
     virtual ~Character();
 

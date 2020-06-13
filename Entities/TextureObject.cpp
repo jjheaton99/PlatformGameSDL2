@@ -1,6 +1,6 @@
 #include "TextureObject.h"
 
-TextureObject::TextureObject(const char* fileName, double xPos, double yPos)
+TextureObject::TextureObject(std::string fileName, double xPos, double yPos)
     : m_position{xPos, yPos}
 {
     m_texture.load(fileName);

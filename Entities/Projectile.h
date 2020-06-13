@@ -20,7 +20,7 @@ protected:
     virtual void motion() = 0;
     
 public:
-    Projectile(const char* fileName, double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 0, double colliderHeight = 0, int damage = 1);
+    Projectile(std::string fileName, double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 0, double colliderHeight = 0, int damage = 1);
     virtual ~Projectile();
 
     virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera) = 0;

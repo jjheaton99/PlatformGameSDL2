@@ -36,7 +36,7 @@ protected:
     virtual void setCollider() { m_collider.setPosition(m_position.getx(), m_position.gety()); }
 
 public:
-    GameObject(const char* fileName, double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 0, double colliderHeight = 0);
+    GameObject(std::string fileName, double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 0, double colliderHeight = 0);
     GameObject(double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 0, double colliderHeight = 0);
     virtual ~GameObject();
 

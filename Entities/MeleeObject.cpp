@@ -1,6 +1,6 @@
 #include "MeleeObject.h"
 
-MeleeObject::MeleeObject(const char* fileName, int damage, double xBasePos, double yBasePos, double colliderWidth, double colliderHeight, double attackDuration)
+MeleeObject::MeleeObject(std::string fileName, int damage, double xBasePos, double yBasePos, double colliderWidth, double colliderHeight, double attackDuration)
     : GameObject(fileName, xBasePos, yBasePos, 0.0, 0.0, colliderWidth, colliderHeight), m_damage{damage}, m_attackDuration{ attackDuration }
 {
     m_updateCount = static_cast<int>(m_attackDuration / Constants::updateStep);

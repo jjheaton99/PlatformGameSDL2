@@ -15,7 +15,7 @@ public:
     WTexture();
     ~WTexture();
 
-    void load(const char* fileName);
+    void load(std::string fileName);
     void draw(const SDL_Rect& srcRect, const SDL_Rect& dstRect, double angle, SDL_Point* centre, SDL_RendererFlip flip) const;
     void destroy();
     void setColour(Uint8 R, Uint8 G, Uint8 B);

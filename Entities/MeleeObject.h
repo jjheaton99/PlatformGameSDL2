@@ -28,7 +28,7 @@ protected:
     std::vector<bool> m_hitEnemies;
 
 public:
-    MeleeObject(const char* fileName, int damage, double xBasePos, double yBasePos, double colliderWidth, double colliderHeight, double attackDuration = 0);
+    MeleeObject(std::string fileName, int damage, double xBasePos, double yBasePos, double colliderWidth, double colliderHeight, double attackDuration = 0);
     virtual ~MeleeObject();
 
     virtual bool update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel) = 0;

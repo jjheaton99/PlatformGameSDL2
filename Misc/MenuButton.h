@@ -11,7 +11,7 @@ private:
     WTexture m_selectedTexture;
 
 public:
-    MenuButton(const char* fileName, const char* selectedTextureFileName, int width = 0, int height = 0, int xPos = 0, int yPos = 0);
+    MenuButton(std::string fileName, std::string selectedTextureFileName, int width = 0, int height = 0, int xPos = 0, int yPos = 0);
     ~MenuButton();
 
     void draw() const override;

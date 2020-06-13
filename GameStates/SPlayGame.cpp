@@ -1,6 +1,6 @@
 #include "SPlayGame.h"
 
-SPlayGame::SPlayGame(const char* mapFile)
+SPlayGame::SPlayGame(std::string mapFile)
 {
     int pathLength{ 15 };
     m_map->loadMap(pathLength);

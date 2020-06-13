@@ -34,7 +34,7 @@ private:
     bool m_paused{ false };
 
 public:
-    SPlayGame(const char* mapFile = "Assets/Maps/sideScroller.txt");
+    SPlayGame(std::string mapFile = "Assets/Maps/sideScroller.txt");
     ~SPlayGame();
 
     State handleEvents();

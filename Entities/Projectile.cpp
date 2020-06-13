@@ -1,6 +1,6 @@
 #include "Projectile.h"
 
-Projectile::Projectile(const char* fileName, double xPos, double yPos, double xVel, double yVel, double colliderWidth, double colliderHeight, int damage)
+Projectile::Projectile(std::string fileName, double xPos, double yPos, double xVel, double yVel, double colliderWidth, double colliderHeight, int damage)
     : GameObject(fileName, xPos, yPos, xVel, yVel, colliderWidth, colliderHeight), m_damage{ damage }
 {}
 

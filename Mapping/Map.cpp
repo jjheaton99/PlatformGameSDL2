@@ -458,7 +458,7 @@ void Map::loadMap(int totalChunks)
 }
 
 //loads tilemap from csv file of rows of numbers that correspond to tiles
-void Map::loadMap(const char* fileName)
+void Map::loadMap(std::string fileName)
 {
     //Erase any previous map
     m_map.clear();

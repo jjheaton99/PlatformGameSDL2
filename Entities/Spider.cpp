@@ -1,7 +1,7 @@
 #include "Spider.h"
 #include "Player.h"
 
-Spider::Spider(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, double colliderWidth, double colliderHeight, int hitPoints, int spriteSheetCount, int damage)
+Spider::Spider(double xStartPos, double yStartPos, double xVel, double yVel, std::string fileName, double colliderWidth, double colliderHeight, int hitPoints, int spriteSheetCount, int damage)
     : GroundedEnemy(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight, hitPoints, spriteSheetCount, damage)
 {
     for (int i{ 0 }; i < m_spriteSheetCount; ++i)

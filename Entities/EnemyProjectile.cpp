@@ -2,7 +2,7 @@
 #include "Player.h"
 
 EnemyProjectile::EnemyProjectile(std::shared_ptr<Character> enemy, Vector2D<double> relStartPos, std::shared_ptr<Player> player, 
-    double xVel, double yVel, double colliderWidth, double colliderHeight, int damage, const char* fileName)
+    double xVel, double yVel, double colliderWidth, double colliderHeight, int damage, std::string fileName)
     : Projectile(fileName, enemy->getPos().getx() + relStartPos.getx(), enemy->getPos().gety() + relStartPos.gety(), xVel, yVel, colliderWidth, colliderHeight, damage)
 {
     m_player = player;

@@ -1,6 +1,6 @@
 #include "PlayerBoomerang.h"
 
-PlayerBoomerang::PlayerBoomerang(double xPos, double yPos, double xVel, double yVel, double colliderWidth, double colliderHeight, const char* fileName, int damage)
+PlayerBoomerang::PlayerBoomerang(double xPos, double yPos, double xVel, double yVel, double colliderWidth, double colliderHeight, std::string fileName, int damage)
     : Projectile(fileName, xPos, yPos, xVel, yVel, colliderWidth, colliderHeight, damage)
 {
     m_srcRect = { 0, 0, 32, 32 };

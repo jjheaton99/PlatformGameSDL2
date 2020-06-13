@@ -44,7 +44,7 @@ public:
     //random map with specified number of chunks
     void loadMap(int totalChunks);
     //overload for loading map directly from single text file
-    void loadMap(const char* fileName);
+    void loadMap(std::string fileName);
 
     void update();
     void drawMap(const Camera& camera) const;

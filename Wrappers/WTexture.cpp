@@ -6,9 +6,9 @@ WTexture::WTexture()
 WTexture::~WTexture()
 {}
 
-void WTexture::load(const char* fileName)
+void WTexture::load(std::string fileName)
 {
-    SDL_Surface* tmpSurface{ IMG_Load(fileName) };
+    SDL_Surface* tmpSurface{ IMG_Load(fileName.c_str()) };
     if (tmpSurface == nullptr)
     {
         std::cout << "Unable to load image! SDL_Error: " << SDL_GetError() << '\n';

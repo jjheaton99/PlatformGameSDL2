@@ -2,7 +2,7 @@
 #include "GroundedEnemy.h"
 
 //Player collision hitBox width = 0.56 * collision hitBox height
-Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, const char* fileName, int hitPoints, int spriteSheetCount)
+Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, std::string fileName, int hitPoints, int spriteSheetCount)
     : GroundedCharacter(fileName, xStartPos, yStartPos, xVel, yVel, 56, 82, hitPoints, spriteSheetCount)
 {
     for (int i{ 0 }; i < m_spriteSheetCount; ++i)
