@@ -35,6 +35,7 @@ private:
 
     //sounds effects
     SoundEffect m_jumpSound{ "Assets/Sounds/PlayerSounds/jump.wav" };
+    Mix_Music* m_music = Mix_LoadMUS("Assets/Sounds/Music/level1.wav");
 
 public:
     SPlayGame(std::string mapFile = "Assets/Maps/sideScroller.txt");

@@ -18,7 +18,8 @@ Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, std
     m_dstRect.w = 100;
     m_dstRect.h = 100;
 
-    m_texture.setBlendingMode(SDL_BLENDMODE_BLEND);
+    m_hitGroundSound.setPercentVolume(70);
+    m_wallslideSound.setPercentVolume(5);
 }
 
 Player::~Player()
@@ -29,7 +30,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
     //std::cout << m_hitPoints << '\n';
     if (m_hitPoints <= 0)
     {
-        //kill();
+        //m_dead = true;
     }
 
     //edge check goes before map collision check to prevent vector subcript error when going off the edge
@@ -293,10 +294,12 @@ void Player::motion()
         else if (m_floatingLeft)
         {
             setVel(-1.0, m_wallslideSpeed);
+            m_wallslideSound.play();
         }
         else if (m_floatingRight)
         {
             setVel(1.0, m_wallslideSpeed);
+            m_wallslideSound.play();
         }
         break;
 
@@ -515,6 +518,7 @@ void Player::dodgeLeft()
     m_dodgingLeft = true;
     m_invincible = true;
     m_iFrameCount = m_iFrames + 1;
+    m_dodgeSound.play();
 }
 
 void Player::dodgeRight()
@@ -522,6 +526,7 @@ void Player::dodgeRight()
     m_dodgingRight = true;
     m_invincible = true;
     m_iFrameCount = m_iFrames + 1;
+    m_dodgeSound.play();
 }
 
 void Player::dodgeCancel()
@@ -610,6 +615,7 @@ void Player::removeHP(int HP)
 {
     if (!m_invincible)
     {
+        m_takeDamageSound.play();
         if (m_hitPoints - HP < 0)
         {
             m_hitPoints = 0;
@@ -660,6 +666,10 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
             case Collider::TOP:
                 if (!yCollision)
                 {
+                    if (!m_crouched && tempVel.gety() > 2.0 * Constants::g)
+                    {
+                        m_hitGroundSound.play();
+                    }
                     tempVel.yScale(result.second);
                     m_velocity.yScale(0);
                     m_movement = STOP;
@@ -707,6 +717,10 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
             {
                 if (!yCollision)
                 {
+                    if (!m_crouched && tempVel.gety() > 2.0 * Constants::g)
+                    {
+                        m_hitGroundSound.play();
+                    }
                     tempVel.yScale(result.second);
                     m_velocity.yScale(0);
                     m_movement = STOP;
@@ -815,5 +829,6 @@ void Player::drinkHealthPotion()
     {
         --m_healthPotions;
         addHP(100);
+        m_drinkPotionSound.play();
     }
 }

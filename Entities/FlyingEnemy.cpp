@@ -7,41 +7,48 @@ FlyingEnemy::FlyingEnemy(std::string fileName, double xStartPos, double yStartPo
 
 void FlyingEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player)
 {
-    if (m_hitPoints <= 0)
+    if (!m_killed)
     {
-        kill();
+        if (m_hitPoints <= 0)
+        {
+            kill();
+        }
+
+        //only update when within certain distance from camera for performance
+        if (m_position.getx() > 1.0 * camera.getx() - m_updateRange && m_position.getx() < 1.0 * camera.getx() + 1.0 * camera.getw() + m_updateRange
+            && m_position.gety() > 1.0 * camera.gety() - m_updateRange && m_position.gety() < 1.0 * camera.gety() + 1.0 * camera.geth() + m_updateRange)
+        {
+            enemyControls(player);
+
+            //edge check goes before map collision check to prevent vector subcript error when going off the edge
+            if (edgeCheck(camera))
+            {
+                //collider position is moved after each function that can change character position
+                setCollider();
+            }
+
+            bool collided{ sweepMapCollideCheck(map) || attackPlayer(player) };
+            if (collided)
+            {
+                setCollider();
+            }
+
+            if (!collided)
+            {
+                m_position.add(m_velocity);
+                setCollider();
+            }
+
+            m_dstRect.x = static_cast<int>(m_position.getx());
+            m_dstRect.y = static_cast<int>(m_position.gety());
+
+            animateSprite();
+            cycleDamageFlash();
+        }
     }
-
-    //only update when within certain distance from camera for performance
-    if (m_position.getx() > 1.0 * camera.getx() - m_updateRange && m_position.getx() < 1.0 * camera.getx() + 1.0 * camera.getw() + m_updateRange
-        && m_position.gety() > 1.0 * camera.gety() - m_updateRange && m_position.gety() < 1.0 * camera.gety() + 1.0 * camera.geth() + m_updateRange)
+    else if (++m_killDelayCount > 60)
     {
-        enemyControls(player);
-
-        //edge check goes before map collision check to prevent vector subcript error when going off the edge
-        if (edgeCheck(camera))
-        {
-            //collider position is moved after each function that can change character position
-            setCollider();
-        }
-
-        bool collided{ sweepMapCollideCheck(map) || attackPlayer(player) };
-        if (collided)
-        {
-            setCollider();
-        }
-
-        if (!collided)
-        {
-            m_position.add(m_velocity);
-            setCollider();
-        }
-
-        m_dstRect.x = static_cast<int>(m_position.getx());
-        m_dstRect.y = static_cast<int>(m_position.gety());
-
-        animateSprite();
-        cycleDamageFlash();
+        m_dead = true;
     }
 }
 

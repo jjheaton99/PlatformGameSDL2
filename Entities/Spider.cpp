@@ -21,56 +21,63 @@ Spider::Spider(double xStartPos, double yStartPos, double xVel, double yVel, std
 
 void Spider::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player)
 {
-    if (m_hitPoints <= 0)
+    if (!m_killed)
     {
-        kill();
+        if (m_hitPoints <= 0)
+        {
+            kill();
+        }
+
+        //only update when within certain distance from camera
+        if (m_position.getx() > 1.0 * camera.getx() - m_updateRange && m_position.getx() < 1.0 * camera.getx() + 1.0 * camera.getw() + m_updateRange
+            && m_position.gety() > 1.0 * camera.gety() - m_updateRange && m_position.gety() < 1.0 * camera.gety() + 1.0 * camera.geth() + m_updateRange)
+        {
+            enemyControls(player);
+
+            //edge check goes before map collision check to prevent vector subcript error when going off the edge
+            if (edgeCheck(camera))
+            {
+                //collider position is moved after each function that can change character position
+                setCollider();
+            }
+
+            bool airborne{ m_movement == AIRBORNE };
+            bool collided{ sweepMapCollideCheck(map) };
+            bool landed{ m_movement != AIRBORNE };
+
+            //if enemy just landed from jumping
+            if (airborne && landed)
+            {
+                m_landed = true;
+            }
+
+            if (!collided)
+            {
+                m_position.add(m_velocity);
+                setCollider();
+            }
+
+            m_dstRect.x = static_cast<int>(m_position.getx());
+            m_dstRect.y = static_cast<int>(m_position.gety());
+
+            motion();
+            animateSprite();
+            cycleDamageFlash();
+
+            if (m_projectile == ProjectileType::SPIDER)
+            {
+                m_projectile = ProjectileType::NONE;
+            }
+            if (++m_projectileCount > 100)
+            {
+                m_projectileCount = 0;
+                m_projectile = ProjectileType::SPIDER;
+            }
+        }
     }
-
-    //only update when within certain distance from camera
-    if (m_position.getx() > 1.0 * camera.getx() - m_updateRange && m_position.getx() < 1.0 * camera.getx() + 1.0 * camera.getw() + m_updateRange
-        && m_position.gety() > 1.0 * camera.gety() - m_updateRange && m_position.gety() < 1.0 * camera.gety() + 1.0 * camera.geth() + m_updateRange)
+    else if (++m_killDelayCount > 60)
     {
-        enemyControls(player);
-
-        //edge check goes before map collision check to prevent vector subcript error when going off the edge
-        if (edgeCheck(camera))
-        {
-            //collider position is moved after each function that can change character position
-            setCollider();
-        }
-
-        bool airborne{ m_movement == AIRBORNE };
-        bool collided{ sweepMapCollideCheck(map) };
-        bool landed{ m_movement != AIRBORNE };
-
-        //if enemy just landed from jumping
-        if (airborne && landed)
-        {
-            m_landed = true;
-        }
-
-        if (!collided)
-        {
-            m_position.add(m_velocity);
-            setCollider();
-        }
-
-        m_dstRect.x = static_cast<int>(m_position.getx());
-        m_dstRect.y = static_cast<int>(m_position.gety());
-
-        motion();
-        animateSprite();
-        cycleDamageFlash();
-
-        if (m_projectile == ProjectileType::SPIDER)
-        {
-            m_projectile = ProjectileType::NONE;
-        }
-        if (++m_projectileCount > 100)
-        {
-            m_projectileCount = 0;
-            m_projectile = ProjectileType::SPIDER;
-        }
+        m_dead = true;
     }
 }
 

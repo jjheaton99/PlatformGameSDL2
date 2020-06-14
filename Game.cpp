@@ -45,7 +45,7 @@ bool Game::init()
 
         else
         {
-            Mix_Volume(-1, 30);
+            Mix_VolumeMusic(30);
 
             g_renderer = g_window.createRenderer();
             g_font = TTF_OpenFont("Assets/Fonts/pixelFont.ttf", 24);

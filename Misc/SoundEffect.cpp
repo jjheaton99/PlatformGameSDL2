@@ -7,6 +7,8 @@ SoundEffect::SoundEffect(std::string soundFile)
     {
         std::cout << "Unable to load sound! Mix_Error: " << Mix_GetError() << '\n';
     }
+
+    Mix_VolumeChunk(m_soundEffect, 128);
 }
 
 SoundEffect::~SoundEffect()

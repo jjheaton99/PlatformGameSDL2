@@ -97,8 +97,9 @@ void Slime::cycleLandAnimation()
     {
         m_animationStep = 0;
         ++m_spriteIndex;
-        if (m_spriteIndex == 18)
+        if (m_spriteIndex > 18)
         {
+            m_spriteIndex = 0;
             m_landed = false;
         }
     }

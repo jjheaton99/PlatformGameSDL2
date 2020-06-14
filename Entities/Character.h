@@ -18,7 +18,9 @@ protected:
     std::vector<SDL_Rect> m_spriteRects;
     std::vector<SDL_Rect>::size_type m_spriteIndex{ 0 };
 
+    bool m_killed{ false };
     bool m_dead{ false };
+    int m_killDelayCount{ 0 };
 
     double m_yMaxSpeed{ 0 };
     double m_xMaxSpeed{ 0 };
@@ -49,6 +51,8 @@ protected:
     virtual void motion() = 0;
     virtual void animateSprite() = 0;
 
+    SoundEffect m_takeDamageSound{ "Assets/Sounds/damageEnemy.wav" };
+
 public:
     Character(std::string fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, 
         double colliderWidth = 0, double colliderHeight = 0, int hitPoints = 0, int spriteSheetCount = 1);
@@ -64,7 +68,7 @@ public:
     int getHP() const { return m_hitPoints; }
 
     bool isDead() const { return m_dead; }
-    void kill() { m_dead = true; }
+    void kill();
 
     double getLadderxPos() const { return m_ladderxPos; }
     bool collidingWithLadder() const { return m_collidingWithLadder; }

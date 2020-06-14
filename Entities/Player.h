@@ -54,6 +54,12 @@ private:
 
     int m_healthPotions{ 20 };
 
+    SoundEffect m_takeDamageSound{ "Assets/Sounds/PlayerSounds/playerDamage.wav" };
+    SoundEffect m_hitGroundSound{ "Assets/Sounds/PlayerSounds/land.wav" };
+    SoundEffect m_wallslideSound{ "Assets/Sounds/PlayerSounds/wallslide.wav" };
+    SoundEffect m_dodgeSound{ "Assets/Sounds/PlayerSounds/dodge.wav" };
+    SoundEffect m_drinkPotionSound{ "Assets/Sounds/PlayerSounds/potion.wav" };
+
     void cycleWalkAnimation();
     void cycleIdleAnimation();
     void animateSprite() override;

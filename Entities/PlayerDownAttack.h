@@ -7,6 +7,8 @@ class PlayerDownAttack : public MeleeObject
 private:
     double m_yoffsetUpdate;
 
+    SoundEffect m_attackSound{ "Assets/Sounds/PlayerSounds/AttackSounds/light.wav" };
+
 public:
     PlayerDownAttack(int damage = 30, double xBase = 0, double yBase = 0);
 

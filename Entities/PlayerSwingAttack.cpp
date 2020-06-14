@@ -81,6 +81,7 @@ bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies,
             {
                 m_delaying = false;
                 m_counter = 1;
+                m_attackSound.play();
             }
         }
 

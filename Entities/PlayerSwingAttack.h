@@ -16,6 +16,8 @@ private:
     void rotateColliders(double angle);
     void resetColliders();
 
+    SoundEffect m_attackSound{ "Assets/Sounds/PlayerSounds/AttackSounds/axe.wav" };
+
 public:
     PlayerSwingAttack(int damage = 40, double xBasePos = 0, double yBasePos = 0);
 

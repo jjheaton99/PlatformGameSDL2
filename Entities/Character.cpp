@@ -4,6 +4,8 @@ Character::Character(std::string fileName, double xStartPos, double yStartPos, d
     : GameObject(fileName, xStartPos, yStartPos, xVel, yVel, colliderWidth, colliderHeight), m_maxHitPoints{ hitPoints }, m_spriteSheetCount{ spriteSheetCount }
 {
     m_hitPoints = m_maxHitPoints;
+
+    m_texture.setBlendingMode(SDL_BLENDMODE_BLEND);
 }
 
 Character::~Character()
@@ -96,70 +98,74 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
 
 void Character::cameraDraw(const Camera& camera) const
 {
-    //objects off the screen are not rendered
-    if (m_collider.collideCheck(camera.getCollider()))
+    //only draw if alive
+    if (!m_killed)
     {
-        //flip texture based on direction character is facing
-        SDL_RendererFlip flip{ SDL_FLIP_NONE };
-        if (m_facingLeft)
+        //objects off the screen are not rendered
+        if (m_collider.collideCheck(camera.getCollider()))
         {
-            flip = SDL_FLIP_HORIZONTAL;
+            //flip texture based on direction character is facing
+            SDL_RendererFlip flip{ SDL_FLIP_NONE };
+            if (m_facingLeft)
+            {
+                flip = SDL_FLIP_HORIZONTAL;
+            }
+
+            SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
+            m_texture.draw(m_srcRect, relativeDstRect, m_angle, nullptr, flip);
+
+            //for drawing health bar
+            if (m_hitPoints < m_maxHitPoints)
+            {
+                double healthFraction{ (static_cast<double>(m_hitPoints) / m_maxHitPoints) };
+                SDL_Rect healthBar{ m_dstRect.x - camera.getx() + (m_dstRect.w / 2) - 25,
+                    m_dstRect.y - camera.gety() + m_dstRect.h + 10, static_cast<int>(healthFraction * 50.0), 10 };
+                SDL_Rect healthBarOutline{ m_dstRect.x - camera.getx() + (m_dstRect.w / 2) - 25,
+                    m_dstRect.y - camera.gety() + m_dstRect.h + 10, 50, 10 };
+
+                if (healthFraction > 0.75)
+                {
+                    SDL_SetRenderDrawColor(g_renderer, 0, 70, 0, 255);
+                }
+                else if (healthFraction > 0.5)
+                {
+                    SDL_SetRenderDrawColor(g_renderer, 60, 70, 0, 255);
+                }
+                else if (healthFraction > 0.25)
+                {
+                    SDL_SetRenderDrawColor(g_renderer, 70, 43, 0, 255);
+                }
+                else
+                {
+                    SDL_SetRenderDrawColor(g_renderer, 70, 0, 0, 255);
+                }
+                SDL_RenderFillRect(g_renderer, &healthBarOutline);
+
+                if (healthFraction > 0.75)
+                {
+                    SDL_SetRenderDrawColor(g_renderer, 0, 230, 0, 255);
+                }
+                else if (healthFraction > 0.5)
+                {
+                    SDL_SetRenderDrawColor(g_renderer, 200, 230, 0, 255);
+                }
+                else if (healthFraction > 0.25)
+                {
+                    SDL_SetRenderDrawColor(g_renderer, 230, 140, 0, 255);
+                }
+                else
+                {
+                    SDL_SetRenderDrawColor(g_renderer, 230, 0, 0, 255);
+                }
+                SDL_RenderFillRect(g_renderer, &healthBar);
+            }
+            //for testing hitbox
+            /*SDL_SetRenderDrawColor(g_renderer, 255, 255, 0, 255);
+            SDL_Rect rect;
+            rect = { static_cast<int>(m_collider.getHitBox().x - camera.getx()), static_cast<int>(m_collider.getHitBox().y - camera.gety()),
+                static_cast<int>(m_collider.getHitBox().w), static_cast<int>(m_collider.getHitBox().h) };
+            SDL_RenderFillRect(g_renderer, &rect);*/
         }
-
-        SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
-        m_texture.draw(m_srcRect, relativeDstRect, m_angle, nullptr, flip);
-
-        //for drawing health bar
-        if (m_hitPoints < m_maxHitPoints)
-        {
-            double healthFraction{ (static_cast<double>(m_hitPoints) / m_maxHitPoints) };
-            SDL_Rect healthBar{ m_dstRect.x - camera.getx() + (m_dstRect.w / 2) - 25,
-                m_dstRect.y - camera.gety() + m_dstRect.h + 10, static_cast<int>(healthFraction * 50.0), 10 };
-            SDL_Rect healthBarOutline{ m_dstRect.x - camera.getx() + (m_dstRect.w / 2) - 25,
-                m_dstRect.y - camera.gety() + m_dstRect.h + 10, 50, 10 };
-
-            if (healthFraction > 0.75)
-            {
-                SDL_SetRenderDrawColor(g_renderer, 0, 70, 0, 255);
-            }
-            else if (healthFraction > 0.5)
-            {
-                SDL_SetRenderDrawColor(g_renderer, 60, 70, 0, 255);
-            }
-            else if (healthFraction > 0.25)
-            {
-                SDL_SetRenderDrawColor(g_renderer, 70, 43, 0, 255);
-            }
-            else
-            {
-                SDL_SetRenderDrawColor(g_renderer, 70, 0, 0, 255);
-            }
-            SDL_RenderFillRect(g_renderer, &healthBarOutline);
-
-            if (healthFraction > 0.75)
-            {
-                SDL_SetRenderDrawColor(g_renderer, 0, 230, 0, 255);
-            }
-            else if (healthFraction > 0.5)
-            {
-                SDL_SetRenderDrawColor(g_renderer, 200, 230, 0, 255);
-            }
-            else if (healthFraction > 0.25)
-            {
-                SDL_SetRenderDrawColor(g_renderer, 230, 140, 0, 255);
-            }
-            else
-            {
-                SDL_SetRenderDrawColor(g_renderer, 230, 0, 0, 255);
-            }
-            SDL_RenderFillRect(g_renderer, &healthBar);
-        }
-        //for testing hitbox
-        /*SDL_SetRenderDrawColor(g_renderer, 255, 255, 0, 255);
-        SDL_Rect rect;
-        rect = { static_cast<int>(m_collider.getHitBox().x - camera.getx()), static_cast<int>(m_collider.getHitBox().y - camera.gety()),
-            static_cast<int>(m_collider.getHitBox().w), static_cast<int>(m_collider.getHitBox().h) };
-        SDL_RenderFillRect(g_renderer, &rect);*/
     }
 }
 
@@ -192,11 +198,19 @@ void Character::removeHP(int HP)
     if (m_hitPoints - HP < 0)
     {
         m_hitPoints = 0;
+        m_takeDamageSound.play();
     }
     else
     {
         m_hitPoints -= HP;
+        m_takeDamageSound.play();
     }
     m_texture.setColour(255, 100, 100);
     m_damageFlashCount = 0;
+}
+
+void Character::kill()
+{
+    m_killed = true;
+    m_texture.setAlpha(0);
 }

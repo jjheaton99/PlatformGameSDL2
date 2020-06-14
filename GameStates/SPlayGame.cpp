@@ -18,11 +18,15 @@ SPlayGame::SPlayGame(std::string mapFile)
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
+    Mix_PlayMusic(m_music, -1);
+    Mix_VolumeMusic(64);
     //m_objectManager->newEnemy(GameObject::EnemyType::SPIDER, playerxSpawn + 500.0, playerySpawn + 500.0);
 }
 
 SPlayGame::~SPlayGame()
-{}
+{
+    Mix_FreeMusic(m_music);
+}
 
 void SPlayGame::playerControlsKeyHold()
 {

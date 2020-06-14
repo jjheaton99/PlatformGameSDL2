@@ -24,6 +24,7 @@ bool PlayerDownAttack::update(std::vector<std::shared_ptr<Character>>& enemies, 
         if (m_counter++ == 0)
         {
             m_offset = Vector2D<double>{ 31.0, 12.5 };
+            m_attackSound.play();
         }
 
         m_totalPosition = m_position - m_offset;
