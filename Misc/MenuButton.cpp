@@ -8,10 +8,7 @@ MenuButton::MenuButton(std::string fileName, std::string selectedTextureFileName
 }
 
 MenuButton::~MenuButton()
-{
-    destroy();
-    m_selectedTexture.destroy();
-}
+{}
 
 //draws a different texture if button is selected
 void MenuButton::draw() const

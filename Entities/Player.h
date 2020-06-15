@@ -53,6 +53,7 @@ private:
     int m_slowDebuffCount{ 0 };
 
     int m_healthPotions{ 20 };
+    int m_money{ 0 };
 
     SoundEffect m_takeDamageSound{ "Assets/Sounds/PlayerSounds/playerDamage.wav" };
     SoundEffect m_hitGroundSound{ "Assets/Sounds/PlayerSounds/land.wav" };
@@ -122,4 +123,7 @@ public:
 
     void drinkHealthPotion();
     int getPotionCount() const { return m_healthPotions; }
+
+    void addMoney(int money) { m_money += money; }
+    int getMoney() const { return m_money; }
 };

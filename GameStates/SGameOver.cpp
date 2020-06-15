@@ -20,9 +20,7 @@ SGameOver::SGameOver()
 }
 
 SGameOver::~SGameOver()
-{
-    m_gameOverTexture.destroy();
-}
+{}
 
 bool SGameOver::gameOverControls(SDL_Event& event)
 {

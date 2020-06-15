@@ -7,9 +7,7 @@ StateMachine::StateMachine()
 }
 
 StateMachine::~StateMachine()
-{
-    m_loading.destroy();
-}
+{}
 
 void StateMachine::setNextState(GameState::State nextState)
 {

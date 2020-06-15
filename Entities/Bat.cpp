@@ -13,6 +13,8 @@ Bat::Bat(double xStartPos, double yStartPos, double xVel, double yVel, std::stri
     m_dstRect.h = 80;
 
     m_deathSound.load("Assets/Sounds/EnemySounds/batDeath.wav");
+
+    m_type = EnemyType::BAT;
 }
 
 void Bat::enemyControls(const std::shared_ptr<Character> player)

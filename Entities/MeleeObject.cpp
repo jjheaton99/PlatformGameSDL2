@@ -7,9 +7,7 @@ MeleeObject::MeleeObject(std::string fileName, int damage, double xBasePos, doub
 }
 
 MeleeObject::~MeleeObject()
-{
-    destroy();
-}
+{}
 
 void MeleeObject::cameraDraw(const Camera& camera) const
 {

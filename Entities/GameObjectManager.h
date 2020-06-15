@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Character.h"
 #include "GroundedEnemy.h"
+#include "MoneyProjectile.h"
 #include "FlyingEnemy.h"
 #include "Player.h"
 #include "Slime.h"

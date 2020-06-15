@@ -31,6 +31,7 @@
     <ClCompile Include="Entities\GroundedCharacter.cpp" />
     <ClCompile Include="Entities\GroundedEnemy.cpp" />
     <ClCompile Include="Entities\MeleeObject.cpp" />
+    <ClCompile Include="Entities\MoneyProjectile.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Entities\PlayerBoomerang.cpp" />
     <ClCompile Include="Entities\PlayerDownAttack.cpp" />
@@ -78,6 +79,7 @@
     <ClInclude Include="Entities\GroundedCharacter.h" />
     <ClInclude Include="Entities\GroundedEnemy.h" />
     <ClInclude Include="Entities\MeleeObject.h" />
+    <ClInclude Include="Entities\MoneyProjectile.h" />
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="Entities\PlayerBoomerang.h" />
     <ClInclude Include="Entities\PlayerDownAttack.h" />

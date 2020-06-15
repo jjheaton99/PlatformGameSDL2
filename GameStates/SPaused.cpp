@@ -20,9 +20,7 @@ SPaused::SPaused()
 }
 
 SPaused::~SPaused()
-{
-    m_pausedTexture.destroy();
-}
+{}
 
 bool SPaused::pausedControls(SDL_Event& event)
 {

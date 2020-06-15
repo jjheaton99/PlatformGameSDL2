@@ -4,14 +4,13 @@ WTexture::WTexture()
 {}
 
 WTexture::~WTexture()
-{}
+{
+    destroy();
+}
 
 void WTexture::load(std::string fileName)
 {
-    if (m_texture)
-    {
-        destroy();
-    }
+    destroy();
 
     SDL_Surface* tmpSurface{ IMG_Load(fileName.c_str()) };
     if (tmpSurface == nullptr)
@@ -27,10 +26,7 @@ void WTexture::load(std::string fileName)
 
 void WTexture::loadText(std::string text, SDL_Color textColour)
 {
-    if (m_texture)
-    {
-        destroy();
-    }
+    destroy();
 
     SDL_Surface* textSurface{ TTF_RenderText_Solid(g_font, text.c_str(), textColour) };
     if (textSurface == nullptr)
@@ -63,7 +59,10 @@ void WTexture::draw(const SDL_Rect& srcRect, const SDL_Rect& dstRect, double ang
 
 void WTexture::destroy()
 {
-    SDL_DestroyTexture(m_texture);
+    if (m_texture)
+    {
+        SDL_DestroyTexture(m_texture);
+    }
 }
 
 void WTexture::setColour(Uint8 R, Uint8 G, Uint8 B)

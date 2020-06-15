@@ -19,12 +19,7 @@ UserInterface::UserInterface(std::shared_ptr<Player> player)
 }
 
 UserInterface::~UserInterface()
-{
-    m_healthBar.destroy();
-    m_healthPotion.destroy();
-    m_boomerangCooldown.destroy();
-    m_dodgeCooldown.destroy();
-}
+{}
 
 void UserInterface::updateHealthBar()
 {

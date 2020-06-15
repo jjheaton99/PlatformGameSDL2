@@ -9,9 +9,7 @@ Character::Character(std::string fileName, double xStartPos, double yStartPos, d
 }
 
 Character::~Character()
-{
-    destroy();
-}
+{}
 
 void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int characterRow, int characterColumn)
 {

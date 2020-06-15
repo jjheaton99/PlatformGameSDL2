@@ -9,9 +9,7 @@ Map::Map()
 }
 
 Map::~Map()
-{
-    m_tileset->destroy();
-}
+{}
 
 void Map::update()
 {

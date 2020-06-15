@@ -5,9 +5,7 @@ Projectile::Projectile(std::string fileName, double xPos, double yPos, double xV
 {}
 
 Projectile::~Projectile()
-{
-    destroy();
-}
+{}
 
 void Projectile::getCollideTiles(const std::vector<std::vector<Tile>>& map, int projectileRow, int projectileColumn)
 {

@@ -24,6 +24,7 @@ public:
 public:
     enum class ProjectileType
     {
+        MONEY,
         SPIDER,
         SKULL,
         NONE

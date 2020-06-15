@@ -18,6 +18,8 @@ Slime::Slime(double xStartPos, double yStartPos, double xVel, double yVel, std::
     m_dstRect.h = 75;
 
     m_deathSound.load("Assets/Sounds/EnemySounds/slimeDeath.wav");
+
+    m_type = EnemyType::SLIME;
 }
 
 void Slime::enemyControls(std::shared_ptr<Character> player)
