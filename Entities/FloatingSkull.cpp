@@ -25,6 +25,8 @@ FloatingSkull::FloatingSkull(double xStartPos, double yStartPos, double xVel, do
     m_dstRect.h = 140;
 
     m_texture.setAlpha(120);
+
+    m_deathSound.load("Assets/Sounds/EnemySounds/skullDeath.wav");
 }
 
 void FloatingSkull::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player)
@@ -75,6 +77,7 @@ void FloatingSkull::update(const std::vector<std::vector<Tile>>& map, const Came
             {
                 m_projectileCount = 0;
                 m_projectile = ProjectileType::SKULL;
+                m_skullShotSound.play();
             }
         }
     }

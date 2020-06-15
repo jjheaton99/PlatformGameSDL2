@@ -174,6 +174,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         if (m_killDelayCount++ == 0)
         {
             m_bruhSound.play();
+            m_meleeAttack->playerDying();
         }
         else if (m_killDelayCount == 50)
         {
@@ -650,14 +651,20 @@ void Player::floatLeft()
 { 
     m_floatingLeft = true;
     m_floatingRight = false;
-    m_facingLeft = true;
+    if (!m_meleeAttack->isAttacking())
+    {
+        m_facingLeft = true;
+    }
 }
 
 void Player::floatRight() 
 {
     m_floatingRight = true;
     m_floatingLeft = false;
-    m_facingLeft = false;
+    if (!m_meleeAttack->isAttacking())
+    {
+        m_facingLeft = false;
+    }
 }
 
 void Player::removeHP(int HP)

@@ -195,18 +195,19 @@ void Character::addHP(int HP)
 
 void Character::removeHP(int HP)
 {
-    if (m_hitPoints - HP < 0)
+    if (m_hitPoints - HP <= 0)
     {
         m_hitPoints = 0;
         m_takeDamageSound.play();
+        m_deathSound.play();
     }
     else
     {
         m_hitPoints -= HP;
         m_takeDamageSound.play();
+        m_texture.setColour(255, 100, 100);
+        m_damageFlashCount = 0;
     }
-    m_texture.setColour(255, 100, 100);
-    m_damageFlashCount = 0;
 }
 
 void Character::kill()

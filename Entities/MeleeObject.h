@@ -42,5 +42,7 @@ public:
 
     void updateHitEnemies(const std::vector<std::shared_ptr<Character>>& enemies);
     void resetHitEnemies();
+
+    void playerDying() { m_texture.setAlpha(0); }
 };
 

@@ -7,12 +7,14 @@
 class SoundEffect
 {
 private:
-    Mix_Chunk* m_soundEffect;
+    Mix_Chunk* m_soundEffect{ nullptr };
 
 public:
     SoundEffect(std::string soundFile);
+    SoundEffect();
     ~SoundEffect();
 
+    void load(std::string soundFile);
     void play() const;
     void setPercentVolume(double percent);
 };

@@ -52,7 +52,8 @@ protected:
     virtual void animateSprite() = 0;
     virtual void killAnimation();
 
-    SoundEffect m_takeDamageSound{ "Assets/Sounds/damageEnemy.wav" };
+    SoundEffect m_takeDamageSound{ "Assets/Sounds/EnemySounds/damageEnemy.wav" };
+    SoundEffect m_deathSound{};
 
 public:
     Character(std::string fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, 

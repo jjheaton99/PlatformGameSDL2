@@ -2,18 +2,33 @@
 
 SoundEffect::SoundEffect(std::string soundFile)
 {
+    load(soundFile);
+}
+
+SoundEffect::SoundEffect()
+{}
+
+SoundEffect::~SoundEffect()
+{
+    Mix_FreeChunk(m_soundEffect);
+}
+
+void SoundEffect::load(std::string soundFile)
+{
+    if (m_soundEffect)
+    {
+        Mix_FreeChunk(m_soundEffect);
+    }
+
     m_soundEffect = Mix_LoadWAV(soundFile.c_str());
     if (!m_soundEffect)
     {
         std::cout << "Unable to load sound! Mix_Error: " << Mix_GetError() << '\n';
     }
-
-    Mix_VolumeChunk(m_soundEffect, 128);
-}
-
-SoundEffect::~SoundEffect()
-{
-    Mix_FreeChunk(m_soundEffect);
+    else
+    {
+        Mix_VolumeChunk(m_soundEffect, 128);
+    }
 }
 
 void SoundEffect::play() const

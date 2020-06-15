@@ -25,8 +25,10 @@ private:
     std::weak_ptr<Character> m_prevTarget;
 
     double m_angle{ 0.0 };
+    int m_flyingSoundCount{ 0 };
 
     SoundEffect m_hitWallSound{ "Assets/Sounds/PlayerSounds/land.wav" };
+    SoundEffect m_flyingSound{ "Assets/Sounds/PlayerSounds/AttackSounds/boomerang.wav" };
 
     bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) override;
     bool aquireTargetEnemy(const std::vector<std::shared_ptr<Character>>& enemies);

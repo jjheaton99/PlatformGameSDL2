@@ -31,7 +31,12 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
         motion();
         m_distanceTravelled += m_velocity.magnitude();
 
-        //for rotating animation
+        //for rotating animation/sound
+        if (++m_flyingSoundCount > 5)
+        {
+            m_flyingSound.play();
+            m_flyingSoundCount = 0;
+        }
         m_angle += 20.0;
 
         //put enemy collide check before map to ensure it hits

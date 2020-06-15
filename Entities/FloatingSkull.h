@@ -9,6 +9,8 @@ protected:
     const double m_acceleration{ 0.1 };
     const double m_maxSpeed{ 6.0 };
 
+    SoundEffect m_skullShotSound{ "Assets/Sounds/EnemySounds/skullShot.wav" };
+
     void motion() override {};
     void animateSprite() override;
     void enemyControls(const std::shared_ptr<Character> player) override;
