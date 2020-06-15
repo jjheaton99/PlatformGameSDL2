@@ -78,9 +78,9 @@ void FloatingSkull::update(const std::vector<std::vector<Tile>>& map, const Came
             }
         }
     }
-    else if (++m_killDelayCount > 60)
+    else
     {
-        m_dead = true;
+        killAnimation();
     }
 }
 

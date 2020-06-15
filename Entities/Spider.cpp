@@ -75,9 +75,9 @@ void Spider::update(const std::vector<std::vector<Tile>>& map, const Camera& cam
             }
         }
     }
-    else if (++m_killDelayCount > 60)
+    else
     {
-        m_dead = true;
+        killAnimation();
     }
 }
 

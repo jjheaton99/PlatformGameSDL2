@@ -98,8 +98,7 @@ void Character::getCollideTiles(const std::vector<std::vector<Tile>>& map, int c
 
 void Character::cameraDraw(const Camera& camera) const
 {
-    //only draw if alive
-    if (!m_killed)
+    if (!m_dead)
     {
         //objects off the screen are not rendered
         if (m_collider.collideCheck(camera.getCollider()))
@@ -115,7 +114,8 @@ void Character::cameraDraw(const Camera& camera) const
             m_texture.draw(m_srcRect, relativeDstRect, m_angle, nullptr, flip);
 
             //for drawing health bar
-            if (m_hitPoints < m_maxHitPoints)
+            //only draw if alive
+            if (!m_killed && m_hitPoints < m_maxHitPoints)
             {
                 double healthFraction{ (static_cast<double>(m_hitPoints) / m_maxHitPoints) };
                 SDL_Rect healthBar{ m_dstRect.x - camera.getx() + (m_dstRect.w / 2) - 25,
@@ -212,5 +212,20 @@ void Character::removeHP(int HP)
 void Character::kill()
 {
     m_killed = true;
-    m_texture.setAlpha(0);
+}
+
+void Character::killAnimation()
+{
+    ++m_killDelayCount;
+    m_texture.setAlpha(static_cast<Uint8>((1.0 - static_cast<double>(m_killDelayCount) / 60.0) * 255));
+    int newDstRectw{ static_cast<int>(static_cast<double>(m_dstRect.w) * 0.95) };
+    int newDstRecth{ static_cast<int>(static_cast<double>(m_dstRect.h) * 0.95) };
+    m_dstRect.x += (m_dstRect.w - newDstRectw) / 2;
+    m_dstRect.y += (m_dstRect.h - newDstRecth) / 2;
+    m_dstRect.w = newDstRectw;
+    m_dstRect.h = newDstRecth;
+    if (m_killDelayCount > 60)
+    {
+        m_dead = true;
+    }
 }

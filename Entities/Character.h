@@ -50,6 +50,7 @@ protected:
     //for adjusting character velocity
     virtual void motion() = 0;
     virtual void animateSprite() = 0;
+    virtual void killAnimation();
 
     SoundEffect m_takeDamageSound{ "Assets/Sounds/damageEnemy.wav" };
 
@@ -69,6 +70,7 @@ public:
 
     bool isDead() const { return m_dead; }
     void kill();
+    bool isDying() const { return m_killed; }
 
     double getLadderxPos() const { return m_ladderxPos; }
     bool collidingWithLadder() const { return m_collidingWithLadder; }

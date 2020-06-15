@@ -161,7 +161,7 @@ bool PlayerBoomerang::aquireTargetEnemy(const std::vector<std::shared_ptr<Charac
 
         for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
         {
-            if (enemies[i] && m_prevTarget.lock() != enemies[i])
+            if (enemies[i] && !enemies[i]->isDying() && m_prevTarget.lock() != enemies[i])
             {
                 enemyDistance = (enemies[i]->getPos() - m_position).magnitude();
                 if (enemyDistance < closestEnemyDistance)

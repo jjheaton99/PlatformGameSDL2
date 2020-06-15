@@ -52,9 +52,9 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
             cycleDamageFlash();
         }
     }
-    else if (++m_killDelayCount > 60)
+    else
     {
-        m_dead = true;
+        killAnimation();
     }
 }
 
