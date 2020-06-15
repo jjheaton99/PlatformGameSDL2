@@ -26,6 +26,8 @@ private:
 
     double m_angle{ 0.0 };
 
+    SoundEffect m_hitWallSound{ "Assets/Sounds/PlayerSounds/land.wav" };
+
     bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) override;
     bool aquireTargetEnemy(const std::vector<std::shared_ptr<Character>>& enemies);
     bool enemyCollideCheck(std::vector<std::shared_ptr<Character>>& enemies);

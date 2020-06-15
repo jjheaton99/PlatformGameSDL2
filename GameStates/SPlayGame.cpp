@@ -19,7 +19,7 @@ SPlayGame::SPlayGame(std::string mapFile)
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
     Mix_PlayMusic(m_music, -1);
-    Mix_VolumeMusic(0);
+    Mix_VolumeMusic(30);
     //m_objectManager->newEnemy(GameObject::EnemyType::SPIDER, playerxSpawn + 500.0, playerySpawn + 500.0);
 }
 
@@ -394,15 +394,23 @@ GameState::State SPlayGame::update()
         {
             m_updateTimer.start();
 
-            //++updateCount;
             m_timeAccumulator -= Constants::updateStep;
-            m_player->update(m_map->getMap(), m_camera, m_objectManager->getEnemies());
-            m_objectManager->update(m_map->getMap(), m_camera, m_player);
-            m_UI.update();
-            m_map->update();
+
             if (m_player->isDead())
             {
                 return GAME_OVER;
+            }
+            else if (!m_player->isDying())
+            {
+                m_player->update(m_map->getMap(), m_camera, m_objectManager->getEnemies());
+                m_objectManager->update(m_map->getMap(), m_camera, m_player);
+                m_UI.update();
+                m_map->update();
+            }
+            else
+            {
+                m_player->update(m_map->getMap(), m_camera, m_objectManager->getEnemies());
+                Mix_PauseMusic();
             }
 
             //add extra time in case logic update took too long to prevent slowing

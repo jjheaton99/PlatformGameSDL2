@@ -59,9 +59,13 @@ private:
     SoundEffect m_wallslideSound{ "Assets/Sounds/PlayerSounds/wallslide.wav" };
     SoundEffect m_dodgeSound{ "Assets/Sounds/PlayerSounds/dodge.wav" };
     SoundEffect m_drinkPotionSound{ "Assets/Sounds/PlayerSounds/potion.wav" };
+    SoundEffect m_bruhSound{ "Assets/Sounds/PlayerSounds/bruh.wav" };
+    SoundEffect m_fatalitySound{ "Assets/Sounds/PlayerSounds/fatality.wav" };
+    SoundEffect m_explosionSound{ "Assets/Sounds/PlayerSounds/explosion.wav" };
 
     void cycleWalkAnimation();
     void cycleIdleAnimation();
+    void cycleDeathExplosion();
     void animateSprite() override;
 
     void motion() override;
@@ -72,7 +76,7 @@ private:
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player) override {};
 
 public:
-    Player(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, std::string fileName = "Assets/MrPix.png", int hitPoints = 200, int spriteSheetCount = 28);
+    Player(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, std::string fileName = "Assets/MrPix.png", int hitPoints = 200, int spriteSheetCount = 37);
     ~Player();
 
     void update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::shared_ptr<Character>>& enemies);

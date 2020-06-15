@@ -143,6 +143,7 @@ bool PlayerBoomerang::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
         {
             setCollider();
             m_prevTarget.reset();
+            m_hitWallSound.play();
             return true;
         }
     }

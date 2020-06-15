@@ -20,6 +20,7 @@ Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, std
 
     m_hitGroundSound.setPercentVolume(70);
     m_wallslideSound.setPercentVolume(5);
+    m_fatalitySound.setPercentVolume(50);
 }
 
 Player::~Player()
@@ -27,143 +28,171 @@ Player::~Player()
 
 void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, std::vector<std::shared_ptr<Character>>& enemies)
 {
-    //std::cout << m_hitPoints << '\n';
-    if (m_hitPoints <= 0)
+    if (!m_killed)
     {
-        //m_dead = true;
-    }
-
-    //edge check goes before map collision check to prevent vector subcript error when going off the edge
-    if (edgeCheck(camera))
-    {
-        //collider position is moved after each function that can change character position
-        setCollider();
-    }
-
-    bool collided{ sweepMapCollideCheck(map) };
-
-    //only add velocity if there was no collision to prevent adding velocity twice
-    if (!collided)
-    {
-        m_position.add(m_velocity);
-        setCollider();
-    }
-
-    m_dstRect.x = static_cast<int>(m_position.getx());
-    m_dstRect.y = static_cast<int>(m_position.gety());
-
-    motion();
-
-    if (m_slowDebuff)
-    {
-        m_texture.setColour(50, 50, 50);
-        m_velocity.xScale(0.6);
-        if (++m_slowDebuffCount > 60)
+        //std::cout << m_hitPoints << '\n';
+        if (m_hitPoints <= 0)
         {
-            m_texture.setColour(255, 255, 255);
-            m_slowDebuff = false;
+            m_killed = true;
         }
-    }
 
-    animateSprite();
-    moveCamera(camera);
-    cycleDamageFlash();
-
-    if (!isDodging() && m_invincible)
-    {
-        ++m_iFrameCount;
-        if (m_iFrameCount > m_iFrames)
+        //edge check goes before map collision check to prevent vector subcript error when going off the edge
+        if (edgeCheck(camera))
         {
-            m_invincible = false;
-            m_iFrameCount = 0;
+            //collider position is moved after each function that can change character position
+            setCollider();
         }
-    }
 
-    if (m_dodgingLeft || m_dodgingRight)
-    {
-        if (m_movement == WALLSLIDE)
+        bool collided{ sweepMapCollideCheck(map) };
+
+        //only add velocity if there was no collision to prevent adding velocity twice
+        if (!collided)
         {
-            m_movement = AIRBORNE;
+            m_position.add(m_velocity);
+            setCollider();
         }
-        if (m_dodgingLeft)
+
+        m_dstRect.x = static_cast<int>(m_position.getx());
+        m_dstRect.y = static_cast<int>(m_position.gety());
+
+        motion();
+
+        if (m_slowDebuff)
         {
-            m_angle -= (360.0 / m_dodgeFrames);
-            if ((m_movement == LEFT || m_movement == RIGHT || m_movement == STOP) && m_velocity.getx() > -m_minDodgeVel)
+            m_texture.setColour(50, 50, 50);
+            m_velocity.xScale(0.6);
+            if (++m_slowDebuffCount > 60)
             {
-                setVel(-m_minDodgeVel, m_velocity.gety());
-            }
-        }
-        else if (m_dodgingRight)
-        {
-            m_angle += (360.0 / m_dodgeFrames);
-            if ((m_movement == LEFT || m_movement == RIGHT || m_movement == STOP) && m_velocity.getx() < m_minDodgeVel)
-            {
-                setVel(m_minDodgeVel, m_velocity.gety());
+                m_texture.setColour(255, 255, 255);
+                m_slowDebuff = false;
             }
         }
 
-        ++m_dodgeStepCount;
+        animateSprite();
+        moveCamera(camera);
+        cycleDamageFlash();
 
-        if (m_dodgeStepCount > m_dodgeFrames)
+        if (!isDodging() && m_invincible)
         {
-            m_dodgingLeft = false;
-            m_dodgingRight = false;
-            m_dodgeStepCount = 0;
-            m_angle = 0.0;
-            m_dodgeCooling = true;
+            ++m_iFrameCount;
+            if (m_iFrameCount > m_iFrames)
+            {
+                m_invincible = false;
+                m_iFrameCount = 0;
+            }
         }
-    }
 
-    if (m_dodgeCooling)
-    {
-        ++m_dodgeStepCount;
-        if (m_dodgeStepCount > static_cast<int>(m_dodgeCooldown / Constants::updateStep))
+        if (m_dodgingLeft || m_dodgingRight)
         {
-            m_dodgeStepCount = 0;
-            m_dodgeCooling = false;
-            m_invincible = false;
-        }
-    }
+            if (m_movement == WALLSLIDE)
+            {
+                m_movement = AIRBORNE;
+            }
+            if (m_dodgingLeft)
+            {
+                m_angle -= (360.0 / m_dodgeFrames);
+                if ((m_movement == LEFT || m_movement == RIGHT || m_movement == STOP) && m_velocity.getx() > -m_minDodgeVel)
+                {
+                    setVel(-m_minDodgeVel, m_velocity.gety());
+                }
+            }
+            else if (m_dodgingRight)
+            {
+                m_angle += (360.0 / m_dodgeFrames);
+                if ((m_movement == LEFT || m_movement == RIGHT || m_movement == STOP) && m_velocity.getx() < m_minDodgeVel)
+                {
+                    setVel(m_minDodgeVel, m_velocity.gety());
+                }
+            }
 
-    if (m_drop)
-    {
-        ++m_crouchStepCount;
-        if (m_crouchStepCount > static_cast<int>(std::sqrt((2 * Constants::tileSize) / Constants::g)))
+            ++m_dodgeStepCount;
+
+            if (m_dodgeStepCount > m_dodgeFrames)
+            {
+                m_dodgingLeft = false;
+                m_dodgingRight = false;
+                m_dodgeStepCount = 0;
+                m_angle = 0.0;
+                m_dodgeCooling = true;
+            }
+        }
+
+        if (m_dodgeCooling)
         {
-            m_drop = false;
-            m_crouchStepCount = 0;
+            ++m_dodgeStepCount;
+            if (m_dodgeStepCount > static_cast<int>(m_dodgeCooldown / Constants::updateStep))
+            {
+                m_dodgeStepCount = 0;
+                m_dodgeCooling = false;
+                m_invincible = false;
+            }
         }
-    }
 
-    if (m_jumpingHigher)
-    {
-        ++m_jumpHigherCount;
-        if (m_jumpHigherCount > 11)
+        if (m_drop)
         {
-            m_jumpingHigher = false;
-            m_jumpHigherCount = 0;
+            ++m_crouchStepCount;
+            if (m_crouchStepCount > static_cast<int>(std::sqrt((2 * Constants::tileSize) / Constants::g)))
+            {
+                m_drop = false;
+                m_crouchStepCount = 0;
+            }
         }
-    }
 
-    //attack texture position set with an offset from player position 
-    m_meleeAttack->setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
-    m_meleeAttack->update(enemies, m_velocity);
+        if (m_jumpingHigher)
+        {
+            ++m_jumpHigherCount;
+            if (m_jumpHigherCount > 11)
+            {
+                m_jumpingHigher = false;
+                m_jumpHigherCount = 0;
+            }
+        }
 
-    m_downAttack->setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 90.0);
-    if (m_downAttack->update(enemies, m_velocity))
-    {
-        setVel(m_velocity.getx(), -30.0);
-    }
+        //attack texture position set with an offset from player position 
+        m_meleeAttack->setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
+        m_meleeAttack->update(enemies, m_velocity);
 
-    m_boomerang.update(map, camera, enemies, shared_from_this());
+        m_downAttack->setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 90.0);
+        if (m_downAttack->update(enemies, m_velocity))
+        {
+            setVel(m_velocity.getx(), -30.0);
+        }
 
-    if (isInvincible())
-    {
-        m_texture.setAlpha(120);
+        m_boomerang.update(map, camera, enemies, shared_from_this());
+
+        if (isInvincible())
+        {
+            m_texture.setAlpha(120);
+        }
+        else
+        {
+            m_texture.setAlpha(255);
+        }
     }
     else
     {
-        m_texture.setAlpha(255);
+        if (m_killDelayCount++ == 0)
+        {
+            m_bruhSound.play();
+        }
+        else if (m_killDelayCount == 50)
+        {
+            m_spriteIndex = 28;
+            m_explosionSound.play();
+        }
+        else if (m_killDelayCount > 50 && m_killDelayCount < 150)
+        {
+            cycleDeathExplosion();
+            animateSprite();
+        }
+        else if (m_killDelayCount == 150)
+        {
+            m_fatalitySound.play();
+        }
+        else if (m_killDelayCount >= 250)
+        {
+            m_dead = true;
+        }
     }
 }
 
@@ -354,8 +383,28 @@ void Player::cycleIdleAnimation()
     }
 }
 
+void Player::cycleDeathExplosion()
+{
+    ++m_animationStep;
+    if (m_animationStep >= 6)
+    {
+        m_animationStep = 0;
+        ++m_spriteIndex;
+        if (m_spriteIndex > 36)
+        {
+            m_spriteIndex = 36;
+        }
+    }
+}
+
 void Player::animateSprite()
 {
+    if (m_killed)
+    {
+        m_srcRect = m_spriteRects.at(m_spriteIndex);
+        return;
+    }
+
     switch (m_movement)
     {
     case GroundedCharacter::AIRBORNE:
@@ -404,7 +453,7 @@ void Player::animateSprite()
         m_spriteIndex = 25;
     }
 
-    m_srcRect = m_spriteRects[m_spriteIndex];
+    m_srcRect = m_spriteRects.at(m_spriteIndex);
 }
 
 void Player::cameraDraw(const Camera& camera) const
@@ -615,18 +664,19 @@ void Player::removeHP(int HP)
 {
     if (!m_invincible)
     {
-        m_takeDamageSound.play();
-        if (m_hitPoints - HP < 0)
+
+        if (m_hitPoints - HP <= 0)
         {
             m_hitPoints = 0;
         }
         else
         {
             m_hitPoints -= HP;
+            m_takeDamageSound.play();
+            m_texture.setColour(255, 100, 100);
+            startiFrames();
+            m_damageFlashCount = 0;
         }
-        startiFrames();
-        m_texture.setColour(255, 100, 100);
-        m_damageFlashCount = 0;
     }
 }
 
