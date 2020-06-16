@@ -24,10 +24,10 @@ void TextureObject::draw() const
     m_texture.draw(m_srcRect, m_dstRect, m_angle, nullptr, SDL_FLIP_NONE);
 }
 
-void TextureObject::destroy()
+/*void TextureObject::destroy()
 {
     m_texture.destroy();
-}
+}*/
 
 void TextureObject::loadText(std::string text, SDL_Color colour)
 {

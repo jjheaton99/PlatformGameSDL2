@@ -13,10 +13,12 @@ void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const 
         //if enemy is dead and hasnt been deleted yet
         if (enemy && enemy->isDead())
         {
-            for (int i{ 0 }; i < 10; ++i)
+            double moneySpeed{ 15.0 };
+            int moneyDrops{ MTRandom::getRandomInt(5, 15) };
+            for (int i{ 0 }; i < moneyDrops; ++i)
             {
                 m_projectiles.push_back(std::make_unique<MoneyProjectile>(player, enemy->getPos().getx(), enemy->getPos().gety(),
-                    MTRandom::getRandomDouble(-20.0, 20.0), MTRandom::getRandomDouble(-20.0, 20.0)));
+                    MTRandom::getRandomDouble(-moneySpeed, moneySpeed), MTRandom::getRandomDouble(-moneySpeed, moneySpeed)));
             }
             enemy.reset();
         }

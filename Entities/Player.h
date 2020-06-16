@@ -63,6 +63,9 @@ private:
     SoundEffect m_bruhSound{ "Assets/Sounds/PlayerSounds/bruh.wav" };
     SoundEffect m_fatalitySound{ "Assets/Sounds/PlayerSounds/fatality.wav" };
     SoundEffect m_explosionSound{ "Assets/Sounds/PlayerSounds/explosion.wav" };
+    SoundEffect m_collectMoneySound1{ "Assets/Sounds/MiscSounds/coin1.wav" };
+    SoundEffect m_collectMoneySound2{ "Assets/Sounds/MiscSounds/coin2.wav" };
+    SoundEffect m_collectMoneySound3{ "Assets/Sounds/MiscSounds/coin3.wav" };
 
     void cycleWalkAnimation();
     void cycleIdleAnimation();
@@ -124,6 +127,7 @@ public:
     void drinkHealthPotion();
     int getPotionCount() const { return m_healthPotions; }
 
-    void addMoney(int money) { m_money += money; }
+    void addMoney(int money);
+    void subtractMoney(int money) { m_money -= money; }
     int getMoney() const { return m_money; }
 };

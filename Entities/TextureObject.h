@@ -24,7 +24,7 @@ public:
     virtual ~TextureObject();
 
     virtual void draw() const;
-    virtual void destroy();
+    //virtual void destroy();
 
     const Vector2D<double>& getPos() const { return m_position; }
     virtual void setPos(double xPos, double yPos) { m_position = Vector2D<double>{ xPos, yPos }; }

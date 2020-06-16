@@ -889,3 +889,22 @@ void Player::drinkHealthPotion()
         m_drinkPotionSound.play();
     }
 }
+
+void Player::addMoney(int money)
+{ 
+    m_money += money;
+    switch (MTRandom::getRandomInt(1, 3))
+    {
+    case 1:
+        m_collectMoneySound1.play();
+        break;
+    case 2:
+        m_collectMoneySound2.play();
+        break;
+    case 3:
+        m_collectMoneySound3.play();
+        break;
+    default:
+        break;
+    }
+}

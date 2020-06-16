@@ -5,11 +5,15 @@ MoneyProjectile::MoneyProjectile(std::shared_ptr<Player> player, double xPos, do
 {
     m_srcRect = { 0, 0, 3, 3 };
 
-    m_dstRect.w = 30;
-    m_dstRect.h = 30;
+    m_value = MTRandom::getRandomInt(20, 100);
+
+    m_dstRect.w = m_value / 5;
+    m_dstRect.h = m_value / 5;
+
+    m_homingDelay = MTRandom::getRandomInt(0, 60);
 }
 
-void MoneyProjectile::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Player> player)
+void MoneyProjectile::update(const std::vector<std::vector<Tile>>& map, const Camera& camera)
 {
     motion();
 
@@ -44,20 +48,26 @@ void MoneyProjectile::update(const std::vector<std::vector<Tile>>& map, const Ca
 
 void MoneyProjectile::motion()
 {
-    double scaleFactor{};
-    double velMag{};
-
-    Vector2D<double> relPos{ Vector2D<double>{m_player->getCollider().getHitBox().x,
-        m_player->getCollider().getHitBox().y} - m_position };
-    scaleFactor = m_acceleration / relPos.magnitude();
-    m_velocity.add(scaleFactor * relPos);
-    velMag = m_velocity.magnitude();
-
-    if (velMag > m_maxSpeed)
+    if (++m_homingDelayCount > m_homingDelay)
     {
-        //subtract excess speed
-        scaleFactor = (velMag - m_maxSpeed) / velMag;
-        m_velocity.subtract(scaleFactor * m_velocity);
-    }
+        double scaleFactor{};
+        double velMag{};
 
+        Vector2D<double> relPos{ Vector2D<double>{m_player->getCollider().getHitBox().x + 50.0,
+            m_player->getCollider().getHitBox().y + 50.0} - m_position };
+        scaleFactor = m_acceleration / relPos.magnitude();
+        m_velocity.add(scaleFactor * relPos);
+        velMag = m_velocity.magnitude();
+
+        if (velMag > m_maxSpeed)
+        {
+            //subtract excess speed
+            scaleFactor = (velMag - m_maxSpeed) / velMag;
+            m_velocity.subtract(scaleFactor * m_velocity);
+        }
+    }
+    else
+    {
+        m_velocity.scale(0.98);
+    }
 }
