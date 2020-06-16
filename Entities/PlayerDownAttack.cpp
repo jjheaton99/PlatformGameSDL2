@@ -3,6 +3,8 @@
 PlayerDownAttack::PlayerDownAttack(int damage, double xBase, double yBase)
     : MeleeObject("Assets/Attacks/downAttack.png", damage, xBase, yBase, 62.0, 66.0, 0.2)
 {
+    m_itemType = ItemType::DOWN_AXE;
+
     m_srcRect = { 0, 0, 20, 21 };
 
     m_dstRect.w = 62;

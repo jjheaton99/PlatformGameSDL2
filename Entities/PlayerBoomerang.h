@@ -6,6 +6,8 @@
 class PlayerBoomerang : public Projectile
 {
 private:
+    ItemType m_itemType{ ItemType::BOOMERANG };
+
     double m_acceleration{ 50.0 };
     double m_maxSpeed{ 20.0 };
     double m_distanceTravelled{ 0.0 };

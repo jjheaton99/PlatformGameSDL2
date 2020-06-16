@@ -3,6 +3,8 @@
 PlayerStabAttack::PlayerStabAttack(int damage, double xBase, double yBase)
     : MeleeObject("Assets/Attacks/sword3.png", damage, xBase, yBase, 131.0, 22.0, 0.16)
 {
+    m_itemType = ItemType::SWORD;
+
     m_srcRect = { 0, 0, 42, 15 };
 
     m_dstRect.w = 131;
@@ -31,6 +33,7 @@ bool PlayerStabAttack::update(std::vector<std::shared_ptr<Character>>& enemies, 
             {
                 m_offset = Vector2D<double>{ 20.0, 22.0 };
             }
+            m_attackSound.play();
         }
 
         m_totalPosition = m_position - m_offset;

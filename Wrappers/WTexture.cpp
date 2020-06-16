@@ -59,10 +59,7 @@ void WTexture::draw(const SDL_Rect& srcRect, const SDL_Rect& dstRect, double ang
 
 void WTexture::destroy()
 {
-    if (m_texture)
-    {
-        SDL_DestroyTexture(m_texture);
-    }
+    SDL_DestroyTexture(m_texture);
 }
 
 void WTexture::setColour(Uint8 R, Uint8 G, Uint8 B)

@@ -7,6 +7,7 @@
 #include "PlayerStabAttack.h"
 #include "PlayerDownAttack.h"
 #include "PlayerBoomerang.h"
+#include "Item.h"
 #include <array>
 #include <cmath>
 #include <cstdint>
@@ -17,7 +18,7 @@ class GroundedEnemy;
 class Player : public std::enable_shared_from_this<Character>, public GroundedCharacter
 {
 private:
-    std::unique_ptr<MeleeObject> m_meleeAttack{ std::make_unique<PlayerSwingAttack>() };
+    std::unique_ptr<MeleeObject> m_meleeAttack{ std::make_unique<PlayerStabAttack>() };
     std::unique_ptr<MeleeObject> m_downAttack{ std::make_unique<PlayerDownAttack>() };
     PlayerBoomerang m_boomerang{};
 
@@ -52,8 +53,11 @@ private:
     bool m_slowDebuff{ false };
     int m_slowDebuffCount{ 0 };
 
-    int m_healthPotions{ 20 };
+    int m_healthPotions{ 5 };
     int m_money{ 0 };
+
+    bool m_interact{ false };
+    int m_interactCount{ 0 };
 
     SoundEffect m_takeDamageSound{ "Assets/Sounds/PlayerSounds/playerDamage.wav" };
     SoundEffect m_hitGroundSound{ "Assets/Sounds/PlayerSounds/land.wav" };
@@ -130,4 +134,9 @@ public:
     void addMoney(int money);
     void subtractMoney(int money) { m_money -= money; }
     int getMoney() const { return m_money; }
+
+    bool isInteracting() const { return m_interact; }
+    void interact() { m_interact = true; }
+
+    ItemType pickUpItem(const Item& item);
 };

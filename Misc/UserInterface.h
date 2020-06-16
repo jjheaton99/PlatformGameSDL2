@@ -30,6 +30,10 @@ private:
     TextureObject m_boomerangCooldown{ "Assets/UITextures/boomerang.png" };
     TextureObject m_dodgeCooldown{ "Assets/UITextures/dodge.png" };
 
+    TextureObject m_moneyIcon{ "Assets/MiscTextures/money.png" };
+    TextureObject m_moneyCount{};
+    int m_playerMoney;
+
 public:
     UserInterface(std::shared_ptr<Player> player);
     ~UserInterface();

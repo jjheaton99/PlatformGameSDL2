@@ -46,9 +46,8 @@ protected:
     virtual bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) = 0;
     //for checking collisions with the edge of the map
     virtual bool edgeCheck(const Camera& camera) = 0;
-
-    //for adjusting character velocity
     virtual void motion() = 0;
+
     virtual void animateSprite() = 0;
     virtual void killAnimation();
 

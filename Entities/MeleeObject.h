@@ -10,6 +10,8 @@
 class MeleeObject : public GameObject
 {
 protected:
+    ItemType m_itemType;
+
     const double m_attackDuration;
 
     int m_damage;
@@ -44,5 +46,7 @@ public:
     void resetHitEnemies();
 
     void playerDying() { m_texture.setAlpha(0); }
+
+    ItemType getType() const { return m_itemType; }
 };
 

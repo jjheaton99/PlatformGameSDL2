@@ -38,6 +38,17 @@ void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const 
             --i;
         }
     }
+
+    for (int i{ 0 }; i < static_cast<int>(m_items.size()); ++i)
+    {
+        m_items[i]->update(map, camera);
+        if (player->isInteracting() && m_items[i]->getCollider().collideCheck(player->getCollider())
+            && ((m_items[i]->isShopItem() && m_items[i]->getPrice() < player->getMoney()) || !m_items[i]->isShopItem()))
+        {
+            newItem(player->pickUpItem(*m_items[i]), false, player->getPos().getx() + 45, player->getPos().gety() + 45);
+            m_items.erase(m_items.begin() + i);
+        }
+    }
 }
 
 void GameObjectManager::cameraDrawEnemies(const Camera& camera) const
@@ -56,6 +67,14 @@ void GameObjectManager::cameraDrawProjectiles(const Camera& camera) const
     for (auto& projectile : m_projectiles)
     {
         projectile->cameraDraw(camera);
+    }
+}
+
+void GameObjectManager::cameraDrawItems(const Camera& camera) const
+{
+    for (auto& item : m_items)
+    {
+        item->cameraDraw(camera);
     }
 }
 
@@ -118,5 +137,13 @@ void GameObjectManager::newProjectile(GameObject::ProjectileType type, std::shar
         break;
     default:
         break;
+    }
+}
+
+void GameObjectManager::newItem(GameObject::ItemType type, bool shopItem, double xPos, double yPos)
+{
+    if (type != GameObject::ItemType::NONE)
+    {
+        m_items.push_back(std::make_unique<Item>(type, shopItem, xPos, yPos));
     }
 }

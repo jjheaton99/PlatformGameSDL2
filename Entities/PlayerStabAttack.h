@@ -9,6 +9,8 @@ private:
 
     void setCollider();
 
+    SoundEffect m_attackSound{ "Assets/Sounds/PlayerSounds/AttackSounds/light.wav" };
+
 public:
     PlayerStabAttack(int damage = 20, double xBase = 0, double yBase = 0);
 

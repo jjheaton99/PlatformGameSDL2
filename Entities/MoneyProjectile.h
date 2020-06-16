@@ -6,8 +6,8 @@
 class MoneyProjectile : public Projectile
 {
 private:
-    double m_acceleration{ 3.0 };
-    double m_maxSpeed{ 15.0 };
+    double m_acceleration{ 25.0 };
+    double m_maxSpeed{ 25.0 };
     int m_homingDelayCount{ 0 };
     int m_homingDelay;
 

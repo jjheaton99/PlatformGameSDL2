@@ -16,6 +16,10 @@ UserInterface::UserInterface(std::shared_ptr<Player> player)
 
     m_dodgeCooldown.alphaBlendOn();
     m_dodgeCooldown.setSrcRect(0, 0, 32, 32);
+
+    m_moneyIcon.setSrcRect(0, 0, 3, 3);
+    m_playerMoney = player->getMoney();
+    m_moneyCount.loadText(std::to_string(m_playerMoney), {255, 255, 255});
 }
 
 UserInterface::~UserInterface()
@@ -62,16 +66,26 @@ void UserInterface::update()
 
     m_healthPotion.setDstRect(m_healthBarBackgroundDstRect.x + m_healthBarBackgroundDstRect.w + 20,
         g_screenHeight - 80, 60, 60);
-    m_potionCount.setDstRect(m_healthBarBackgroundDstRect.x + m_healthBarBackgroundDstRect.w + 28,
-        g_screenHeight - 72, 2 * m_potionCount.getTextDimensions().x, 2 * m_potionCount.getTextDimensions().y);
-    if (m_playerPotionCount != m_player->getPotionCount())
+    int playerPotionCount{ m_player->getPotionCount() };
+    if (m_playerPotionCount != playerPotionCount)
     {
-        m_playerPotionCount = m_player->getPotionCount();
+        m_playerPotionCount = playerPotionCount;
         m_potionCount.loadText(std::to_string(m_playerPotionCount), m_textColour);
     }
+    m_potionCount.setDstRect(m_healthBarBackgroundDstRect.x + m_healthBarBackgroundDstRect.w + 28,
+        g_screenHeight - 72, 2 * m_potionCount.getTextDimensions().x, 2 * m_potionCount.getTextDimensions().y);
 
     m_boomerangCooldown.setDstRect(g_screenWidth - 80, g_screenHeight - 80, 60, 60);
     m_dodgeCooldown.setDstRect(g_screenWidth - 160, g_screenHeight - 80, 60, 60);
+
+    m_moneyIcon.setDstRect(20, 20, 30, 30);
+    int playerMoney{ m_player->getMoney() };
+    if (m_playerMoney != playerMoney)
+    {
+        m_playerMoney = playerMoney;
+        m_moneyCount.loadText(std::to_string(m_playerMoney), { 255, 255, 255 });
+    }
+    m_moneyCount.setDstRect(70, 22, 3 * m_moneyCount.getTextDimensions().x, 3 * m_moneyCount.getTextDimensions().y);
 }
 
 void UserInterface::draw()
@@ -90,6 +104,9 @@ void UserInterface::draw()
     SDL_Rect dodgeCoolDownCover{ g_screenWidth - 158, g_screenHeight - 78, 56, static_cast<int>(m_player->getDodgeCooldownFraction() * 56.0) };
     m_dodgeCooldown.draw();
     SDL_RenderFillRect(g_renderer, &dodgeCoolDownCover);
+
+    m_moneyIcon.draw();
+    m_moneyCount.draw();
 
     SDL_SetRenderDrawBlendMode(g_renderer, SDL_BLENDMODE_NONE);
 }

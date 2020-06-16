@@ -5,10 +5,10 @@ MoneyProjectile::MoneyProjectile(std::shared_ptr<Player> player, double xPos, do
 {
     m_srcRect = { 0, 0, 3, 3 };
 
-    m_value = MTRandom::getRandomInt(20, 100);
+    m_value = MTRandom::getRandomInt(5, 20);
 
-    m_dstRect.w = m_value / 5;
-    m_dstRect.h = m_value / 5;
+    m_dstRect.w = m_value;
+    m_dstRect.h = m_value;
 
     m_homingDelay = MTRandom::getRandomInt(0, 60);
 }

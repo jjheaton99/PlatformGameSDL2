@@ -3,6 +3,8 @@
 PlayerSwingAttack::PlayerSwingAttack(int damage, double xBasePos, double yBasePos)
     : MeleeObject("Assets/Attacks/axe.png", damage, xBasePos, yBasePos, 1.0, 1.0, 0.25)
 {
+    m_itemType = ItemType::AXE;
+
     m_srcRect = { 0, 0, 32, 55 };
 
     m_dstRect.w = 100;

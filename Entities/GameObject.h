@@ -21,13 +21,22 @@ public:
         MAX_ENEMIES
     };
 
-public:
     enum class ProjectileType
     {
         MONEY,
         SPIDER,
         SKULL,
         NONE
+    };
+
+    enum class ItemType
+    {
+        POTION,
+        SWORD,
+        AXE,
+        BOOMERANG,
+        DOWN_AXE,
+        NONE,
     };
 
 protected:

@@ -2,7 +2,7 @@
 
 SPlayGame::SPlayGame(std::string mapFile)
 {
-    int pathLength{ 15 };
+    int pathLength{ 20 };
     m_map->loadMap(pathLength);
 
     double playerxSpawn{ ((1.0 * m_map->getPlayerSpawnChunk().getx()) * Constants::chunkWidth * Constants::tileSize) + 700.0 };
@@ -15,11 +15,18 @@ SPlayGame::SPlayGame(std::string mapFile)
         m_objectManager->newRandomEnemy(spawnPoint.getx(), spawnPoint.gety());
     }
 
+    m_objectManager->newItem(GameObject::ItemType::AXE, false, playerxSpawn, playerySpawn);
+    for (int i{ 0 }; i < 20; ++i)
+    {
+        m_objectManager->newItem(GameObject::ItemType::POTION, false, 
+            playerxSpawn - static_cast<double>(500 - (50 * i)), playerySpawn + 500);
+    }
+
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
     Mix_PlayMusic(m_music, -1);
-    Mix_VolumeMusic(30);
+    Mix_VolumeMusic(0);
     //m_objectManager->newEnemy(GameObject::EnemyType::SPIDER, playerxSpawn + 500.0, playerySpawn + 500.0);
 }
 
@@ -129,6 +136,10 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
     {
         switch (event.key.keysym.sym)
         {
+        case SDLK_e:
+            m_player->interact();
+            break;
+
         case SDLK_SPACE:
             if (m_player->isCrouched())
             {
@@ -453,6 +464,7 @@ GameState::State SPlayGame::update()
 void SPlayGame::render()
 {
     m_map->drawMap(m_camera);
+    m_objectManager->cameraDrawItems(m_camera);
     m_objectManager->cameraDrawEnemies(m_camera);
     m_player->cameraDraw(m_camera);
     m_objectManager->cameraDrawProjectiles(m_camera);

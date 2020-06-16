@@ -72,6 +72,12 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         moveCamera(camera);
         cycleDamageFlash();
 
+        if (m_interact && ++m_interactCount == 2)
+        {
+            m_interact = false;
+            m_interactCount = 0;
+        }
+
         if (!isDodging() && m_invincible)
         {
             ++m_iFrameCount;
@@ -906,5 +912,52 @@ void Player::addMoney(int money)
         break;
     default:
         break;
+    }
+}
+
+GameObject::ItemType Player::pickUpItem(const Item& item)
+{
+    if (item.isShopItem() && item.getPrice() > m_money)
+    {
+        return ItemType::NONE;
+    }
+    else
+    {
+        if (item.isShopItem())
+        {
+            subtractMoney(item.getPrice());
+        }
+
+        ItemType droppedItem{ ItemType::NONE };   
+
+        switch (item.getType())
+        {
+        case GameObject::ItemType::POTION:
+            ++m_healthPotions;
+            break;
+
+        case GameObject::ItemType::SWORD:
+            droppedItem = m_meleeAttack->getType();
+            m_meleeAttack.reset(new PlayerStabAttack{});
+            break;
+
+        case GameObject::ItemType::AXE:
+            droppedItem = m_meleeAttack->getType();
+            m_meleeAttack.reset(new PlayerSwingAttack{});
+            break;
+
+        case GameObject::ItemType::BOOMERANG:
+            break;
+
+        case GameObject::ItemType::DOWN_AXE:
+            droppedItem = m_downAttack->getType();
+            m_downAttack.reset(new PlayerDownAttack{});
+            break;
+
+        default:
+            break;
+        }
+
+        return droppedItem;
     }
 }
