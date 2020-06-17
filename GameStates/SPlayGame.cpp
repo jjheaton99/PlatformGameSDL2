@@ -18,8 +18,14 @@ SPlayGame::SPlayGame(std::string mapFile)
     m_objectManager->newItem(GameObject::ItemType::AXE, false, playerxSpawn, playerySpawn);
     for (int i{ 0 }; i < 20; ++i)
     {
-        m_objectManager->newItem(GameObject::ItemType::POTION, false, 
-            playerxSpawn - static_cast<double>(500 - (50 * i)), playerySpawn + 500);
+        m_objectManager->newItem(GameObject::ItemType::POTION, true, 
+            static_cast<int>(playerxSpawn) - (620 - (100 * i)), static_cast<int>(playerySpawn) + 1250);
+    }
+
+    for (int i{ 0 }; i < 20; ++i)
+    {
+        m_objectManager->newItem(GameObject::ItemType::POTION, true,
+            playerxSpawn - 620, playerySpawn + 1250);
     }
 
     m_camera.setPos(0, 0);
@@ -88,7 +94,7 @@ void SPlayGame::playerControlsKeyHold()
             m_player->setVel(0, 0);
             //lining player up with ladder
             //player hit box height is used instead of width because of the dest rect width of the player is equal to the height
-            m_player->setPos(m_player->getLadderxPos() + 0.5 * Constants::tileSize - 50.0, m_player->getPos().gety());
+            //m_player->setPos(m_player->getLadderxPos() + 0.5 * Constants::tileSize - 50.0, m_player->getPos().gety());
             m_player->climbUp();
         }
         else if (m_player->isClimbing())

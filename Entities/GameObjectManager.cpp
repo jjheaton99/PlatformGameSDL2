@@ -42,7 +42,13 @@ void GameObjectManager::update(const std::vector<std::vector<Tile>>& map, const 
     for (int i{ 0 }; i < static_cast<int>(m_items.size()); ++i)
     {
         m_items[i]->update(map, camera);
-        if (player->isInteracting() && m_items[i]->getCollider().collideCheck(player->getCollider())
+
+        if (m_items[i]->isShopItem())
+        {
+            m_items[i]->setPriceColour(player->getMoney());
+        }
+
+        if (player->isInteracting() && !player->pickedUpItem() && m_items[i]->getCollider().collideCheck(player->getCollider())
             && ((m_items[i]->isShopItem() && m_items[i]->getPrice() < player->getMoney()) || !m_items[i]->isShopItem()))
         {
             newItem(player->pickUpItem(*m_items[i]), false, player->getPos().getx() + 45, player->getPos().gety() + 45);

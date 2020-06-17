@@ -72,7 +72,7 @@ public:
     void kill();
     bool isDying() const { return m_killed; }
 
-    double getLadderxPos() const { return m_ladderxPos; }
+    //double getLadderxPos() const { return m_ladderxPos; }
     bool collidingWithLadder() const { return m_collidingWithLadder; }
 
     void faceLeft() { m_facingLeft = true; }

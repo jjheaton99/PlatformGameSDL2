@@ -10,6 +10,7 @@ protected:
 
     bool m_shopItem;
     int m_price;
+    TextureObject m_priceTexture{};
 
     std::vector<Collider::sweptObstacleTuple> m_solidColliders;
     std::vector<Collider::sweptObstacleTuple> m_platformColliders;
@@ -27,10 +28,12 @@ public:
     Item(ItemType type, bool shopItem, double xPos = 0, double yPos = 0);
 
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera);
+    void cameraDraw(const Camera& camera) const override;
 
     ItemType getType() const { return m_type; }
 
     bool isShopItem() const { return m_shopItem; }
     int getPrice() const { return m_price; }
+    void setPriceColour(int playerMoney);
 };
 

@@ -21,6 +21,7 @@ Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, std
     m_hitGroundSound.setPercentVolume(70);
     m_wallslideSound.setPercentVolume(5);
     m_fatalitySound.setPercentVolume(50);
+    m_pickUpItemSound.setPercentVolume(50);
 }
 
 Player::~Player()
@@ -76,6 +77,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         {
             m_interact = false;
             m_interactCount = 0;
+            m_pickedUpItem = false;
         }
 
         if (!isDodging() && m_invincible)
@@ -356,6 +358,11 @@ void Player::motion()
     {
         m_movement = AIRBORNE;
         m_velocity.xScale(0.95);
+    }
+
+    if (isClimbing())
+    {
+        setPos(m_ladderxPos + 0.5 * Constants::tileSize - 50.0, m_position.gety());
     }
 
     m_floatingLeft = false;
@@ -926,6 +933,11 @@ GameObject::ItemType Player::pickUpItem(const Item& item)
         if (item.isShopItem())
         {
             subtractMoney(item.getPrice());
+            m_buyItemSound.play();
+        }
+        else
+        {
+            m_pickUpItemSound.play();
         }
 
         ItemType droppedItem{ ItemType::NONE };   
@@ -957,6 +969,8 @@ GameObject::ItemType Player::pickUpItem(const Item& item)
         default:
             break;
         }
+
+        m_pickedUpItem = true;
 
         return droppedItem;
     }

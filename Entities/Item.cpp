@@ -10,7 +10,7 @@ Item::Item(ItemType type, bool shopItem, double xPos, double yPos)
         m_srcRect = { 0, 0, 16, 19 };
         m_dstRect.w = 50;
         m_dstRect.h = 59;
-        m_price = 500;
+        m_price = 100;
         break;
 
     case GameObject::ItemType::SWORD:
@@ -51,6 +51,11 @@ Item::Item(ItemType type, bool shopItem, double xPos, double yPos)
     }
 
     setPos(xPos - ((m_dstRect.w - 50.0) / 2.0), yPos - m_dstRect.h + 50.0);
+
+    if (m_shopItem)
+    {
+        m_priceTexture.loadText(std::to_string(m_price), { 255, 255, 255 });
+    }
 }
 
 void Item::update(const std::vector<std::vector<Tile>>& map, const Camera& camera)
@@ -76,12 +81,30 @@ void Item::update(const std::vector<std::vector<Tile>>& map, const Camera& camer
 
         m_dstRect.x = static_cast<int>(m_position.getx());
         m_dstRect.y = static_cast<int>(m_position.gety());
+
+        if (m_shopItem)
+        {
+            m_priceTexture.setDstRect(m_dstRect.x - (((3 * m_priceTexture.getTextDimensions().x) - m_dstRect.w) / 2) - camera.getx(), 
+                m_dstRect.y + m_dstRect.h + 5 - camera.gety(), 3 * m_priceTexture.getTextDimensions().x, 3 * m_priceTexture.getTextDimensions().y);
+        }
     }
 }
 
 void Item::motion()
 {
     m_velocity.add(0.0, Constants::g);
+}
+
+void Item::setPriceColour(int playerMoney)
+{
+    if (playerMoney >= m_price)
+    {
+        m_priceTexture.setColour(0, 255, 0);
+    }
+    else
+    {
+        m_priceTexture.setColour(255, 0, 0);
+    }
 }
 
 void Item::getCollideTiles(const std::vector<std::vector<Tile>>& map, int itemRow, int itemColumn)
@@ -232,4 +255,16 @@ bool Item::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
     }
 
     return xCollision || yCollision;
+}
+
+void Item::cameraDraw(const Camera& camera) const
+{
+    //objects off the screen are not rendered
+    if (m_collider.collideCheck(camera.getCollider()))
+    {
+        SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
+        m_texture.draw(m_srcRect, relativeDstRect, m_angle, nullptr, SDL_FLIP_NONE);
+
+        m_priceTexture.draw();
+    }
 }

@@ -32,9 +32,11 @@ public:
     void setSrcRect(const SDL_Rect& rect) { m_srcRect = rect; }
     void setDstRect(int xPos, int yPos, int width, int height) { m_dstRect = { xPos, yPos, width, height }; }
     void setDstRect(const SDL_Rect& rect) { m_dstRect = rect; }
+    const SDL_Rect& getDstRect() const { return m_dstRect; }
 
     void alphaBlendOn() { m_texture.setBlendingMode(SDL_BLENDMODE_BLEND); }
     void setAlpha(Uint8 alpha) { m_texture.setAlpha(alpha); }
+    void setColour(Uint8 R, Uint8 G, Uint8 B) { m_texture.setColour(R, G, B); }
 
     void loadText(std::string text, SDL_Color colour);
     const SDL_Point& getTextDimensions() const { return m_texture.getTextDimensions(); }

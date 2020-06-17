@@ -58,6 +58,7 @@ private:
 
     bool m_interact{ false };
     int m_interactCount{ 0 };
+    bool m_pickedUpItem{ false };
 
     SoundEffect m_takeDamageSound{ "Assets/Sounds/PlayerSounds/playerDamage.wav" };
     SoundEffect m_hitGroundSound{ "Assets/Sounds/PlayerSounds/land.wav" };
@@ -70,6 +71,8 @@ private:
     SoundEffect m_collectMoneySound1{ "Assets/Sounds/MiscSounds/coin1.wav" };
     SoundEffect m_collectMoneySound2{ "Assets/Sounds/MiscSounds/coin2.wav" };
     SoundEffect m_collectMoneySound3{ "Assets/Sounds/MiscSounds/coin3.wav" };
+    SoundEffect m_buyItemSound{ "Assets/Sounds/MiscSounds/buyItem.wav" };
+    SoundEffect m_pickUpItemSound{ "Assets/Sounds/MiscSounds/pickUpItem.wav" };
 
     void cycleWalkAnimation();
     void cycleIdleAnimation();
@@ -139,4 +142,5 @@ public:
     void interact() { m_interact = true; }
 
     ItemType pickUpItem(const Item& item);
+    bool pickedUpItem() const { return m_pickedUpItem; }
 };
