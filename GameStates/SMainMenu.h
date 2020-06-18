@@ -25,13 +25,17 @@ private:
     int m_buttonWidth;
     int m_buttonHeight;
 
-    bool mainMenuControls(SDL_Event& event);
+    bool mainMenuControls(SDL_Event& event, SDL_GameController* controller);
+
+    void cycleUp();
+    void cycleDown();
+    bool m_joyStickCentered{ true };
 
 public:
     SMainMenu();
     ~SMainMenu();
 
-    State handleEvents();
+    State handleEvents(SDL_GameController* controller);
     State update();
     void render();
 };

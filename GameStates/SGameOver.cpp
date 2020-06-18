@@ -22,58 +22,62 @@ SGameOver::SGameOver()
 SGameOver::~SGameOver()
 {}
 
+void SGameOver::cycleUp()
+{
+    if (m_currentSelection != PLAY_AGAIN)
+    {
+        m_currentSelection = static_cast<GameOverSelection>(static_cast<int>(m_currentSelection) - 1);
+    }
+    else
+    {
+        m_currentSelection = QUIT;
+    }
+}
+
+void SGameOver::cycleDown()
+{
+    if (m_currentSelection != QUIT)
+    {
+        m_currentSelection = static_cast<GameOverSelection>(static_cast<int>(m_currentSelection) + 1);
+    }
+    else
+    {
+        m_currentSelection = PLAY_AGAIN;
+    }
+}
+
 bool SGameOver::gameOverControls(SDL_Event& event)
 {
     if (event.type == SDL_KEYDOWN)
     {
-        switch (event.key.keysym.sym)
+        if (m_currentSelection == NONE && (event.key.keysym.sym == SDLK_w
+            || event.key.keysym.sym == SDLK_s || event.key.keysym.sym == SDLK_UP
+            || event.key.keysym.sym == SDLK_DOWN))
         {
-        case SDLK_w:
-            if (m_currentSelection != PLAY_AGAIN)
+            m_currentSelection = PLAY_AGAIN;
+        }
+
+        else
+        {
+            switch (event.key.keysym.sym)
             {
-                m_currentSelection = static_cast<GameOverSelection>(static_cast<int>(m_currentSelection) - 1);
+            case SDLK_w:
+            case SDLK_UP:
+                cycleUp();
+                return false;
+
+            case SDLK_s:
+            case SDLK_DOWN:
+                cycleDown();
+                return false;
+
+            case SDLK_RETURN:
+            case SDLK_SPACE:
+                return true;
+
+            default:
+                return false;
             }
-            else
-            {
-                m_currentSelection = QUIT;
-            }
-            return false;
-        case SDLK_UP:
-            if (m_currentSelection != PLAY_AGAIN)
-            {
-                m_currentSelection = static_cast<GameOverSelection>(static_cast<int>(m_currentSelection) - 1);
-            }
-            else
-            {
-                m_currentSelection = QUIT;
-            }
-            return false;
-        case SDLK_s:
-            if (m_currentSelection != QUIT)
-            {
-                m_currentSelection = static_cast<GameOverSelection>(static_cast<int>(m_currentSelection) + 1);
-            }
-            else
-            {
-                m_currentSelection = PLAY_AGAIN;
-            }
-            return false;
-        case SDLK_DOWN:
-            if (m_currentSelection != QUIT)
-            {
-                m_currentSelection = static_cast<GameOverSelection>(static_cast<int>(m_currentSelection) + 1);
-            }
-            else
-            {
-                m_currentSelection = PLAY_AGAIN;
-            }
-            return false;
-        case SDLK_RETURN:
-            return true;
-        case SDLK_SPACE:
-            return true;
-        default:
-            return false;
         }
     }
 
@@ -92,28 +96,78 @@ bool SGameOver::gameOverControls(SDL_Event& event)
         return false;
     }
 
-    else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+    else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT
+        && (m_playAgain.mouseIsOnButton() || m_quit.mouseIsOnButton()))
     {
-        if (m_playAgain.mouseIsOnButton())
+        return true;
+    }
+
+    else if (event.type == SDL_CONTROLLERAXISMOTION)
+    {
+        if (m_currentSelection == NONE && (event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY || event.caxis.axis == SDL_CONTROLLER_AXIS_RIGHTY)
+            && (std::abs(event.caxis.value) > m_joystickDeadZone))
         {
-            return true;
+            m_currentSelection = PLAY_AGAIN;
         }
 
-        else if (m_quit.mouseIsOnButton())
+        else
         {
-            return true;
+            if (event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY || event.caxis.axis == SDL_CONTROLLER_AXIS_RIGHTY)
+            {
+                if (event.caxis.value < -m_joystickDeadZone && m_joyStickCentered)
+                {
+                    cycleUp();
+                    m_joyStickCentered = false;
+                }
+                else if (event.caxis.value > m_joystickDeadZone && m_joyStickCentered)
+                {
+                    cycleDown();
+                    m_joyStickCentered = false;
+                }
+                else if (std::abs(event.caxis.value) <= m_joystickDeadZone)
+                {
+                    m_joyStickCentered = true;
+                }
+            }
+        }
+    }
+
+    else if (event.type == SDL_CONTROLLERBUTTONDOWN)
+    {
+        if (m_currentSelection == NONE && (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP
+            || event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN))
+        {
+            m_currentSelection = PLAY_AGAIN;
         }
 
-        else if (m_quit.mouseIsOnButton())
+        else
         {
-            return true;
+            switch (event.cbutton.button)
+            {
+            case SDL_CONTROLLER_BUTTON_DPAD_UP:
+                cycleUp();
+                return false;
+
+            case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+                cycleDown();
+                return false;
+
+            case SDL_CONTROLLER_BUTTON_A:
+                if (m_currentSelection != NONE)
+                {
+                    return true;
+                }
+
+            default:
+                return false;
+            }
         }
     }
 
     return false;
 }
 
-GameState::State SGameOver::handleEvents()
+GameState::State SGameOver::handleEvents(SDL_GameController* controller)
 {
     for (SDL_Event& element : m_events)
     {

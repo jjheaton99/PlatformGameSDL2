@@ -16,13 +16,8 @@ SPlayGame::SPlayGame(std::string mapFile)
     }
 
     m_objectManager->newItem(GameObject::ItemType::AXE, false, playerxSpawn, playerySpawn);
-    for (int i{ 0 }; i < 20; ++i)
-    {
-        m_objectManager->newItem(GameObject::ItemType::POTION, true, 
-            static_cast<int>(playerxSpawn) - (620 - (100 * i)), static_cast<int>(playerySpawn) + 1250);
-    }
 
-    for (int i{ 0 }; i < 20; ++i)
+    for (int i{ 0 }; i < 5; ++i)
     {
         m_objectManager->newItem(GameObject::ItemType::POTION, true,
             playerxSpawn - 620, playerySpawn + 1250);
@@ -41,11 +36,190 @@ SPlayGame::~SPlayGame()
     Mix_FreeMusic(m_music);
 }
 
-void SPlayGame::playerControlsKeyHold()
+void SPlayGame::ladderClimbUp()
+{
+    if (!m_player->isClimbing() && m_player->collidingWithLadder() && !m_player->isDodging())
+    {
+        m_player->uncrouch();
+        m_player->setVel(0, 0);
+        //lining player up with ladder
+        //player hit box height is used instead of width because of the dest rect width of the player is equal to the height
+        //m_player->setPos(m_player->getLadderxPos() + 0.5 * Constants::tileSize - 50.0, m_player->getPos().gety());
+        m_player->climbUp();
+    }
+    else if (m_player->isClimbing())
+    {
+        if (m_player->collidingWithLadder())
+        {
+            m_player->climbUp();
+        }
+        else
+        {
+            m_player->makeAirborne();
+        }
+    }
+}
+
+void SPlayGame::ladderClimbDown()
+{
+    if (m_player->isClimbing())
+    {
+        if (m_player->collidingWithLadder())
+        {
+            m_player->climbDown();
+        }
+        else
+        {
+            m_player->makeAirborne();
+        }
+    }
+}
+
+void SPlayGame::jump()
+{
+    if (m_player->isCrouched())
+    {
+        m_player->dropThroughPlatform();
+    }
+
+    else if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isAttacking())
+    {
+        if (m_player->getMovement() == Player::WALLSLIDE)
+        {
+            double wallJumpVel{ 18.0 };
+            if (m_player->isFacingLeft())
+            {
+                m_player->setVel(wallJumpVel, -1.5 * wallJumpVel);
+                m_player->faceRight();
+            }
+            else
+            {
+                m_player->setVel(-wallJumpVel, -1.5 * wallJumpVel);
+                m_player->faceLeft();
+            }
+            m_player->makeAirborne();
+            m_jumpSound.play();
+        }
+        else if (m_player->isClimbing())
+        {
+            m_player->makeAirborne();
+        }
+        else
+        {
+            double jumpVel{ 20.0 };
+            double maxJumpxVel{ 15.0 };
+
+            m_jumpSound.play();
+            m_player->jumpHigher();
+            m_player->dodgeCancel();
+            if (std::abs(m_player->getVel().getx()) < maxJumpxVel)
+            {
+                m_player->setVel(m_player->getVel().getx(), -jumpVel);
+            }
+            else if (m_player->isFacingLeft())
+            {
+                m_player->setVel(-maxJumpxVel, -jumpVel);
+            }
+            else if (!m_player->isFacingLeft())
+            {
+                m_player->setVel(maxJumpxVel, -jumpVel);
+            }
+            m_player->makeAirborne();
+        }
+    }
+}
+
+void SPlayGame::holdLeftDodge()
+{
+    if (m_player->isClimbing())
+    {
+        m_player->makeAirborne();
+        m_player->addVel(-12.5, 0);
+    }
+    else if (m_player->getMovement() == Player::AIRBORNE)
+    {
+        if (m_player->getVel().getx() >= 0.0)
+        {
+            m_player->addVel(-12.5, 0);
+        }
+        else if (m_player->getVel().getx() < 0.0)
+        {
+            m_player->addVel(-6.5, 0);
+        }
+    }
+    else
+    {
+        m_player->addVel(-40.0, 0);
+    }
+
+    m_player->dodgeLeft();
+}
+
+void SPlayGame::holdRightDodge()
+{
+    if (m_player->isClimbing())
+    {
+        m_player->makeAirborne();
+        m_player->addVel(12.5, 0);
+    }
+    else if (m_player->getMovement() == Player::AIRBORNE)
+    {
+        if (m_player->getVel().getx() >= 0.0)
+        {
+            m_player->addVel(6.5, 0);
+        }
+        else if (m_player->getVel().getx() < 0.0)
+        {
+            m_player->addVel(12.5, 0);
+        }
+    }
+    else
+    {
+        m_player->addVel(40.0, 0);
+    }
+
+    m_player->dodgeRight();
+}
+
+void SPlayGame::defaultDodge()
+{
+    if (m_player->isFacingLeft())
+    {
+        if (m_player->getMovement() == Player::AIRBORNE)
+        {
+            m_player->addVel(-12.5, 0);
+        }
+        else
+        {
+            m_player->addVel(-40.0, 0);
+        }
+
+        m_player->dodgeLeft();
+    }
+
+    else if (!m_player->isFacingLeft())
+    {
+        if (m_player->getMovement() == Player::AIRBORNE)
+        {
+            m_player->addVel(12.5, 0);
+        }
+        else
+        {
+            m_player->addVel(40.0, 0);
+        }
+
+        m_player->dodgeRight();
+    }
+}
+
+void SPlayGame::playerControlsHold(SDL_GameController* controller)
 {
     const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
+    const Sint16 currentLeftyState{ SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY) };
+    const Sint16 currentLeftxState{ SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX) };
 
-    if (m_player->isJumpingHigher() && currentKeyState[SDL_SCANCODE_SPACE])
+    if (m_player->isJumpingHigher() && (currentKeyState[SDL_SCANCODE_SPACE] 
+        || SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_A)))
     {
         m_player->jumpHigher();
     }
@@ -56,15 +230,22 @@ void SPlayGame::playerControlsKeyHold()
 
     if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isClimbing() && !(m_player->getMovement() == Player::WALLSLIDE))
     {
-        if (currentKeyState[SDL_SCANCODE_S])
+        if (currentKeyState[SDL_SCANCODE_S] 
+            || SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)
+            //increase deadzone for crouch 
+            || currentLeftyState > 2 * m_joystickDeadZone)
         {
             m_player->crouch();
         }
-        else if (currentKeyState[SDL_SCANCODE_A])
+        else if (currentKeyState[SDL_SCANCODE_A] 
+            || SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)
+            || currentLeftxState < -m_joystickDeadZone)
         {
             m_player->moveLeft();
         }
-        else if (currentKeyState[SDL_SCANCODE_D])
+        else if (currentKeyState[SDL_SCANCODE_D] 
+            || SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
+            || currentLeftxState > m_joystickDeadZone)
         {
             m_player->moveRight();
         }
@@ -76,67 +257,50 @@ void SPlayGame::playerControlsKeyHold()
 
     else if (m_player->getMovement() == Player::AIRBORNE || m_player->getMovement() == Player::WALLSLIDE)
     {
-        if (currentKeyState[SDL_SCANCODE_A])
+        if (currentKeyState[SDL_SCANCODE_A] 
+            || SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)
+            || currentLeftxState < -m_joystickDeadZone)
         {
             m_player->floatLeft();
         }
-        else if (currentKeyState[SDL_SCANCODE_D])
+        else if (currentKeyState[SDL_SCANCODE_D] 
+            || SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
+            || currentLeftxState > m_joystickDeadZone)
         {
             m_player->floatRight();
         }
     }
 
-    if (currentKeyState[SDL_SCANCODE_W])
+    if (currentKeyState[SDL_SCANCODE_W] 
+        || SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_UP)
+        || currentLeftyState < -m_joystickDeadZone)
     {
-        if (!m_player->isClimbing() && m_player->collidingWithLadder() && !m_player->isDodging())
-        {
-            m_player->uncrouch();
-            m_player->setVel(0, 0);
-            //lining player up with ladder
-            //player hit box height is used instead of width because of the dest rect width of the player is equal to the height
-            //m_player->setPos(m_player->getLadderxPos() + 0.5 * Constants::tileSize - 50.0, m_player->getPos().gety());
-            m_player->climbUp();
-        }
-        else if (m_player->isClimbing())
-        {
-            if (m_player->collidingWithLadder())
-            {
-                m_player->climbUp();
-            }
-            else
-            {
-                m_player->makeAirborne();
-            }
-        }
+        ladderClimbUp();
     }
-    else if (currentKeyState[SDL_SCANCODE_S])
+    else if (currentKeyState[SDL_SCANCODE_S] 
+        || SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)
+        || currentLeftyState > m_joystickDeadZone)
     {
-        if (m_player->isClimbing())
-        {
-            if (m_player->collidingWithLadder())
-            {
-                m_player->climbDown();
-            }
-            else
-            {
-                m_player->makeAirborne();
-            }
-        }
+        ladderClimbDown();
     }
     else if (m_player->isClimbing() && m_player->collidingWithLadder())
     {
         m_player->climbStop();
     }
 
-    if (!currentKeyState[SDL_SCANCODE_S])
+    if (!currentKeyState[SDL_SCANCODE_S] 
+        && !SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)
+        && currentLeftyState < 2 * m_joystickDeadZone)
     {
         m_player->uncrouch();
     }
 }
 
-void SPlayGame::playerControlsKeyPress(SDL_Event& event)
+void SPlayGame::playerControlsPress(SDL_Event& event, SDL_GameController* controller)
 {
     const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
+    const Sint16 currentLeftyState{ SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY) };
+    const Sint16 currentLeftxState{ SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX) };
 
     if (event.type == SDL_KEYDOWN)
     {
@@ -147,56 +311,7 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
             break;
 
         case SDLK_SPACE:
-            if (m_player->isCrouched())
-            {
-                m_player->dropThroughPlatform();
-            }
-
-            else if (!(m_player->getMovement() == Player::AIRBORNE) && !m_player->isAttacking())
-            {
-                if (m_player->getMovement() == Player::WALLSLIDE)
-                {
-                    double wallJumpVel{ 18.0 };
-                    if (m_player->isFacingLeft())
-                    {
-                        m_player->setVel(wallJumpVel, - 1.5 * wallJumpVel);
-                        m_player->faceRight();
-                    }
-                    else
-                    {
-                        m_player->setVel(-wallJumpVel, -1.5 * wallJumpVel);
-                        m_player->faceLeft();
-                    }
-                    m_player->makeAirborne();
-                    m_jumpSound.play();
-                }
-                else if (m_player->isClimbing())
-                {
-                    m_player->makeAirborne();
-                }
-                else
-                {
-                    double jumpVel{ 20.0 };
-                    double maxJumpxVel{ 15.0 };
-
-                    m_jumpSound.play();
-                    m_player->jumpHigher();
-                    m_player->dodgeCancel();
-                    if (std::abs(m_player->getVel().getx()) < maxJumpxVel)
-                    {
-                        m_player->setVel(m_player->getVel().getx(), -jumpVel);
-                    }
-                    else if (m_player->isFacingLeft())
-                    {
-                        m_player->setVel(-maxJumpxVel, -jumpVel);
-                    }
-                    else if (!m_player->isFacingLeft())
-                    {
-                        m_player->setVel(maxJumpxVel, -jumpVel);
-                    }
-                    m_player->makeAirborne();
-                }
-            }
+            jump();
             break;
 
         case SDLK_LSHIFT:
@@ -205,86 +320,18 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
                 m_player->attackCancel();
                 if (currentKeyState[SDL_SCANCODE_A])
                 {
-                    if (m_player->isClimbing())
-                    {
-                        m_player->makeAirborne();
-                        m_player->addVel(-12.5, 0);
-                    }
-                    else if (m_player->getMovement() == Player::AIRBORNE)
-                    {
-                        if (m_player->getVel().getx() >= 0.0)
-                        {
-                            m_player->addVel(-12.5, 0);
-                        }
-                        else if (m_player->getVel().getx() < 0.0)
-                        {
-                            m_player->addVel(-6.5, 0);
-                        }
-                    }
-                    else
-                    {
-                        m_player->addVel(-40.0, 0);
-                    }
-
-                    m_player->dodgeLeft();
+                    holdLeftDodge();
                 }
 
                 else if (currentKeyState[SDL_SCANCODE_D])
                 {
-                    if (m_player->isClimbing())
-                    {
-                        m_player->makeAirborne();
-                        m_player->addVel(12.5, 0);
-                    }
-                    else if (m_player->getMovement() == Player::AIRBORNE)
-                    {
-                        if (m_player->getVel().getx() >= 0.0)
-                        {
-                            m_player->addVel(6.5, 0);
-                        }
-                        else if (m_player->getVel().getx() < 0.0)
-                        {
-                            m_player->addVel(12.5, 0);
-                        }
-                    }
-                    else
-                    {
-                        m_player->addVel(40.0, 0);
-                    }
-
-                    m_player->dodgeRight();
+                    holdRightDodge();
                 }
 
                 //default dodge in direction currently facing
                 else if (!m_player->isClimbing())
                 {
-                    if (m_player->isFacingLeft())
-                    {
-                        if (m_player->getMovement() == Player::AIRBORNE)
-                        {
-                                m_player->addVel(-12.5, 0);
-                        }
-                        else
-                        {
-                            m_player->addVel(-40.0, 0);
-                        }
-
-                        m_player->dodgeLeft();
-                    }
-
-                    else if (!m_player->isFacingLeft())
-                    {
-                        if (m_player->getMovement() == Player::AIRBORNE)
-                        {
-                            m_player->addVel(12.5, 0);
-                        }
-                        else
-                        {
-                            m_player->addVel(40.0, 0);
-                        }
-
-                        m_player->dodgeRight();
-                    }
+                    defaultDodge();
                 }
             }
             break;
@@ -297,13 +344,8 @@ void SPlayGame::playerControlsKeyPress(SDL_Event& event)
             break;
         }
     }
-}
 
-void SPlayGame::playerControlsMouseClick(SDL_Event& event)
-{
-    const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
-
-    if (event.type == SDL_MOUSEBUTTONDOWN)
+    else if (event.type == SDL_MOUSEBUTTONDOWN)
     {
         switch (event.button.button)
         {
@@ -359,30 +401,118 @@ void SPlayGame::playerControlsMouseClick(SDL_Event& event)
             break;
         }
     }
+
+    else if (event.type == SDL_CONTROLLERBUTTONDOWN)
+    {
+        switch (event.cbutton.button)
+        {
+        case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+            m_player->interact();
+            break;
+
+        case SDL_CONTROLLER_BUTTON_A:
+            jump();
+            break;
+
+        case SDL_CONTROLLER_BUTTON_B:
+            if (!m_player->isDodging() && !m_player->dodgeCooling())
+            {
+                m_player->attackCancel();
+                if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)
+                    || currentLeftxState < -m_joystickDeadZone)
+                {
+                    holdLeftDodge();
+                }
+
+                else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
+                    || currentLeftxState > m_joystickDeadZone)
+                {
+                    holdRightDodge();
+                }
+
+                //default dodge in direction currently facing
+                else if (!m_player->isClimbing())
+                {
+                    defaultDodge();
+                }
+            }
+            break;
+
+        case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+            m_player->drinkHealthPotion();
+            break;
+
+        case SDL_CONTROLLER_BUTTON_X:
+            if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)
+                || currentLeftyState > 2 * m_joystickDeadZone)
+            {
+                m_player->dodgeCancel();
+                m_player->downAttack();
+            }
+            else if (!m_player->isClimbing())
+            {
+                m_player->dodgeCancel();
+                if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)
+                    || currentLeftxState < -m_joystickDeadZone)
+                {
+                    m_player->meleeAttackLeft();
+                }
+                else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
+                    || currentLeftxState > m_joystickDeadZone)
+                {
+                    m_player->meleeAttackRight();
+                }
+                else if (m_player->isFacingLeft())
+                {
+                    m_player->meleeAttackLeft();
+                }
+                else
+                {
+                    m_player->meleeAttackRight();
+                }
+            }
+            break;
+
+        case SDL_CONTROLLER_BUTTON_Y:
+            m_player->dodgeCancel();
+            if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)
+                || currentLeftxState < -m_joystickDeadZone)
+            {
+                m_player->throwBoomerangLeft();
+            }
+            else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
+                || currentLeftxState > m_joystickDeadZone)
+            {
+                m_player->throwBoomerangRight();
+            }
+            else if (m_player->isFacingLeft())
+            {
+                m_player->throwBoomerangLeft();
+            }
+            else
+            {
+                m_player->throwBoomerangRight();
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
 }
 
-GameState::State SPlayGame::handleEvents()
+GameState::State SPlayGame::handleEvents(SDL_GameController* controller)
 {
-    playerControlsKeyHold();
+    playerControlsHold(controller);
 
     for (SDL_Event& element : m_events)
     {
-        if (element.type == SDL_KEYDOWN)
+        if ((element.type == SDL_KEYDOWN && element.key.keysym.sym == SDLK_ESCAPE)
+            || (element.type == SDL_CONTROLLERBUTTONDOWN && element.cbutton.button == SDL_CONTROLLER_BUTTON_START))
         {
-            switch (element.key.keysym.sym)
-            {
-            case SDLK_ESCAPE:
-                m_paused = true;
-                m_stepTimer.pause();
-                return PAUSED;
-
-            case SDLK_F2:
-                m_paused = true;
-                return MAIN_MENU;
-
-            default:
-                break;
-            }
+            m_paused = true;
+            m_stepTimer.pause();
+            return PAUSED;
         }
 
         if (element.type == SDL_MOUSEMOTION)
@@ -390,8 +520,7 @@ GameState::State SPlayGame::handleEvents()
             g_window.setMouseCentre();
         }
 
-        playerControlsKeyPress(element);
-        playerControlsMouseClick(element);
+        playerControlsPress(element, controller);
     }
 
     return STATE_NULL;

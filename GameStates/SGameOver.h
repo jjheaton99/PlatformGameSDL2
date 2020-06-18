@@ -9,7 +9,8 @@ public:
     enum GameOverSelection
     {
         PLAY_AGAIN,
-        QUIT
+        QUIT,
+        NONE
     };
 
 private:
@@ -28,11 +29,15 @@ private:
 
     bool gameOverControls(SDL_Event& event);
 
+    void cycleUp();
+    void cycleDown();
+    bool m_joyStickCentered{ true };
+
 public:
     SGameOver();
     ~SGameOver();
 
-    State handleEvents();
+    State handleEvents(SDL_GameController* controller);
     State update();
     void render();
 };

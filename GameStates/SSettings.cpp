@@ -22,6 +22,30 @@ SSettings::SSettings()
 SSettings::~SSettings()
 {}
 
+void SSettings::cycleUp()
+{
+    if (m_currentSelection != FULLSCREEN)
+    {
+        m_currentSelection = static_cast<SettingsSelection>(static_cast<int>(m_currentSelection) - 1);
+    }
+    else
+    {
+        m_currentSelection = BACK;
+    }
+}
+
+void SSettings::cycleDown()
+{
+    if (m_currentSelection != BACK)
+    {
+        m_currentSelection = static_cast<SettingsSelection>(static_cast<int>(m_currentSelection) + 1);
+    }
+    else
+    {
+        m_currentSelection = FULLSCREEN;
+    }
+}
+
 bool SSettings::settingsControls(SDL_Event& event)
 {
     if (event.type == SDL_KEYDOWN)
@@ -38,55 +62,19 @@ bool SSettings::settingsControls(SDL_Event& event)
             switch (event.key.keysym.sym)
             {
             case SDLK_w:
-                if (m_currentSelection != FULLSCREEN)
-                {
-                    m_currentSelection = static_cast<SettingsSelection>(static_cast<int>(m_currentSelection) - 1);
-                }
-                else
-                {
-                    m_currentSelection = BACK;
-                }
-                return false;
             case SDLK_UP:
-                if (m_currentSelection != FULLSCREEN)
-                {
-                    m_currentSelection = static_cast<SettingsSelection>(static_cast<int>(m_currentSelection) - 1);
-                }
-                else
-                {
-                    m_currentSelection = BACK;
-                }
+                cycleUp();
                 return false;
+
             case SDLK_s:
-                if (m_currentSelection != BACK)
-                {
-                    m_currentSelection = static_cast<SettingsSelection>(static_cast<int>(m_currentSelection) + 1);
-                }
-                else
-                {
-                    m_currentSelection = FULLSCREEN;
-                }
-                return false;
             case SDLK_DOWN:
-                if (m_currentSelection != BACK)
-                {
-                    m_currentSelection = static_cast<SettingsSelection>(static_cast<int>(m_currentSelection) + 1);
-                }
-                else
-                {
-                    m_currentSelection = FULLSCREEN;
-                }
+                cycleDown();
                 return false;
+
             case SDLK_RETURN:
-                if (m_currentSelection != NONE)
-                {
-                    return true;
-                }
             case SDLK_SPACE:
-                if (m_currentSelection != NONE)
-                {
-                    return true;
-                }
+                return true;
+
             default:
                 return false;
             }
@@ -108,27 +96,83 @@ bool SSettings::settingsControls(SDL_Event& event)
         return false;
     }
 
-    else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+    else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT
+        && (m_fullscreenOff.mouseIsOnButton() || m_back.mouseIsOnButton()))
     {
-        if (m_fullscreenOff.mouseIsOnButton())
+        return true;
+    }
+
+    else if (event.type == SDL_CONTROLLERAXISMOTION)
+    {
+        if (m_currentSelection == NONE && (event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY || event.caxis.axis == SDL_CONTROLLER_AXIS_RIGHTY)
+            && (std::abs(event.caxis.value) > m_joystickDeadZone))
         {
-            return true;
+            m_currentSelection = FULLSCREEN;
         }
 
-        else if (m_back.mouseIsOnButton())
+        else
         {
-            return true;
+            if (event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY || event.caxis.axis == SDL_CONTROLLER_AXIS_RIGHTY)
+            {
+                if (event.caxis.value < -m_joystickDeadZone && m_joyStickCentered)
+                {
+                    cycleUp();
+                    m_joyStickCentered = false;
+                }
+                else if (event.caxis.value > m_joystickDeadZone && m_joyStickCentered)
+                {
+                    cycleDown();
+                    m_joyStickCentered = false;
+                }
+                else if (std::abs(event.caxis.value) <= m_joystickDeadZone)
+                {
+                    m_joyStickCentered = true;
+                }
+            }
+        }
+    }
+
+    else if (event.type == SDL_CONTROLLERBUTTONDOWN)
+    {
+        if (m_currentSelection == NONE && (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP
+            || event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN))
+        {
+            m_currentSelection = FULLSCREEN;
+        }
+
+        else
+        {
+            switch (event.cbutton.button)
+            {
+            case SDL_CONTROLLER_BUTTON_DPAD_UP:
+                cycleUp();
+                return false;
+
+            case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+                cycleDown();
+                return false;
+
+            case SDL_CONTROLLER_BUTTON_A:
+                if (m_currentSelection != NONE)
+                {
+                    return true;
+                }
+
+            default:
+                return false;
+            }
         }
     }
 
     return false;
 }
 
-GameState::State SSettings::handleEvents()
+GameState::State SSettings::handleEvents(SDL_GameController* controller)
 {
     for (SDL_Event& element : m_events)
     {
-        if (element.type == SDL_KEYDOWN && element.key.keysym.sym == SDLK_ESCAPE)
+        if ((element.type == SDL_KEYDOWN && element.key.keysym.sym == SDLK_ESCAPE)
+            || (element.type == SDL_CONTROLLERBUTTONDOWN && element.cbutton.button == SDL_CONTROLLER_BUTTON_B))
         {
             return PREVIOUS;
         }

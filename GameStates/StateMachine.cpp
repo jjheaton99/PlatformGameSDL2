@@ -4,10 +4,17 @@ StateMachine::StateMachine()
 {
     m_loading.setSrcRect(0, 0, 96, 14);
     m_loading.setDstRect(g_screenWidth - 300, g_screenHeight - 70, 384, 56);
+
+    if (SDL_GameControllerAddMappingsFromFile("Assets/gamecontrollerdb.txt") < 0)
+    {
+        std::cout << "Unable to add mappings from specified file! SDL_Error: " << SDL_GetError() << '\n';
+    }
 }
 
 StateMachine::~StateMachine()
-{}
+{
+    SDL_GameControllerClose(m_controller);
+}
 
 void StateMachine::setNextState(GameState::State nextState)
 {
@@ -102,13 +109,36 @@ void StateMachine::gameLoop()
             changeState();
             return;
         }
+        else if (event.type == SDL_JOYDEVICEADDED)
+        {
+            for (int i{ 0 }; i < SDL_NumJoysticks(); ++i)
+            {
+                if (SDL_IsGameController(i))
+                {
+                    m_controller = SDL_GameControllerOpen(i);
+                    if (m_controller)
+                    {
+                        std::cout << "controller connected, num controllers: " << SDL_NumJoysticks() << '\n';
+                        break;
+                    }
+                    else
+                    {
+                        std::cout << "Unable to open game controller! SDL_Error: " << SDL_GetError() << '\n';
+                    }
+                }
+            }
+        }
+        else if (event.type == SDL_JOYDEVICEREMOVED)
+        {
+            std::cout << "controller disconnected, num controllers: " << SDL_NumJoysticks() << '\n';
+        }
 
         g_window.handleEvent(event);
 
         m_currentState->pushEvent(event);
     }
 
-    setNextState(m_currentState->handleEvents());
+    setNextState(m_currentState->handleEvents(m_controller));
 
     //updates only if the state is not changing
     if (m_nextState == GameState::STATE_NULL)

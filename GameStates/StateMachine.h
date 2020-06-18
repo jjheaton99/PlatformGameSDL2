@@ -13,6 +13,8 @@
 class StateMachine
 {
 private:
+    SDL_GameController* m_controller{ nullptr };
+
     GameState::State m_currentStateID{GameState::MAIN_MENU};
     GameState::State m_prevStateID{ GameState::MAIN_MENU };
     GameState::State m_nextState{ GameState::STATE_NULL };

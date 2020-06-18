@@ -30,11 +30,15 @@ private:
     bool settingsControls(SDL_Event& event);
     bool m_fullscreen{ false };
 
+    void cycleUp();
+    void cycleDown();
+    bool m_joyStickCentered{ true };
+
 public:
     SSettings();
     ~SSettings();
 
-    State handleEvents();
+    State handleEvents(SDL_GameController* controller);
     State update();
     void render();
 };

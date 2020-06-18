@@ -29,11 +29,15 @@ private:
 
     bool pausedControls(SDL_Event& event);
 
+    void cycleUp();
+    void cycleDown();
+    bool m_joyStickCentered{ true };
+
 public:
     SPaused();
     ~SPaused();
 
-    State handleEvents();
+    State handleEvents(SDL_GameController* controller);
     State update();
     void render();
 };

@@ -25,9 +25,15 @@ private:
     double m_FPSTime{ 0.0 };
     int m_FPSCount{ 0 };
 
-    void playerControlsKeyHold();
-    void playerControlsKeyPress(SDL_Event& event);
-    void playerControlsMouseClick(SDL_Event& event);
+    void ladderClimbUp();
+    void ladderClimbDown();
+    void jump();
+    void holdLeftDodge();
+    void holdRightDodge();
+    void defaultDodge();
+
+    void playerControlsHold(SDL_GameController* controller);
+    void playerControlsPress(SDL_Event& event, SDL_GameController* controller);
 
     double averageFPS(double timeStep);
 
@@ -41,7 +47,7 @@ public:
     SPlayGame(std::string mapFile = "Assets/Maps/sideScroller.txt");
     ~SPlayGame();
 
-    State handleEvents();
+    State handleEvents(SDL_GameController* controller);
     State update();
     void render();
 

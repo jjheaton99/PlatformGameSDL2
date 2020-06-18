@@ -44,6 +44,7 @@
     <ClCompile Include="Entities\SpiderShot.cpp" />
     <ClCompile Include="Entities\TextureObject.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameStates\GameState.cpp" />
     <ClCompile Include="GameStates\SGameOver.cpp" />
     <ClCompile Include="GameStates\SMainMenu.cpp" />
     <ClCompile Include="GameStates\SPaused.cpp" />

@@ -4,6 +4,7 @@
 #include "WTimer.h"
 #include "GlobalObjects.h"
 #include "TextureObject.h"
+#include "SDL_gamecontroller.h"
 #include <vector>
 
 //base class for any state of the game
@@ -13,6 +14,8 @@ protected:
     //events are stored in a vector in case we want to handle them in multiple separate functions
     //this ensures events arent 'deleted' through polling in one function before all handling functions have been called
     std::vector<SDL_Event> m_events;
+
+    const int m_joystickDeadZone{ 8000 };
 
 public:
     enum State
@@ -27,10 +30,10 @@ public:
         EXIT
     };
 
-    GameState() {};
-    virtual ~GameState() {};
+    GameState();
+    virtual ~GameState();
 
-    virtual State handleEvents() = 0;
+    virtual State handleEvents(SDL_GameController* controller) = 0;
     virtual State update() = 0;
     virtual void render() = 0;
 
