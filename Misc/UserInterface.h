@@ -27,7 +27,8 @@ private:
     int m_playerPotionCount;
     TextureObject m_potionCount{};
 
-    TextureObject m_boomerangCooldown{ "Assets/UITextures/boomerang.png" };
+    TextureObject m_rangedCooldown{ "Assets/UITextures/empty.png" };
+    GameObject::ItemType m_playerCurrentRangedAttack{ GameObject::ItemType::NONE };
     TextureObject m_dodgeCooldown{ "Assets/UITextures/dodge.png" };
 
     TextureObject m_moneyIcon{ "Assets/MiscTextures/money.png" };

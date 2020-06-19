@@ -38,6 +38,7 @@ public:
     void setAlpha(Uint8 alpha) { m_texture.setAlpha(alpha); }
     void setColour(Uint8 R, Uint8 G, Uint8 B) { m_texture.setColour(R, G, B); }
 
+    void loadPng(std::string text) { m_texture.load(text); }
     void loadText(std::string text, SDL_Color colour);
     const SDL_Point& getTextDimensions() const { return m_texture.getTextDimensions(); }
 };

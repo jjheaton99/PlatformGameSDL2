@@ -157,16 +157,25 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         }
 
         //attack texture position set with an offset from player position 
-        m_meleeAttack->setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
-        m_meleeAttack->update(enemies, m_velocity);
-
-        m_downAttack->setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 90.0);
-        if (m_downAttack->update(enemies, m_velocity))
+        if (m_meleeAttack)
         {
-            setVel(m_velocity.getx(), -30.0);
+            m_meleeAttack->setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 65.0);
+            m_meleeAttack->update(enemies, m_velocity);
         }
 
-        m_rangedAttack->update(map, camera, enemies, shared_from_this());
+        if (m_downAttack)
+        {
+            m_downAttack->setPos(1.0 * m_position.getx() + 50.0, 1.0 * m_position.gety() + 90.0);
+            if (m_downAttack->update(enemies, m_velocity))
+            {
+                setVel(m_velocity.getx(), -30.0);
+            }
+        }
+        
+        if (m_rangedAttack)
+        {
+            m_rangedAttack->update(map, camera, enemies, shared_from_this());
+        }
 
         if (isInvincible())
         {
@@ -499,9 +508,18 @@ void Player::cameraDraw(const Camera& camera) const
 
     /*m_swingAttack.cameraDraw(camera);
     m_stabAttack.cameraDraw(camera);*/
-    m_meleeAttack->cameraDraw(camera);
-    m_downAttack->cameraDraw(camera);
-    m_rangedAttack->cameraDraw(camera);
+    if (m_meleeAttack)
+    {
+        m_meleeAttack->cameraDraw(camera);
+    }
+    if (m_downAttack)
+    {
+        m_downAttack->cameraDraw(camera);
+    }
+    if (m_rangedAttack)
+    {
+        m_rangedAttack->cameraDraw(camera);
+    }
 }
 
 void Player::moveCamera(Camera& camera)
@@ -560,35 +578,6 @@ void Player::moveCamera(Camera& camera)
     }
 }
 
-void Player::meleeAttackLeft()
-{
-    m_downAttack->cancel();
-    m_facingLeft = true;
-    m_meleeAttack->attackLeft();
-}
-
-void Player::meleeAttackRight()
-{
-    m_downAttack->cancel();
-    m_facingLeft = false;
-    m_meleeAttack->attackRight();
-}
-
-void Player::downAttack()
-{
-    if (m_movement == AIRBORNE)
-    {
-        m_meleeAttack->cancel();
-        m_downAttack->attackLeft();
-    }
-}
-
-void Player::attackCancel()
-{
-    m_meleeAttack->cancel();
-    m_downAttack->cancel();
-}
-
 void Player::dodgeLeft()
 {
     m_dodgingLeft = true;
@@ -610,6 +599,22 @@ void Player::dodgeCancel()
     if (isDodging())
     {
         m_dodgeStepCount = m_dodgeFrames + 1;
+    }
+}
+
+double Player::getDodgeCooldownFraction() const
+{
+    if (isDodging())
+    {
+        return 1.0;
+    }
+    else if (!m_dodgeCooling)
+    {
+        return 0.0;
+    }
+    else
+    {
+        return 1.0 - (static_cast<double>(m_dodgeStepCount) / (m_dodgeCooldown / Constants::updateStep));
     }
 }
 
@@ -641,40 +646,8 @@ void Player::setCollider()
     }
 }
 
-void Player::shootRangedLeft()
-{
-    if (!m_meleeAttack->isAttacking() && !m_downAttack->isAttacking())
-    {
-        m_rangedAttack->shootLeft();
-    }
-}
-
-void Player::shootRangedRight()
-{
-    if (!m_meleeAttack->isAttacking() && !m_downAttack->isAttacking())
-    {
-        m_rangedAttack->shootRight();
-    }
-}
-
-double Player::getDodgeCooldownFraction() const
-{
-    if (isDodging())
-    {
-        return 1.0;
-    }
-    else if (!m_dodgeCooling)
-    {
-        return 0.0;
-    }
-    else
-    {
-        return 1.0 - (static_cast<double>(m_dodgeStepCount) / (m_dodgeCooldown / Constants::updateStep));
-    }
-}
-
 void Player::floatLeft()
-{ 
+{
     m_floatingLeft = true;
     m_floatingRight = false;
     if (!m_meleeAttack->isAttacking())
@@ -683,7 +656,7 @@ void Player::floatLeft()
     }
 }
 
-void Player::floatRight() 
+void Player::floatRight()
 {
     m_floatingRight = true;
     m_floatingLeft = false;
@@ -710,6 +683,139 @@ void Player::removeHP(int HP)
             startiFrames();
             m_damageFlashCount = 0;
         }
+    }
+}
+
+void Player::meleeAttackLeft()
+{
+    if (m_meleeAttack)
+    {
+        m_downAttack->cancel();
+        m_facingLeft = true;
+        m_meleeAttack->attackLeft();
+    }
+}
+
+void Player::meleeAttackRight()
+{
+    if (m_meleeAttack)
+    {
+        m_downAttack->cancel();
+        m_facingLeft = false;
+        m_meleeAttack->attackRight();
+    }
+}
+
+void Player::downAttack()
+{
+    if (m_downAttack && m_movement == AIRBORNE)
+    {
+        m_meleeAttack->cancel();
+        m_downAttack->attackLeft();
+    }
+}
+
+void Player::attackCancel()
+{
+    if (m_meleeAttack)
+    {
+        m_meleeAttack->cancel();
+    }
+    if (m_downAttack)
+    {
+        m_downAttack->cancel();
+    }
+}
+
+bool Player::isAttacking() const 
+{ 
+    bool attacking{ false };
+    if (m_meleeAttack)
+    {
+        if (m_meleeAttack->isAttacking())
+        {
+            attacking = true;
+        }
+    }
+    if (m_downAttack)
+    {
+        if (m_downAttack->isAttacking())
+        {
+            attacking = true;
+        }
+    }
+    return attacking;
+}
+
+void Player::shootRangedLeft()
+{
+    if (m_rangedAttack && !m_meleeAttack->isAttacking() && !m_downAttack->isAttacking())
+    {
+        m_rangedAttack->shootLeft();
+    }
+}
+
+void Player::shootRangedRight()
+{
+    if (m_rangedAttack && !m_meleeAttack->isAttacking() && !m_downAttack->isAttacking())
+    {
+        m_rangedAttack->shootRight();
+    }
+}
+
+bool Player::rangedAttackIsFlying() const
+{
+    if (m_rangedAttack)
+    {
+        return m_rangedAttack->isFlying();
+    }
+    return false;
+}
+
+double Player::getRangedAttackCooldownFraction() const 
+{ 
+    if (m_rangedAttack)
+    {
+        return m_rangedAttack->getCooldownFraction();
+    }
+    return 1.0;
+}
+
+GameObject::ItemType Player::getRangedAttackType() const
+{
+    if (m_rangedAttack)
+    {
+        return m_rangedAttack->getType();
+    }
+    return ItemType::NONE;
+}
+
+void Player::drinkHealthPotion()
+{
+    if (m_healthPotions > 0 && m_hitPoints != m_maxHitPoints)
+    {
+        --m_healthPotions;
+        addHP(100);
+        m_drinkPotionSound.play();
+    }
+}
+
+void Player::addMoney(int money)
+{
+    m_money += money;
+    switch (MTRandom::getRandomInt(1, 3))
+    {
+    case 1:
+        m_collectMoneySound1.play();
+        break;
+    case 2:
+        m_collectMoneySound2.play();
+        break;
+    case 3:
+        m_collectMoneySound3.play();
+        break;
+    default:
+        break;
     }
 }
 
@@ -907,35 +1013,6 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
     return xCollision || yCollision;
 }
 
-void Player::drinkHealthPotion()
-{
-    if (m_healthPotions > 0 && m_hitPoints != m_maxHitPoints)
-    {
-        --m_healthPotions;
-        addHP(100);
-        m_drinkPotionSound.play();
-    }
-}
-
-void Player::addMoney(int money)
-{ 
-    m_money += money;
-    switch (MTRandom::getRandomInt(1, 3))
-    {
-    case 1:
-        m_collectMoneySound1.play();
-        break;
-    case 2:
-        m_collectMoneySound2.play();
-        break;
-    case 3:
-        m_collectMoneySound3.play();
-        break;
-    default:
-        break;
-    }
-}
-
 GameObject::ItemType Player::pickUpItem(const Item& item)
 {
     if (item.isShopItem() && item.getPrice() > m_money)
@@ -963,20 +1040,34 @@ GameObject::ItemType Player::pickUpItem(const Item& item)
             break;
 
         case GameObject::ItemType::SWORD:
-            droppedItem = m_meleeAttack->getType();
+            if (m_meleeAttack)
+            {
+                droppedItem = m_meleeAttack->getType();
+            }
             m_meleeAttack.reset(new Sword{});
             break;
 
         case GameObject::ItemType::AXE:
-            droppedItem = m_meleeAttack->getType();
+            if (m_meleeAttack)
+            {
+                droppedItem = m_meleeAttack->getType();
+            }
             m_meleeAttack.reset(new Axe{});
             break;
 
         case GameObject::ItemType::BOOMERANG:
+            if (m_rangedAttack)
+            {
+                droppedItem = m_rangedAttack->getType();
+            }
+            m_rangedAttack.reset(new Boomerang{});
             break;
 
         case GameObject::ItemType::DOWN_AXE:
-            droppedItem = m_downAttack->getType();
+            if (m_downAttack)
+            {
+                droppedItem = m_downAttack->getType();
+            }
             m_downAttack.reset(new DownAxe{});
             break;
 

@@ -31,5 +31,7 @@ public:
     virtual void shootRight();
 
     double getCooldownFraction() const;
+
+    ItemType getType() const { return m_itemType; }
 };
 

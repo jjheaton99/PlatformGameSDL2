@@ -21,7 +21,8 @@ class Player : public std::enable_shared_from_this<Character>, public GroundedCh
 private:
     std::unique_ptr<PlayerMeleeAttack> m_meleeAttack{ std::make_unique<Sword>() };
     std::unique_ptr<PlayerMeleeAttack> m_downAttack{ std::make_unique<DownAxe>() };
-    std::unique_ptr<PlayerRangedAttack> m_rangedAttack{ std::make_unique<Boomerang>() };
+    //std::unique_ptr<PlayerRangedAttack> m_rangedAttack{ std::make_unique<Boomerang>() };
+    std::unique_ptr<PlayerRangedAttack> m_rangedAttack{ nullptr };
 
     //member variables for controlling dodge timing and animation
     const double m_dodgeDuration{ 0.25 };
@@ -108,12 +109,13 @@ public:
     void meleeAttackRight();
     void downAttack();
     void attackCancel();
-    bool isAttacking() const { return m_meleeAttack->isAttacking() || m_downAttack->isAttacking(); }
+    bool isAttacking() const;
 
     void shootRangedLeft();
     void shootRangedRight();
-    bool rangedAttackIsFlying() const { return m_rangedAttack->isFlying(); }
-    double getRangedAttackCooldownFraction() const { return m_rangedAttack->getCooldownFraction(); }
+    bool rangedAttackIsFlying() const;
+    double getRangedAttackCooldownFraction() const;
+    ItemType getRangedAttackType() const;
 
     bool isFacingLeft() const { return m_facingLeft; }
     

@@ -11,8 +11,8 @@ UserInterface::UserInterface(std::shared_ptr<Player> player)
     m_playerPotionCount = player->getPotionCount();
     m_potionCount.loadText(std::to_string(m_playerPotionCount), m_textColour);
 
-    m_boomerangCooldown.alphaBlendOn();
-    m_boomerangCooldown.setSrcRect(0, 0, 32, 32);
+    m_rangedCooldown.alphaBlendOn();
+    m_rangedCooldown.setSrcRect(0, 0, 32, 32);
 
     m_dodgeCooldown.alphaBlendOn();
     m_dodgeCooldown.setSrcRect(0, 0, 32, 32);
@@ -75,7 +75,22 @@ void UserInterface::update()
     m_potionCount.setDstRect(m_healthBarBackgroundDstRect.x + m_healthBarBackgroundDstRect.w + 28,
         g_screenHeight - 72, 2 * m_potionCount.getTextDimensions().x, 2 * m_potionCount.getTextDimensions().y);
 
-    m_boomerangCooldown.setDstRect(g_screenWidth - 80, g_screenHeight - 80, 60, 60);
+    m_rangedCooldown.setDstRect(g_screenWidth - 80, g_screenHeight - 80, 60, 60);
+    GameObject::ItemType rangedType{ m_player->getRangedAttackType() };
+    if (m_playerCurrentRangedAttack != rangedType)
+    {
+        m_playerCurrentRangedAttack = rangedType;
+        switch (m_playerCurrentRangedAttack)
+        {
+        case GameObject::ItemType::NONE:
+            m_rangedCooldown.loadPng("Assets/UITextures/empty.png");
+        case GameObject::ItemType::BOOMERANG:
+            m_rangedCooldown.loadPng("Assets/UITextures/boomerang.png");
+        default:
+            break;
+        }
+    }
+
     m_dodgeCooldown.setDstRect(g_screenWidth - 160, g_screenHeight - 80, 60, 60);
 
     m_moneyIcon.setDstRect(20, 20, 30, 30);
@@ -98,7 +113,7 @@ void UserInterface::draw()
     SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 200);
 
     SDL_Rect boomerangCoolDownCover{ g_screenWidth - 78, g_screenHeight - 78, 56, static_cast<int>(m_player->getRangedAttackCooldownFraction() * 56.0) };
-    m_boomerangCooldown.draw();
+    m_rangedCooldown.draw();
     SDL_RenderFillRect(g_renderer, &boomerangCoolDownCover);
 
     SDL_Rect dodgeCoolDownCover{ g_screenWidth - 158, g_screenHeight - 78, 56, static_cast<int>(m_player->getDodgeCooldownFraction() * 56.0) };

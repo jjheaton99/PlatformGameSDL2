@@ -16,6 +16,7 @@ SPlayGame::SPlayGame(std::string mapFile)
     }
 
     m_objectManager->newItem(GameObject::ItemType::AXE, false, playerxSpawn, playerySpawn);
+    m_objectManager->newItem(GameObject::ItemType::BOOMERANG, false, playerxSpawn + 300, playerySpawn);
 
     for (int i{ 0 }; i < 5; ++i)
     {
