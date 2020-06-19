@@ -45,6 +45,14 @@ Item::Item(ItemType type, bool shopItem, double xPos, double yPos)
         m_price = 3000;
         break;
 
+    case GameObject::ItemType::BLACK_HOLE:
+        m_texture.load("Assets/Items/blackHole.png");
+        m_srcRect = { 0, 0, 50, 50 };
+        m_dstRect.w = 100;
+        m_dstRect.h = 100;
+        m_price = 8000;
+        break;
+
     case GameObject::ItemType::NONE:
     default:
         break;

@@ -1071,6 +1071,14 @@ GameObject::ItemType Player::pickUpItem(const Item& item)
             m_downAttack.reset(new DownAxe{});
             break;
 
+        case GameObject::ItemType::BLACK_HOLE:
+            if (m_rangedAttack)
+            {
+                droppedItem = m_rangedAttack->getType();
+            }
+            m_rangedAttack.reset(new BlackHole{});
+            break;
+
         default:
             break;
         }

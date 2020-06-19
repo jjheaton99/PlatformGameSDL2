@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entities\Bat.cpp" />
+    <ClCompile Include="Entities\BlackHole.cpp" />
     <ClCompile Include="Entities\Character.cpp" />
     <ClCompile Include="Entities\EnemyProjectile.cpp" />
     <ClCompile Include="Entities\FloatingSkull.cpp" />
@@ -71,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entities\Bat.h" />
+    <ClInclude Include="Entities\BlackHole.h" />
     <ClInclude Include="Entities\Character.h" />
     <ClInclude Include="Entities\EnemyProjectile.h" />
     <ClInclude Include="Entities\FloatingSkull.h" />

@@ -9,8 +9,6 @@ class FlyingEnemy : public FlyingCharacter
 protected:
     EnemyType m_type;
 
-    double m_updateRange{ 1000.0 };
-
     int m_projectileCount{ 0 };
     int m_damage;
 

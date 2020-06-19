@@ -8,6 +8,7 @@
 #include "Sword.h"
 #include "DownAxe.h"
 #include "Boomerang.h"
+#include "BlackHole.h"
 #include "Item.h"
 #include <array>
 #include <cmath>

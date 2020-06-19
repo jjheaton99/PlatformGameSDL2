@@ -44,7 +44,10 @@ void FloatingSkull::update(const std::vector<std::vector<Tile>>& map, const Came
         if (m_position.getx() > 1.0 * camera.getx() - m_updateRange && m_position.getx() < 1.0 * camera.getx() + 1.0 * camera.getw() + m_updateRange
             && m_position.gety() > 1.0 * camera.gety() - m_updateRange && m_position.gety() < 1.0 * camera.gety() + 1.0 * camera.geth() + m_updateRange)
         {
-            enemyControls(player);
+            if (!m_immobilised)
+            {
+                enemyControls(player);
+            }
 
             //edge check goes before map collision check to prevent vector subcript error when going off the edge
             if (edgeCheck(camera))
@@ -53,13 +56,21 @@ void FloatingSkull::update(const std::vector<std::vector<Tile>>& map, const Came
                 setCollider();
             }
 
-            bool collided{ sweepMapCollideCheck(map) };
+            bool collided{ false };
+            if (!m_immobilised)
+            {
+                collided = sweepMapCollideCheck(map);
+            }
+            else
+            {
+                collided = immobilisedSweepMapCollideCheck(map);
+            }
+
             if (collided)
             {
                 setCollider();
             }
-
-            if (!collided)
+            else
             {
                 m_position.add(m_velocity);
                 setCollider();
@@ -81,6 +92,11 @@ void FloatingSkull::update(const std::vector<std::vector<Tile>>& map, const Came
                 m_projectile = ProjectileType::SKULL;
                 m_skullShotSound.play();
             }
+            m_inUpdateRange = true;
+        }
+        else
+        {
+            m_inUpdateRange = false;
         }
     }
     else

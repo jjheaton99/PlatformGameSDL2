@@ -36,6 +36,5 @@ public:
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::vector<std::shared_ptr<Character>>& enemies, std::shared_ptr<Character> player) override;
 
     bool isReturning() const { return m_returningToPlayer; }
-    bool isFlying() const { return m_flying; }
 };
 

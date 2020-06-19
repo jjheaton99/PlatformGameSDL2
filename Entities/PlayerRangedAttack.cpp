@@ -1,7 +1,7 @@
 #include "PlayerRangedAttack.h"
 
-PlayerRangedAttack::PlayerRangedAttack(std::string fileName, double xPos, double yPos, double xVel, double yVel, double colliderWidth, double colliderHeight, int damage) 
-    : Projectile(fileName, xPos, yPos, xVel, yVel, colliderWidth, colliderHeight, damage)
+PlayerRangedAttack::PlayerRangedAttack(std::string fileName, double xPos, double yPos, double xVel, double yVel, double colliderWidth, double colliderHeight, int damage, double cooldown)
+    : Projectile(fileName, xPos, yPos, xVel, yVel, colliderWidth, colliderHeight, damage), m_coolDown{cooldown}
 {}
 
 void PlayerRangedAttack::cameraDraw(const Camera& camera) const

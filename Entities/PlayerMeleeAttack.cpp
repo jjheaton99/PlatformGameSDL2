@@ -52,7 +52,7 @@ bool PlayerMeleeAttack::collideCheck(std::vector<std::shared_ptr<Character>>& en
     for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
     {
         //if enemy is alive, hasnt been hit by attack and near weapon attack
-        if (enemies[i] && !enemies[i]->isDying() && !m_hitEnemies[i] && (enemies[i]->getPos() - m_position).magnitude() < 1000)
+        if (enemies[i] && enemies[i]->isInUpdateRange() && !enemies[i]->isDying() && !m_hitEnemies[i] && (enemies[i]->getPos() - m_position).magnitude() < 700)
         {
             bool hit{ false };
             if (m_collider.collideCheck(enemies[i]->getCollider()))

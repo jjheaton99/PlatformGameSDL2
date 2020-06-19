@@ -36,6 +36,7 @@ public:
         AXE,
         BOOMERANG,
         DOWN_AXE,
+        BLACK_HOLE,
         NONE,
     };
 

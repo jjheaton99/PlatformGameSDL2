@@ -18,7 +18,10 @@ void FlyingEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera
         if (m_position.getx() > 1.0 * camera.getx() - m_updateRange && m_position.getx() < 1.0 * camera.getx() + 1.0 * camera.getw() + m_updateRange
             && m_position.gety() > 1.0 * camera.gety() - m_updateRange && m_position.gety() < 1.0 * camera.gety() + 1.0 * camera.geth() + m_updateRange)
         {
-            enemyControls(player);
+            if (!m_immobilised)
+            {
+                enemyControls(player);
+            }
 
             //edge check goes before map collision check to prevent vector subcript error when going off the edge
             if (edgeCheck(camera))
@@ -27,13 +30,21 @@ void FlyingEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera
                 setCollider();
             }
 
-            bool collided{ sweepMapCollideCheck(map) || attackPlayer(player) };
+            bool collided{ false };
+            if (!m_immobilised)
+            {
+                collided = sweepMapCollideCheck(map) || attackPlayer(player);
+            }
+            else
+            {
+                collided = immobilisedSweepMapCollideCheck(map) || attackPlayer(player);
+            }
+
             if (collided)
             {
                 setCollider();
             }
-
-            if (!collided)
+            else
             {
                 m_position.add(m_velocity);
                 setCollider();
@@ -44,6 +55,11 @@ void FlyingEnemy::update(const std::vector<std::vector<Tile>>& map, const Camera
 
             animateSprite();
             cycleDamageFlash();
+            m_inUpdateRange = true;
+        }
+        else
+        {
+            m_inUpdateRange = false;
         }
     }
     else

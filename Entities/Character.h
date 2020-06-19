@@ -18,6 +18,9 @@ protected:
     std::vector<SDL_Rect> m_spriteRects;
     std::vector<SDL_Rect>::size_type m_spriteIndex{ 0 };
 
+    double m_updateRange{ 1000.0 };
+    bool m_inUpdateRange{ true };
+
     bool m_killed{ false };
     bool m_dead{ false };
     int m_killDelayCount{ 0 };
@@ -39,11 +42,14 @@ protected:
     bool m_collidingWithLadder{ false };
     double m_ladderxPos{ 0.0 };
 
+    bool m_immobilised{ false };
+
     ProjectileType m_projectile{ ProjectileType::NONE };
 
     //for checking collisions with map tiles
     void getCollideTiles(const std::vector<std::vector<Tile>>& map, int characterRow, int characterColumn);
     virtual bool sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map) = 0;
+    bool immobilisedSweepMapCollideCheck(const std::vector<std::vector<Tile>>& map);
     //for checking collisions with the edge of the map
     virtual bool edgeCheck(const Camera& camera) = 0;
     virtual void motion() = 0;
@@ -63,6 +69,8 @@ public:
     virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::shared_ptr<Character> player) = 0;
     virtual void cameraDraw(const Camera& camera) const override;
 
+    bool isInUpdateRange() const { return m_inUpdateRange; }
+
     void addHP(int HP);
     virtual void removeHP(int HP);
     int getMaxHP() const { return m_maxHitPoints; }
@@ -77,6 +85,10 @@ public:
 
     void faceLeft() { m_facingLeft = true; }
     void faceRight() { m_facingLeft = false; }
+
+    void immobilise() { m_immobilised = true; }
+    void freeMovement() { m_immobilised = false; }
+    bool isImmobilised() const { return m_immobilised; }
 
     GameObject::ProjectileType getProjectile() const { return m_projectile; }
 };

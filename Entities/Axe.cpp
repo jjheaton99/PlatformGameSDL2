@@ -140,7 +140,7 @@ bool Axe::collideCheck(std::vector<std::shared_ptr<Character>>& enemies, const V
     for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
     {
         //if enemy is alive, hasnt been hit by attack and near weapon attack
-        if (enemies[i] && !enemies[i]->isDying() && !m_hitEnemies[i] && (enemies[i]->getPos() - m_position).magnitude() < 300)
+        if (enemies[i] && enemies[i]->isInUpdateRange() && !enemies[i]->isDying() && !m_hitEnemies[i] && (enemies[i]->getPos() - m_position).magnitude() < 300)
         {
             if (m_multiCollider.collideCheck(enemies[i]->getCollider()))
             {

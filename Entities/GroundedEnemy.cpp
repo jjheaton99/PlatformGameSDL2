@@ -18,7 +18,14 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
         if (m_position.getx() > 1.0 * camera.getx() - m_updateRange && m_position.getx() < 1.0 * camera.getx() + 1.0 * camera.getw() + m_updateRange
             && m_position.gety() > 1.0 * camera.gety() - m_updateRange && m_position.gety() < 1.0 * camera.gety() + 1.0 * camera.geth() + m_updateRange)
         {
-            enemyControls(player);
+            if (!m_immobilised)
+            {
+                enemyControls(player);
+            }
+            else
+            {
+                m_movement = AIRBORNE;
+            }
 
             //edge check goes before map collision check to prevent vector subcript error when going off the edge
             if (edgeCheck(camera))
@@ -27,17 +34,28 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
                 setCollider();
             }
 
-            bool airborne{ m_movement == AIRBORNE };
-            bool collided{ sweepMapCollideCheck(map) };
-            bool landed{ m_movement != AIRBORNE };
-
-            //if enemy just landed from jumping
-            if (airborne && landed)
+            bool collided{ false };
+            if (!m_immobilised)
             {
-                m_landed = true;
+                bool airborne{ m_movement == AIRBORNE };
+                bool collided{ sweepMapCollideCheck(map) };
+                bool landed{ m_movement != AIRBORNE };
+                //if enemy just landed from jumping
+                if (airborne && landed)
+                {
+                    m_landed = true;
+                }
+            }
+            else
+            {
+                collided = immobilisedSweepMapCollideCheck(map);
             }
 
-            if (!collided)
+            if (collided)
+            {
+                setCollider();
+            }
+            else
             {
                 m_position.add(m_velocity);
                 setCollider();
@@ -46,10 +64,19 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
             m_dstRect.x = static_cast<int>(m_position.getx());
             m_dstRect.y = static_cast<int>(m_position.gety());
 
-            motion();
+            if (!m_immobilised)
+            {
+                motion();
+            }
             animateSprite();
             attackPlayer(player);
             cycleDamageFlash();
+
+            m_inUpdateRange = true;
+        }
+        else
+        {
+            m_inUpdateRange = false;
         }
     }
     else

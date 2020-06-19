@@ -1,7 +1,7 @@
 #include "Boomerang.h"
 
 Boomerang::Boomerang()
-    : PlayerRangedAttack("Assets/Attacks/boomerang.png", 0.0, 0.0, 0.0, 0.0, 10.0, 10.0, 20)
+    : PlayerRangedAttack("Assets/Attacks/boomerang.png", 0.0, 0.0, 0.0, 0.0, 10.0, 10.0, 20, 3.0)
 {
     m_itemType = ItemType::BOOMERANG;
 
@@ -169,7 +169,7 @@ bool Boomerang::aquireTargetEnemy(const std::vector<std::shared_ptr<Character>>&
 
         for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
         {
-            if (enemies[i] && !enemies[i]->isDying() && m_prevTarget.lock() != enemies[i])
+            if (enemies[i] && enemies[i]->isInUpdateRange() && !enemies[i]->isDying() && m_prevTarget.lock() != enemies[i])
             {
                 enemyDistance = (enemies[i]->getPos() - m_position).magnitude();
                 if (enemyDistance < closestEnemyDistance)

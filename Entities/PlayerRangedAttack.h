@@ -11,7 +11,7 @@ protected:
     bool m_shootLeft{ false };
     bool m_shootRight{ false };
     bool m_flying{ false };
-    double m_coolDown{ 3.0 };
+    double m_coolDown;
     int m_coolDownCount{ 0 };
     bool m_isCooling{ false };
 
@@ -19,7 +19,7 @@ protected:
 
 public:
     PlayerRangedAttack(std::string fileName, double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 0.0, 
-        double colliderHeight = 0.0, int damage = 1);
+        double colliderHeight = 0.0, int damage = 1, double cooldown = 1.0);
 
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera) override {};
     virtual void update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::vector<std::shared_ptr<Character>>& enemies, std::shared_ptr<Character> player) = 0;
