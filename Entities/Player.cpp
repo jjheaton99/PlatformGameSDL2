@@ -166,7 +166,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
             setVel(m_velocity.getx(), -30.0);
         }
 
-        m_boomerang.update(map, camera, enemies, shared_from_this());
+        m_rangedAttack->update(map, camera, enemies, shared_from_this());
 
         if (isInvincible())
         {
@@ -501,7 +501,7 @@ void Player::cameraDraw(const Camera& camera) const
     m_stabAttack.cameraDraw(camera);*/
     m_meleeAttack->cameraDraw(camera);
     m_downAttack->cameraDraw(camera);
-    m_boomerang.cameraDraw(camera);
+    m_rangedAttack->cameraDraw(camera);
 }
 
 void Player::moveCamera(Camera& camera)
@@ -641,19 +641,19 @@ void Player::setCollider()
     }
 }
 
-void Player::throwBoomerangLeft()
+void Player::shootRangedLeft()
 {
     if (!m_meleeAttack->isAttacking() && !m_downAttack->isAttacking())
     {
-        m_boomerang.throwLeft();
+        m_rangedAttack->shootLeft();
     }
 }
 
-void Player::throwBoomerangRight()
+void Player::shootRangedRight()
 {
     if (!m_meleeAttack->isAttacking() && !m_downAttack->isAttacking())
     {
-        m_boomerang.throwRight();
+        m_rangedAttack->shootRight();
     }
 }
 

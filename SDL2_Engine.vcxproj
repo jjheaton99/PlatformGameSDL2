@@ -36,6 +36,7 @@
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Entities\Boomerang.cpp" />
     <ClCompile Include="Entities\DownAxe.cpp" />
+    <ClCompile Include="Entities\PlayerRangedAttack.cpp" />
     <ClCompile Include="Entities\Sword.cpp" />
     <ClCompile Include="Entities\Axe.cpp" />
     <ClCompile Include="Entities\Projectile.cpp" />
@@ -86,6 +87,7 @@
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="Entities\Boomerang.h" />
     <ClInclude Include="Entities\DownAxe.h" />
+    <ClInclude Include="Entities\PlayerRangedAttack.h" />
     <ClInclude Include="Entities\Sword.h" />
     <ClInclude Include="Entities\Axe.h" />
     <ClInclude Include="Entities\Projectile.h" />

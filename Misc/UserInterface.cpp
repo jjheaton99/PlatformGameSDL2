@@ -97,7 +97,7 @@ void UserInterface::draw()
     SDL_SetRenderDrawBlendMode(g_renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 200);
 
-    SDL_Rect boomerangCoolDownCover{ g_screenWidth - 78, g_screenHeight - 78, 56, static_cast<int>(m_player->getBoomerangCooldownFraction() * 56.0) };
+    SDL_Rect boomerangCoolDownCover{ g_screenWidth - 78, g_screenHeight - 78, 56, static_cast<int>(m_player->getRangedAttackCooldownFraction() * 56.0) };
     m_boomerangCooldown.draw();
     SDL_RenderFillRect(g_renderer, &boomerangCoolDownCover);
 

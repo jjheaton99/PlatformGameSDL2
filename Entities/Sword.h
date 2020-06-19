@@ -12,7 +12,7 @@ private:
     SoundEffect m_attackSound{ "Assets/Sounds/PlayerSounds/AttackSounds/light.wav" };
 
 public:
-    Sword(int damage = 20, double xBase = 0, double yBase = 0);
+    Sword();
 
     bool update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel) override;
     //void cameraDraw(const Camera& camera) const override;

@@ -334,20 +334,20 @@ void SPlayGame::rangedAttackController(SDL_GameController* controller, Sint16 cu
     if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)
         || currentLeftxState < -m_joystickDeadZone)
     {
-        m_player->throwBoomerangLeft();
+        m_player->shootRangedLeft();
     }
     else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
         || currentLeftxState > m_joystickDeadZone)
     {
-        m_player->throwBoomerangRight();
+        m_player->shootRangedRight();
     }
     else if (m_player->isFacingLeft())
     {
-        m_player->throwBoomerangLeft();
+        m_player->shootRangedLeft();
     }
     else
     {
-        m_player->throwBoomerangRight();
+        m_player->shootRangedRight();
     }
 }
 
@@ -436,19 +436,19 @@ void SPlayGame::playerControlsPress(SDL_Event& event, SDL_GameController* contro
             m_player->dodgeCancel();
             if (currentKeyState[SDL_SCANCODE_A])
             {
-                m_player->throwBoomerangLeft();
+                m_player->shootRangedLeft();
             }
             else if (currentKeyState[SDL_SCANCODE_D])
             {
-                m_player->throwBoomerangRight();
+                m_player->shootRangedRight();
             }
             else if (m_player->isFacingLeft())
             {
-                m_player->throwBoomerangLeft();
+                m_player->shootRangedLeft();
             }
             else
             {
-                m_player->throwBoomerangRight();
+                m_player->shootRangedRight();
             }
             break;
 

@@ -1,8 +1,10 @@
 #include "Boomerang.h"
 
-Boomerang::Boomerang(double xPos, double yPos, double xVel, double yVel, double colliderWidth, double colliderHeight, std::string fileName, int damage)
-    : Projectile(fileName, xPos, yPos, xVel, yVel, colliderWidth, colliderHeight, damage)
+Boomerang::Boomerang()
+    : PlayerRangedAttack("Assets/Attacks/boomerang.png", 0.0, 0.0, 0.0, 0.0, 10.0, 10.0, 20)
 {
+    m_itemType = ItemType::BOOMERANG;
+
     m_srcRect = { 0, 0, 32, 32 };
 
     m_dstRect.w = 60;
@@ -11,17 +13,17 @@ Boomerang::Boomerang(double xPos, double yPos, double xVel, double yVel, double 
 
 void Boomerang::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::vector<std::shared_ptr<Character>>& enemies, std::shared_ptr<Character> player)
 {
-    if (m_throwLeft)
+    if (m_shootLeft)
     {
         m_flying = true;
-        m_throwLeft = false;
+        m_shootLeft = false;
         aquireTargetEnemy(enemies);
         m_velocity = Vector2D<double>{ -m_maxSpeed, 0.0 };
     }
-    else if (m_throwRight)
+    else if (m_shootRight)
     {
         m_flying = true;
-        m_throwRight = false;
+        m_shootRight = false;
         aquireTargetEnemy(enemies);
         m_velocity = Vector2D<double>{ m_maxSpeed, 0.0 };
     }
@@ -259,49 +261,5 @@ void Boomerang::motion()
             scaleFactor = (velMag - m_maxSpeed) / velMag;
             m_velocity.subtract(scaleFactor * m_velocity);
         }
-    }
-}
-
-void Boomerang::cameraDraw(const Camera& camera) const
-{
-    if (m_flying)
-    {
-        if (m_collider.collideCheck(camera.getCollider()))
-        {
-            SDL_Rect relativeDstRect{ m_dstRect.x - camera.getx(), m_dstRect.y - camera.gety(), m_dstRect.w, m_dstRect.h };
-            m_texture.draw(m_srcRect, relativeDstRect, m_angle, nullptr, SDL_FLIP_NONE);
-        }
-    }
-}
-
-void Boomerang::throwLeft()
-{
-    if (!m_isCooling && !m_flying)
-    {
-        m_throwLeft = true;
-    }
-}
-
-void Boomerang::throwRight()
-{
-    if (!m_isCooling && !m_flying)
-    {
-        m_throwRight = true;
-    }
-}
-
-double Boomerang::getCooldownFraction() const
-{
-    if (m_flying)
-    {
-        return 1.0;
-    }
-    else if (!m_isCooling)
-    {
-        return 0.0;
-    }
-    else
-    {
-        return 1.0 - (static_cast<double>(m_coolDownCount) / (m_coolDown / Constants::updateStep));
     }
 }

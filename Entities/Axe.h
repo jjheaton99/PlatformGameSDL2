@@ -19,7 +19,7 @@ private:
     SoundEffect m_attackSound{ "Assets/Sounds/PlayerSounds/AttackSounds/axe.wav" };
 
 public:
-    Axe(int damage = 40, double xBasePos = 0, double yBasePos = 0);
+    Axe();
 
     bool update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel) override;
     bool collideCheck(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel, double xKnockback, double yKnockback) override;

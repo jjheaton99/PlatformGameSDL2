@@ -1,7 +1,7 @@
 #include "Sword.h"
 
-Sword::Sword(int damage, double xBase, double yBase)
-    : PlayerMeleeAttack("Assets/Attacks/sword3.png", damage, xBase, yBase, 131.0, 22.0, 0.16)
+Sword::Sword()
+    : PlayerMeleeAttack("Assets/Attacks/sword3.png", 20, 0.0, 0.0, 131.0, 22.0, 0.16)
 {
     m_itemType = ItemType::SWORD;
 
