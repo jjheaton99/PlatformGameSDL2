@@ -1,7 +1,7 @@
-#include "PlayerDownAttack.h"
+#include "DownAxe.h"
 
-PlayerDownAttack::PlayerDownAttack(int damage, double xBase, double yBase)
-    : MeleeObject("Assets/Attacks/downAttack.png", damage, xBase, yBase, 62.0, 66.0, 0.2)
+DownAxe::DownAxe(int damage, double xBase, double yBase)
+    : PlayerMeleeAttack("Assets/Attacks/downAttack.png", damage, xBase, yBase, 62.0, 66.0, 0.2)
 {
     m_itemType = ItemType::DOWN_AXE;
 
@@ -15,7 +15,7 @@ PlayerDownAttack::PlayerDownAttack(int damage, double xBase, double yBase)
     m_yoffsetUpdate = 100.0 / m_updateCount;
 }
 
-bool PlayerDownAttack::update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel)
+bool DownAxe::update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel)
 {
     updateHitEnemies(enemies);
 

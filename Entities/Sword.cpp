@@ -1,7 +1,7 @@
-#include "PlayerStabAttack.h"
+#include "Sword.h"
 
-PlayerStabAttack::PlayerStabAttack(int damage, double xBase, double yBase)
-    : MeleeObject("Assets/Attacks/sword3.png", damage, xBase, yBase, 131.0, 22.0, 0.16)
+Sword::Sword(int damage, double xBase, double yBase)
+    : PlayerMeleeAttack("Assets/Attacks/sword3.png", damage, xBase, yBase, 131.0, 22.0, 0.16)
 {
     m_itemType = ItemType::SWORD;
 
@@ -15,7 +15,7 @@ PlayerStabAttack::PlayerStabAttack(int damage, double xBase, double yBase)
     m_xoffsetUpdate = 150.0 / m_updateCount;
 }
 
-bool PlayerStabAttack::update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel)
+bool Sword::update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel)
 {
     updateHitEnemies(enemies);
 
@@ -94,7 +94,7 @@ bool PlayerStabAttack::update(std::vector<std::shared_ptr<Character>>& enemies, 
     return hit;
 }
 
-void PlayerStabAttack::setCollider()
+void Sword::setCollider()
 {
     if (m_facingLeft)
     {

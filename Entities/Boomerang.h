@@ -3,7 +3,7 @@
 #include "Projectile.h"
 #include "Character.h"
 
-class PlayerBoomerang : public Projectile
+class Boomerang : public Projectile
 {
 private:
     ItemType m_itemType{ ItemType::BOOMERANG };
@@ -41,7 +41,7 @@ private:
     void setCollider() override { m_collider.setPosition(m_position.getx() + 15.0, m_position.gety() + 15.0); }
 
 public:
-    PlayerBoomerang(double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 10.0, double colliderHeight = 10.0, 
+    Boomerang(double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 10.0, double colliderHeight = 10.0, 
         std::string fileName = "Assets/Attacks/boomerang.png", int damage = 20);
 
     void update(const std::vector<std::vector<Tile>>& map, const Camera& camera) override {};

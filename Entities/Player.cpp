@@ -964,12 +964,12 @@ GameObject::ItemType Player::pickUpItem(const Item& item)
 
         case GameObject::ItemType::SWORD:
             droppedItem = m_meleeAttack->getType();
-            m_meleeAttack.reset(new PlayerStabAttack{});
+            m_meleeAttack.reset(new Sword{});
             break;
 
         case GameObject::ItemType::AXE:
             droppedItem = m_meleeAttack->getType();
-            m_meleeAttack.reset(new PlayerSwingAttack{});
+            m_meleeAttack.reset(new Axe{});
             break;
 
         case GameObject::ItemType::BOOMERANG:
@@ -977,7 +977,7 @@ GameObject::ItemType Player::pickUpItem(const Item& item)
 
         case GameObject::ItemType::DOWN_AXE:
             droppedItem = m_downAttack->getType();
-            m_downAttack.reset(new PlayerDownAttack{});
+            m_downAttack.reset(new DownAxe{});
             break;
 
         default:

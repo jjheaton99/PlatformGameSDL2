@@ -1,15 +1,15 @@
-#include "MeleeObject.h"
+#include "PlayerMeleeAttack.h"
 
-MeleeObject::MeleeObject(std::string fileName, int damage, double xBasePos, double yBasePos, double colliderWidth, double colliderHeight, double attackDuration)
+PlayerMeleeAttack::PlayerMeleeAttack(std::string fileName, int damage, double xBasePos, double yBasePos, double colliderWidth, double colliderHeight, double attackDuration)
     : GameObject(fileName, xBasePos, yBasePos, 0.0, 0.0, colliderWidth, colliderHeight), m_damage{damage}, m_attackDuration{ attackDuration }
 {
     m_updateCount = static_cast<int>(m_attackDuration / Constants::updateStep);
 }
 
-MeleeObject::~MeleeObject()
+PlayerMeleeAttack::~PlayerMeleeAttack()
 {}
 
-void MeleeObject::cameraDraw(const Camera& camera) const
+void PlayerMeleeAttack::cameraDraw(const Camera& camera) const
 {
     if (m_attacking && m_counter != 0)
     {
@@ -33,7 +33,7 @@ void MeleeObject::cameraDraw(const Camera& camera) const
     }
 }
 
-void MeleeObject::updateHitEnemies(const std::vector<std::shared_ptr<Character>>& enemies)
+void PlayerMeleeAttack::updateHitEnemies(const std::vector<std::shared_ptr<Character>>& enemies)
 {
     if (m_hitEnemies.size() != enemies.size())
     {
@@ -41,18 +41,18 @@ void MeleeObject::updateHitEnemies(const std::vector<std::shared_ptr<Character>>
     }
 }
 
-void MeleeObject::resetHitEnemies()
+void PlayerMeleeAttack::resetHitEnemies()
 {
     std::fill(m_hitEnemies.begin(), m_hitEnemies.end(), false);
 }
 
-bool MeleeObject::collideCheck(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel, double xKnockback, double yKnockback)
+bool PlayerMeleeAttack::collideCheck(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel, double xKnockback, double yKnockback)
 {
     bool attackLanded{ false };
     for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
     {
         //if enemy is alive, hasnt been hit by attack and near weapon attack
-        if (enemies[i] && !m_hitEnemies[i] && (enemies[i]->getPos() - m_position).magnitude() < 1000)
+        if (enemies[i] && !enemies[i]->isDying() && !m_hitEnemies[i] && (enemies[i]->getPos() - m_position).magnitude() < 1000)
         {
             bool hit{ false };
             if (m_collider.collideCheck(enemies[i]->getCollider()))
@@ -88,7 +88,7 @@ bool MeleeObject::collideCheck(std::vector<std::shared_ptr<Character>>& enemies,
     return attackLanded;
 }
 
-void MeleeObject::attackLeft()
+void PlayerMeleeAttack::attackLeft()
 { 
     if (!m_attacking)
     {
@@ -97,7 +97,7 @@ void MeleeObject::attackLeft()
     }
 }
 
-void MeleeObject::attackRight()
+void PlayerMeleeAttack::attackRight()
 { 
     if (!m_attacking)
     {
@@ -106,7 +106,7 @@ void MeleeObject::attackRight()
     }
 }
 
-void MeleeObject::cancel()
+void PlayerMeleeAttack::cancel()
 {
     m_attacking = false;
     m_counter = 0;

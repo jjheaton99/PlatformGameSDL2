@@ -1,7 +1,7 @@
-#include "PlayerSwingAttack.h"
+#include "Axe.h"
 
-PlayerSwingAttack::PlayerSwingAttack(int damage, double xBasePos, double yBasePos)
-    : MeleeObject("Assets/Attacks/axe.png", damage, xBasePos, yBasePos, 1.0, 1.0, 0.25)
+Axe::Axe(int damage, double xBasePos, double yBasePos)
+    : PlayerMeleeAttack("Assets/Attacks/axe.png", damage, xBasePos, yBasePos, 1.0, 1.0, 0.25)
 {
     m_itemType = ItemType::AXE;
 
@@ -25,7 +25,7 @@ PlayerSwingAttack::PlayerSwingAttack(int damage, double xBasePos, double yBasePo
     };
 }
 
-void PlayerSwingAttack::rotateColliders(double angle)
+void Axe::rotateColliders(double angle)
 {
     for (auto& position : m_colliderOffsets)
     {
@@ -33,7 +33,7 @@ void PlayerSwingAttack::rotateColliders(double angle)
     }
 }
 
-void PlayerSwingAttack::resetColliders()
+void Axe::resetColliders()
 {
     double reflect{ static_cast<double>(m_facingLeft ? -1.0 : 1.0) };
     m_colliderOffsets = std::vector<Vector2D<double>>{
@@ -46,7 +46,7 @@ void PlayerSwingAttack::resetColliders()
     };
 }
 
-bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel)
+bool Axe::update(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel)
 {
     updateHitEnemies(enemies);
 
@@ -133,14 +133,14 @@ bool PlayerSwingAttack::update(std::vector<std::shared_ptr<Character>>& enemies,
     return hit;
 }
 
-bool PlayerSwingAttack::collideCheck(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel, double xKnockback, double yKnockback)
+bool Axe::collideCheck(std::vector<std::shared_ptr<Character>>& enemies, const Vector2D<double>& playerVel, double xKnockback, double yKnockback)
 {
     bool hit{ false };
 
     for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
     {
         //if enemy is alive, hasnt been hit by attack and near weapon attack
-        if (enemies[i] && !m_hitEnemies[i] && (enemies[i]->getPos() - m_position).magnitude() < 300)
+        if (enemies[i] && !enemies[i]->isDying() && !m_hitEnemies[i] && (enemies[i]->getPos() - m_position).magnitude() < 300)
         {
             if (m_multiCollider.collideCheck(enemies[i]->getCollider()))
             {
@@ -163,7 +163,7 @@ bool PlayerSwingAttack::collideCheck(std::vector<std::shared_ptr<Character>>& en
 }
 
 //for testing positions of hitboxes
-/*void PlayerSwingAttack::cameraDraw(const Camera& camera) const
+/*void Axe::cameraDraw(const Camera& camera) const
 {
     SDL_RendererFlip flip{ SDL_FLIP_NONE };
     if (m_facingLeft)

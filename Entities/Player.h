@@ -2,11 +2,11 @@
 
 #include "GroundedCharacter.h"
 #include "Constants.h"
-#include "MeleeObject.h"
-#include "PlayerSwingAttack.h"
-#include "PlayerStabAttack.h"
-#include "PlayerDownAttack.h"
-#include "PlayerBoomerang.h"
+#include "PlayerMeleeAttack.h"
+#include "Axe.h"
+#include "Sword.h"
+#include "DownAxe.h"
+#include "Boomerang.h"
 #include "Item.h"
 #include <array>
 #include <cmath>
@@ -18,9 +18,9 @@ class GroundedEnemy;
 class Player : public std::enable_shared_from_this<Character>, public GroundedCharacter
 {
 private:
-    std::unique_ptr<MeleeObject> m_meleeAttack{ std::make_unique<PlayerStabAttack>() };
-    std::unique_ptr<MeleeObject> m_downAttack{ std::make_unique<PlayerDownAttack>() };
-    PlayerBoomerang m_boomerang{};
+    std::unique_ptr<PlayerMeleeAttack> m_meleeAttack{ std::make_unique<Sword>() };
+    std::unique_ptr<PlayerMeleeAttack> m_downAttack{ std::make_unique<DownAxe>() };
+    Boomerang m_boomerang{};
 
     //member variables for controlling dodge timing and animation
     const double m_dodgeDuration{ 0.25 };

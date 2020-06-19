@@ -1,6 +1,6 @@
-#include "PlayerBoomerang.h"
+#include "Boomerang.h"
 
-PlayerBoomerang::PlayerBoomerang(double xPos, double yPos, double xVel, double yVel, double colliderWidth, double colliderHeight, std::string fileName, int damage)
+Boomerang::Boomerang(double xPos, double yPos, double xVel, double yVel, double colliderWidth, double colliderHeight, std::string fileName, int damage)
     : Projectile(fileName, xPos, yPos, xVel, yVel, colliderWidth, colliderHeight, damage)
 {
     m_srcRect = { 0, 0, 32, 32 };
@@ -9,7 +9,7 @@ PlayerBoomerang::PlayerBoomerang(double xPos, double yPos, double xVel, double y
     m_dstRect.h = 60;
 }
 
-void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::vector<std::shared_ptr<Character>>& enemies, std::shared_ptr<Character> player)
+void Boomerang::update(const std::vector<std::vector<Tile>>& map, const Camera& camera, std::vector<std::shared_ptr<Character>>& enemies, std::shared_ptr<Character> player)
 {
     if (m_throwLeft)
     {
@@ -122,14 +122,14 @@ void PlayerBoomerang::update(const std::vector<std::vector<Tile>>& map, const Ca
     }
 }
 
-void PlayerBoomerang::returnToPlayer(std::shared_ptr<Character> player)
+void Boomerang::returnToPlayer(std::shared_ptr<Character> player)
 {
     m_returningToPlayer = true;
     m_target = player;
     m_prevTarget.reset();
 }
 
-bool PlayerBoomerang::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
+bool Boomerang::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
 {
     int projectileColumn{ static_cast<int>(m_collider.getHitBox().x / Constants::tileSize) };
     int projectileRow{ static_cast<int>(m_collider.getHitBox().y / Constants::tileSize) };
@@ -156,7 +156,7 @@ bool PlayerBoomerang::sweepMapCollideCheck(const std::vector<std::vector<Tile>>&
 }
 
 //searches for enemy closest to boomerang and locks on
-bool PlayerBoomerang::aquireTargetEnemy(const std::vector<std::shared_ptr<Character>>& enemies)
+bool Boomerang::aquireTargetEnemy(const std::vector<std::shared_ptr<Character>>& enemies)
 {
     if (!m_target.lock())
     {
@@ -192,7 +192,7 @@ bool PlayerBoomerang::aquireTargetEnemy(const std::vector<std::shared_ptr<Charac
     return false;
 }
 
-bool PlayerBoomerang::enemyCollideCheck(std::vector<std::shared_ptr<Character>>& enemies)
+bool Boomerang::enemyCollideCheck(std::vector<std::shared_ptr<Character>>& enemies)
 {
     bool hit{ false };
     if (!m_returningToPlayer)
@@ -227,7 +227,7 @@ bool PlayerBoomerang::enemyCollideCheck(std::vector<std::shared_ptr<Character>>&
     return hit;
 }
 
-void PlayerBoomerang::motion()
+void Boomerang::motion()
 {
     double scaleFactor{};
     double velMag{};
@@ -262,7 +262,7 @@ void PlayerBoomerang::motion()
     }
 }
 
-void PlayerBoomerang::cameraDraw(const Camera& camera) const
+void Boomerang::cameraDraw(const Camera& camera) const
 {
     if (m_flying)
     {
@@ -274,7 +274,7 @@ void PlayerBoomerang::cameraDraw(const Camera& camera) const
     }
 }
 
-void PlayerBoomerang::throwLeft()
+void Boomerang::throwLeft()
 {
     if (!m_isCooling && !m_flying)
     {
@@ -282,7 +282,7 @@ void PlayerBoomerang::throwLeft()
     }
 }
 
-void PlayerBoomerang::throwRight()
+void Boomerang::throwRight()
 {
     if (!m_isCooling && !m_flying)
     {
@@ -290,7 +290,7 @@ void PlayerBoomerang::throwRight()
     }
 }
 
-double PlayerBoomerang::getCooldownFraction() const
+double Boomerang::getCooldownFraction() const
 {
     if (m_flying)
     {
