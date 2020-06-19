@@ -249,7 +249,7 @@ bool Character::immobilisedSweepMapCollideCheck(const std::vector<std::vector<Ti
 
     Vector2D<double> tempVel{ m_velocity };
 
-    double deflectionFactor{ 1.0 };
+    double deflectionFactor{ 0.99 };
     for (auto& sweptCollider : m_solidColliders)
     {
         //if we have had collision in both directions, skip

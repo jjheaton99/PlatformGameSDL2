@@ -42,6 +42,7 @@ void BlackHole::update(const std::vector<std::vector<Tile>>& map, const Camera& 
         m_angle += 1.0;
 
         pullEnemies(enemies);
+        pulledEnemiesCollideCheck();
 
         //passes through map if returning to player
         if (sweepMapCollideCheck(map))
@@ -120,7 +121,8 @@ void BlackHole::pullEnemies(std::vector<std::shared_ptr<Character>>& enemies)
         //check for immobilised enemy to ensure they are not already being pulled
         if (enemies[i] && enemies[i]->isInUpdateRange() && !enemies[i]->isDying() && !enemies[i]->isImmobilised())
         {
-            enemyRelPos = enemies[i]->getPos() - m_position - Vector2D<double>{78.0, 78.0};
+            enemyRelPos = enemies[i]->getPos() + Vector2D<double>{(enemies[i]->getDstRect().w / 2.0), (enemies[i]->getDstRect().h / 2.0)} 
+            - m_position - Vector2D<double>{78.0, 78.0};
             enemyDistance = enemyRelPos.magnitude();
             if (enemyDistance < m_pullRange)
             {
@@ -135,7 +137,8 @@ void BlackHole::pullEnemies(std::vector<std::shared_ptr<Character>>& enemies)
     {
         if (enemy && !enemy->isDying())
         {
-            enemyRelPos = m_position + Vector2D<double>{78.0, 78.0} - enemy->getPos();
+            enemyRelPos = m_position + Vector2D<double>{78.0, 78.0} 
+            - enemy->getPos() - Vector2D<double>{(enemy->getDstRect().w / 2.0), (enemy->getDstRect().h / 2.0)};
             enemy->setDirection(enemyRelPos.direction());
         }
     }
@@ -144,37 +147,16 @@ void BlackHole::pullEnemies(std::vector<std::shared_ptr<Character>>& enemies)
 //searches for enemy closest to BlackHole and locks on
 void BlackHole::pulledEnemiesCollideCheck()
 {
-    /*if (!m_target.lock())
+    for (auto& enemy : m_pulledEnemies)
     {
-        double enemyDistance;
-        double closestEnemyDistance;
-        closestEnemyDistance = std::numeric_limits<double>::max();
-        int closestEnemyIndex{ -1 };
-
-        for (int i{ 0 }; i < static_cast<int>(enemies.size()); ++i)
+        if (enemy && !enemy->isDying())
         {
-            if (enemies[i] && !enemies[i]->isDying() && m_prevTarget.lock() != enemies[i])
+            if (m_collider.collideCheck(enemy->getCollider()))
             {
-                enemyDistance = (enemies[i]->getPos() - m_position).magnitude();
-                if (enemyDistance < closestEnemyDistance)
-                {
-                    closestEnemyIndex = i;
-                    closestEnemyDistance = enemyDistance;
-                }
+                enemy->removeHP(m_damage);
             }
         }
-
-        if (closestEnemyIndex >= 0)
-        {
-            m_target = enemies[closestEnemyIndex];
-            return true;
-        }
-        else
-        {
-            m_target.reset();
-            return false;
-        }
-    }*/
+    }
 }
 
 void BlackHole::motion()

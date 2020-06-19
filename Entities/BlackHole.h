@@ -5,7 +5,7 @@
 class BlackHole : public PlayerRangedAttack
 {
 private:
-    const double m_pullSpeed{ 5.0 };
+    const double m_pullSpeed{ 7.0 };
     const double m_speed{ 1.5 };
     const double m_duration{ 5.0 };
     int m_flyingCount{ 0 };
