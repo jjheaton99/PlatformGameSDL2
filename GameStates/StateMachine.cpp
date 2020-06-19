@@ -118,7 +118,6 @@ void StateMachine::gameLoop()
                     m_controller = SDL_GameControllerOpen(i);
                     if (m_controller)
                     {
-                        std::cout << "controller connected, num controllers: " << SDL_NumJoysticks() << '\n';
                         break;
                     }
                     else
@@ -127,10 +126,6 @@ void StateMachine::gameLoop()
                     }
                 }
             }
-        }
-        else if (event.type == SDL_JOYDEVICEREMOVED)
-        {
-            std::cout << "controller disconnected, num controllers: " << SDL_NumJoysticks() << '\n';
         }
 
         g_window.handleEvent(event);

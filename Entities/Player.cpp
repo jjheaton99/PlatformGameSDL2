@@ -19,7 +19,7 @@ Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, std
     m_dstRect.h = 100;
 
     m_hitGroundSound.setPercentVolume(70);
-    m_wallslideSound.setPercentVolume(5);
+    m_wallslideSound.setPercentVolume(10);
     m_fatalitySound.setPercentVolume(50);
     m_pickUpItemSound.setPercentVolume(50);
 }
@@ -149,7 +149,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         if (m_jumpingHigher)
         {
             ++m_jumpHigherCount;
-            if (m_jumpHigherCount > 11)
+            if (m_jumpHigherCount > 13)
             {
                 m_jumpingHigher = false;
                 m_jumpHigherCount = 0;
@@ -220,6 +220,11 @@ void Player::motion()
     else
     {
         fallAccel = Constants::g;
+    }
+
+    if (m_movement != WALLSLIDE)
+    {
+        m_wallSlideSoundCount = 0;
     }
 
     switch (m_movement)
@@ -332,12 +337,20 @@ void Player::motion()
         else if (m_floatingLeft)
         {
             setVel(-1.0, m_wallslideSpeed);
-            m_wallslideSound.play();
+            if (++m_wallSlideSoundCount > 17)
+            {
+                m_wallslideSound.play();
+                m_wallSlideSoundCount = 0;
+            }
         }
         else if (m_floatingRight)
         {
             setVel(1.0, m_wallslideSpeed);
-            m_wallslideSound.play();
+            if (++m_wallSlideSoundCount > 17)
+            {
+                m_wallslideSound.play();
+                m_wallSlideSoundCount = 0;
+            }
         }
         break;
 
@@ -766,6 +779,7 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                     if (m_movement == AIRBORNE && m_velocity.gety() > -15.0 && !isDodging())
                     {
                         m_movement = WALLSLIDE;
+                        m_wallslideSound.play();
                     }
                 }
                 break;

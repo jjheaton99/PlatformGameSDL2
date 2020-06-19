@@ -296,6 +296,61 @@ void SPlayGame::playerControlsHold(SDL_GameController* controller)
     }
 }
 
+void SPlayGame::meleeAttackController(SDL_GameController* controller, Sint16 currentLeftyState, Sint16 currentLeftxState)
+{
+    if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)
+        || currentLeftyState > 2 * m_joystickDeadZone)
+    {
+        m_player->dodgeCancel();
+        m_player->downAttack();
+    }
+    else if (!m_player->isClimbing())
+    {
+        m_player->dodgeCancel();
+        if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)
+            || currentLeftxState < -m_joystickDeadZone)
+        {
+            m_player->meleeAttackLeft();
+        }
+        else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
+            || currentLeftxState > m_joystickDeadZone)
+        {
+            m_player->meleeAttackRight();
+        }
+        else if (m_player->isFacingLeft())
+        {
+            m_player->meleeAttackLeft();
+        }
+        else
+        {
+            m_player->meleeAttackRight();
+        }
+    }
+}
+
+void SPlayGame::rangedAttackController(SDL_GameController* controller, Sint16 currentLeftyState, Sint16 currentLeftxState)
+{
+    m_player->dodgeCancel();
+    if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)
+        || currentLeftxState < -m_joystickDeadZone)
+    {
+        m_player->throwBoomerangLeft();
+    }
+    else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
+        || currentLeftxState > m_joystickDeadZone)
+    {
+        m_player->throwBoomerangRight();
+    }
+    else if (m_player->isFacingLeft())
+    {
+        m_player->throwBoomerangLeft();
+    }
+    else
+    {
+        m_player->throwBoomerangRight();
+    }
+}
+
 void SPlayGame::playerControlsPress(SDL_Event& event, SDL_GameController* controller)
 {
     const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
@@ -406,10 +461,6 @@ void SPlayGame::playerControlsPress(SDL_Event& event, SDL_GameController* contro
     {
         switch (event.cbutton.button)
         {
-        case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-            m_player->interact();
-            break;
-
         case SDL_CONTROLLER_BUTTON_A:
             jump();
             break;
@@ -438,60 +489,47 @@ void SPlayGame::playerControlsPress(SDL_Event& event, SDL_GameController* contro
             }
             break;
 
-        case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-            m_player->drinkHealthPotion();
-            break;
-
         case SDL_CONTROLLER_BUTTON_X:
-            if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)
-                || currentLeftyState > 2 * m_joystickDeadZone)
+            if (!m_bumperControllerConfig)
             {
-                m_player->dodgeCancel();
-                m_player->downAttack();
+                meleeAttackController(controller, currentLeftyState, currentLeftxState);
             }
-            else if (!m_player->isClimbing())
+            else
             {
-                m_player->dodgeCancel();
-                if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)
-                    || currentLeftxState < -m_joystickDeadZone)
-                {
-                    m_player->meleeAttackLeft();
-                }
-                else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
-                    || currentLeftxState > m_joystickDeadZone)
-                {
-                    m_player->meleeAttackRight();
-                }
-                else if (m_player->isFacingLeft())
-                {
-                    m_player->meleeAttackLeft();
-                }
-                else
-                {
-                    m_player->meleeAttackRight();
-                }
+                m_player->interact();
             }
             break;
 
         case SDL_CONTROLLER_BUTTON_Y:
-            m_player->dodgeCancel();
-            if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)
-                || currentLeftxState < -m_joystickDeadZone)
+            if (!m_bumperControllerConfig)
             {
-                m_player->throwBoomerangLeft();
-            }
-            else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
-                || currentLeftxState > m_joystickDeadZone)
-            {
-                m_player->throwBoomerangRight();
-            }
-            else if (m_player->isFacingLeft())
-            {
-                m_player->throwBoomerangLeft();
+                rangedAttackController(controller, currentLeftyState, currentLeftxState);
             }
             else
             {
-                m_player->throwBoomerangRight();
+                m_player->drinkHealthPotion();
+            }
+            break;
+
+        case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+            if (m_bumperControllerConfig)
+            {
+                meleeAttackController(controller, currentLeftyState, currentLeftxState);
+            }
+            else
+            {
+                m_player->interact();
+            }
+            break;
+
+        case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+            if (m_bumperControllerConfig)
+            {
+                rangedAttackController(controller, currentLeftyState, currentLeftxState);
+            }
+            else
+            {
+                m_player->drinkHealthPotion();
             }
             break;
 

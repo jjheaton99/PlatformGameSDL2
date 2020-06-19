@@ -34,6 +34,9 @@ private:
 
     void playerControlsHold(SDL_GameController* controller);
     void playerControlsPress(SDL_Event& event, SDL_GameController* controller);
+    void meleeAttackController(SDL_GameController* controller, Sint16 currentLeftyState, Sint16 currentLeftxState);
+    void rangedAttackController(SDL_GameController* controller, Sint16 currentLeftyState, Sint16 currentLeftxState);
+    bool m_bumperControllerConfig{ true };
 
     double averageFPS(double timeStep);
 

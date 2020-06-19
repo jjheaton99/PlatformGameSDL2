@@ -63,6 +63,7 @@ private:
     SoundEffect m_takeDamageSound{ "Assets/Sounds/PlayerSounds/playerDamage.wav" };
     SoundEffect m_hitGroundSound{ "Assets/Sounds/PlayerSounds/land.wav" };
     SoundEffect m_wallslideSound{ "Assets/Sounds/PlayerSounds/wallslide.wav" };
+    int m_wallSlideSoundCount{ 0 };
     SoundEffect m_dodgeSound{ "Assets/Sounds/PlayerSounds/dodge.wav" };
     SoundEffect m_drinkPotionSound{ "Assets/Sounds/PlayerSounds/potion.wav" };
     SoundEffect m_bruhSound{ "Assets/Sounds/PlayerSounds/bruh.wav" };
