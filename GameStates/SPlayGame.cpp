@@ -25,10 +25,10 @@ SPlayGame::SPlayGame(std::string mapFile)
             playerxSpawn - 620, playerySpawn + 1250);
     }
 
-    for (int i{ 0 }; i < 100; ++i)
+    /*for (int i{ 0 }; i < 100; ++i)
     {
         m_objectManager->newRandomEnemy(playerxSpawn, playerySpawn);
-    }
+    }*/
 
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());

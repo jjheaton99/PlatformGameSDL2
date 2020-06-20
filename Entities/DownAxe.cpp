@@ -1,7 +1,7 @@
 #include "DownAxe.h"
 
 DownAxe::DownAxe()
-    : PlayerMeleeAttack("Assets/Attacks/downAttack.png", 30, 0.0, 0.0, 62.0, 66.0, 0.2)
+    : PlayerMeleeAttack("Assets/Attacks/downAttack.png", 300, 0.0, 0.0, 62.0, 66.0, 0.2)
 {
     m_itemType = ItemType::DOWN_AXE;
 

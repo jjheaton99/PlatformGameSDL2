@@ -1,7 +1,7 @@
 #include "Axe.h"
 
 Axe::Axe()
-    : PlayerMeleeAttack("Assets/Attacks/axe.png", 40, 0.0, 0.0, 1.0, 1.0, 0.25)
+    : PlayerMeleeAttack("Assets/Attacks/axe.png", 400, 0.0, 0.0, 1.0, 1.0, 0.25)
 {
     m_itemType = ItemType::AXE;
 

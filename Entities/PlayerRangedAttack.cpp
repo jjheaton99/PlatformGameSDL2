@@ -47,3 +47,17 @@ double PlayerRangedAttack::getCooldownFraction() const
         return 1.0 - (static_cast<double>(m_coolDownCount) / (m_coolDown / Constants::updateStep));
     }
 }
+
+void PlayerRangedAttack::coolDown()
+{
+    if (m_isCooling)
+    {
+        ++m_coolDownCount;
+        if (m_coolDownCount > static_cast<int>(m_coolDown / Constants::updateStep))
+        {
+            m_isCooling = false;
+            m_coolDownCount = 0;
+            m_cdFinishedSound.play();
+        }
+    }
+}

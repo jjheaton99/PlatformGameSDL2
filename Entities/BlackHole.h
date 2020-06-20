@@ -18,6 +18,8 @@ private:
     int m_flyingCount{ 0 };
     int m_implosionCount{ 0 };
 
+    int m_damageTickCount{ 0 };
+
     std::vector<std::shared_ptr<Character>> m_pulledEnemies;
 
     SoundEffect m_flyingSound{ "Assets/Sounds/PlayerSounds/AttackSounds/blackHole.wav" };

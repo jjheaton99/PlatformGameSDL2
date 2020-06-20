@@ -18,6 +18,6 @@ protected:
     
 public:
     Slime(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, std::string fileName = "Assets/Enemies/slime.png", 
-        double colliderWidth = 70, double colliderHeight = 60, int hitPoints = 100, int spriteSheetCount = 19, int damage = 30);
+        double colliderWidth = 70, double colliderHeight = 60, int hitPoints = 1000, int spriteSheetCount = 19, int damage = 30);
 };
 

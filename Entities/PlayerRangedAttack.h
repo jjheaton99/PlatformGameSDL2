@@ -13,9 +13,13 @@ protected:
     bool m_flying{ false };
     double m_coolDown;
     int m_coolDownCount{ 0 };
-    bool m_isCooling{ false };
+    bool m_isCooling{ true };
+
+    void coolDown();
 
     virtual bool enemyCollideCheck(std::vector<std::shared_ptr<Character>>& enemies) = 0;
+
+    SoundEffect m_cdFinishedSound{"Assets/Sounds/PlayerSounds/cdFinished.wav"};
 
 public:
     PlayerRangedAttack(std::string fileName, double xPos = 0, double yPos = 0, double xVel = 0, double yVel = 0, double colliderWidth = 0.0, 

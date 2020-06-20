@@ -17,5 +17,5 @@ protected:
 
 public:
     Bat(double xStartPos = 0, double yStartPos = 0, double xVel = 0, double yVel = 0, std::string fileName = "Assets/Enemies/blackBat.png", 
-        double colliderWidth = 35, double colliderHeight = 35, int hitPoints = 30, int spriteSheetCount = 10, int damage = 15);
+        double colliderWidth = 35, double colliderHeight = 35, int hitPoints = 300, int spriteSheetCount = 10, int damage = 15);
 };

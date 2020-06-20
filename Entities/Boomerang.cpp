@@ -1,7 +1,7 @@
 #include "Boomerang.h"
 
 Boomerang::Boomerang()
-    : PlayerRangedAttack("Assets/Attacks/boomerang.png", 0.0, 0.0, 0.0, 0.0, 10.0, 10.0, 20, 3.0)
+    : PlayerRangedAttack("Assets/Attacks/boomerang.png", 0.0, 0.0, 0.0, 0.0, 10.0, 10.0, 200, 3.0)
 {
     m_itemType = ItemType::BOOMERANG;
 
@@ -112,15 +112,7 @@ void Boomerang::update(const std::vector<std::vector<Tile>>& map, const Camera& 
     else
     {
         setPos(player->getPos().getx() + 20.0, player->getPos().gety() + 20.0);
-        if (m_isCooling)
-        {
-            ++m_coolDownCount;
-            if (m_coolDownCount > static_cast<int>(m_coolDown / Constants::updateStep))
-            {
-                m_isCooling = false;
-                m_coolDownCount = 0;
-            }
-        }
+        coolDown();
     }
 }
 

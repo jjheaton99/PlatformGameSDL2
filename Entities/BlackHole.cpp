@@ -1,7 +1,7 @@
 #include "BlackHole.h"
 
 BlackHole::BlackHole()
-    : PlayerRangedAttack("Assets/Attacks/blackHole.png", 0.0, 0.0, 0.0, 0.0, 56.0, 56.0, 1, 0.5)
+    : PlayerRangedAttack("Assets/Attacks/blackHole.png", 0.0, 0.0, 0.0, 0.0, 56.0, 56.0, 5, 10.0)
 {
     for (int i{ 0 }; i < m_spriteSheetCount; ++i)
     {
@@ -110,15 +110,7 @@ void BlackHole::update(const std::vector<std::vector<Tile>>& map, const Camera& 
     else
     {
         setPos(player->getPos().getx() - 28.0, player->getPos().gety() - 28.0);
-        if (m_isCooling)
-        {
-            ++m_coolDownCount;
-            if (m_coolDownCount > static_cast<int>(m_coolDown / Constants::updateStep))
-            {
-                m_isCooling = false;
-                m_coolDownCount = 0;
-            }
-        }
+        coolDown();
     }
 }
 
@@ -182,13 +174,23 @@ void BlackHole::pullEnemies(std::vector<std::shared_ptr<Character>>& enemies)
 //searches for enemy closest to BlackHole and locks on
 void BlackHole::pulledEnemiesCollideCheck()
 {
-    for (auto& enemy : m_pulledEnemies)
+    bool damage{ false };
+    if (++m_damageTickCount >= 12)
     {
-        if (enemy && !enemy->isDying())
+        damage = true;
+        m_damageTickCount = 0;
+    }
+
+    if (damage)
+    {
+        for (auto& enemy : m_pulledEnemies)
         {
-            if (m_collider.collideCheck(enemy->getCollider()))
+            if (enemy && !enemy->isDying())
             {
-                //enemy->removeHP(m_damage);
+                if (m_collider.collideCheck(enemy->getCollider()))
+                {
+                    enemy->removeHP(m_damage);
+                }
             }
         }
     }
@@ -202,7 +204,7 @@ void BlackHole::pulledEnemiesExplode()
         {
             if (m_collider.collideCheck(enemy->getCollider()))
             {
-                enemy->removeHP(10 * m_damage);
+                enemy->removeHP(50 * m_damage);
                 enemy->addVel(50.0, 0);
                 enemy->setDirection(MTRandom::getRandomDouble(0.0, 360.0));
             }

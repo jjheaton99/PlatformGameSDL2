@@ -32,8 +32,8 @@ Item::Item(ItemType type, bool shopItem, double xPos, double yPos)
     case GameObject::ItemType::BOOMERANG:
         m_texture.load("Assets/Items/boomerang.png");
         m_srcRect = { 0, 0, 34, 34 };
-        m_dstRect.w = 106;
-        m_dstRect.h = 106;
+        m_dstRect.w = 64;
+        m_dstRect.h = 64;
         m_price = 4000;
         break;
 
@@ -47,9 +47,9 @@ Item::Item(ItemType type, bool shopItem, double xPos, double yPos)
 
     case GameObject::ItemType::BLACK_HOLE:
         m_texture.load("Assets/Items/blackHole.png");
-        m_srcRect = { 0, 0, 50, 50 };
-        m_dstRect.w = 100;
-        m_dstRect.h = 100;
+        m_srcRect = { 0, 0, 34, 34 };
+        m_dstRect.w = 106;
+        m_dstRect.h = 106;
         m_price = 8000;
         break;
 

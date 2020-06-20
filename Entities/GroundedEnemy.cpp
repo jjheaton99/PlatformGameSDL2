@@ -38,7 +38,7 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
             if (!m_immobilised)
             {
                 bool airborne{ m_movement == AIRBORNE };
-                bool collided{ sweepMapCollideCheck(map) };
+                bool collided{ sweepMapCollideCheck(map) || attackPlayer(player) };
                 bool landed{ m_movement != AIRBORNE };
                 //if enemy just landed from jumping
                 if (airborne && landed)
@@ -48,7 +48,7 @@ void GroundedEnemy::update(const std::vector<std::vector<Tile>>& map, const Came
             }
             else
             {
-                collided = immobilisedSweepMapCollideCheck(map);
+                collided = immobilisedSweepMapCollideCheck(map) || attackPlayer(player);
             }
 
             if (collided)
@@ -156,19 +156,22 @@ void GroundedEnemy::motion()
     }
 }
 
-void GroundedEnemy::attackPlayer(std::shared_ptr<Character> player)
+bool GroundedEnemy::attackPlayer(std::shared_ptr<Character> player)
 {
-    if (m_collider.collideCheck(dynamic_cast<Player&>(*player).getCollider()) && !dynamic_cast<Player&>(*player).isInvincible())
+    if (!dynamic_cast<Player&>(*player).isInvincible() && (m_velocity.magnitude() < (m_position - player->getPos()).magnitude()))
     {
-        dynamic_cast<Player&>(*player).removeHP(m_damage);
-        m_velocity.scale(0);
-        if (m_position.getx() < player->getPos().getx() + 50)
+        Collider::sweptObstacleTuple sweptCollider{ player->getCollider(), Collider::xOverlap(m_collider, player->getCollider()), Collider::yOverlap(m_collider, player->getCollider()) };
+        if (m_collider.sweptAABBDeflect(1.0, sweptCollider, m_position, m_velocity, player->getVel()))
         {
-            player->setVel(15.0, -5.0);
+            dynamic_cast<Player&>(*player).removeHP(m_damage);
+            return true;
         }
-        else if (m_position.getx() > player->getPos().getx() + 50)
+        else if (m_collider.collideCheck(player->getCollider()))
         {
-            player->setVel(-15.0, -5.0);
+            dynamic_cast<Player&>(*player).removeHP(m_damage);
+            m_velocity.scale(-1.0);
+            return true;
         }
     }
+    return false;
 }

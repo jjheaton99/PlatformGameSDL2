@@ -84,8 +84,13 @@ void UserInterface::update()
         {
         case GameObject::ItemType::NONE:
             m_rangedCooldown.loadPng("Assets/UITextures/empty.png");
+            break;
         case GameObject::ItemType::BOOMERANG:
             m_rangedCooldown.loadPng("Assets/UITextures/boomerang.png");
+            break;
+        case GameObject::ItemType::BLACK_HOLE:
+            m_rangedCooldown.loadPng("Assets/UITextures/blackHole.png");
+            break;
         default:
             break;
         }

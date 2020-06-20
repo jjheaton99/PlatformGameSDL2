@@ -20,7 +20,7 @@ protected:
 
     virtual void enemyControls(std::shared_ptr<Character> player) = 0;
     virtual void motion() override;
-    virtual void attackPlayer(std::shared_ptr<Character> player);
+    virtual bool attackPlayer(std::shared_ptr<Character> player);
 
 public:
     GroundedEnemy(std::string fileName, double xStartPos = 0, double yStartPos = 0, double xVel = 0, 
