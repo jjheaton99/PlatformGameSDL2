@@ -3,6 +3,11 @@
 BlackHole::BlackHole()
     : PlayerRangedAttack("Assets/Attacks/blackHole.png", 0.0, 0.0, 0.0, 0.0, 56.0, 56.0, 1, 0.5)
 {
+    for (int i{ 0 }; i < m_spriteSheetCount; ++i)
+    {
+        m_spriteRects.push_back({ 50 * i, 0, 50, 50 });
+    }
+
     m_itemType = ItemType::BLACK_HOLE;
 
     m_srcRect = { 0, 0, 50, 50 };
@@ -31,15 +36,25 @@ void BlackHole::update(const std::vector<std::vector<Tile>>& map, const Camera& 
 
     if (m_flying)
     {
-        motion();
-
-        //for rotating animation/sound
-        if (++m_flyingSoundCount > 5)
+        if (m_flyingCount == 0)
         {
+            m_dstRect.w = 156;
+            m_dstRect.h = 156;
             m_flyingSound.play();
-            m_flyingSoundCount = 0;
         }
-        m_angle += 1.0;
+
+        m_angle -= 6.0;
+        if (++m_animationStep >= 4)
+        {
+            m_animationStep = 0;
+            ++m_spriteIndex;
+            if (m_spriteIndex > 6)
+            {
+                m_spriteIndex = 0;
+            }
+        }
+
+        m_srcRect = m_spriteRects[m_spriteIndex];
 
         pullEnemies(enemies);
         pulledEnemiesCollideCheck();
@@ -53,23 +68,43 @@ void BlackHole::update(const std::vector<std::vector<Tile>>& map, const Camera& 
         m_position.add(m_velocity);
         setCollider();
 
-        m_dstRect.x = static_cast<int>(m_position.getx());
-        m_dstRect.y = static_cast<int>(m_position.gety());
+        motion();
+
+        if (m_implosionCount == 0)
+        {
+            m_dstRect.x = static_cast<int>(m_position.getx());
+            m_dstRect.y = static_cast<int>(m_position.gety());
+        }
 
         if (++m_flyingCount >= static_cast<int>(m_duration / Constants::updateStep))
         {
-            m_flying = false;
-            m_isCooling = true;
-            m_collided = false;
-            m_flyingCount = 0;
-            for (auto& enemy : m_pulledEnemies)
+            m_collided = true;
+
+            int newDstRectw{ static_cast<int>(static_cast<double>(m_dstRect.w) * 0.9) };
+            int newDstRecth{ static_cast<int>(static_cast<double>(m_dstRect.h) * 0.9) };
+            m_dstRect.x += static_cast<int>((1.0 * m_dstRect.w - newDstRectw) / 2.0);
+            m_dstRect.y += static_cast<int>((1.0 * m_dstRect.h - newDstRecth) / 2.0);
+            m_dstRect.w = newDstRectw;
+            m_dstRect.h = newDstRecth;
+            if (++m_implosionCount > 30)
             {
-                if (enemy && !enemy->isDying())
+                pulledEnemiesExplode();
+                m_boomSound.play();
+
+                m_flying = false;
+                m_isCooling = true;
+                m_collided = false;
+                m_flyingCount = 0;
+                m_implosionCount = 0;
+                for (auto& enemy : m_pulledEnemies)
                 {
-                    enemy->freeMovement();
+                    if (enemy && !enemy->isDying())
+                    {
+                        enemy->freeMovement();
+                    }
                 }
+                m_pulledEnemies.clear();
             }
-            m_pulledEnemies.clear();
         }
     }
     else
@@ -153,7 +188,23 @@ void BlackHole::pulledEnemiesCollideCheck()
         {
             if (m_collider.collideCheck(enemy->getCollider()))
             {
-                enemy->removeHP(m_damage);
+                //enemy->removeHP(m_damage);
+            }
+        }
+    }
+}
+
+void BlackHole::pulledEnemiesExplode()
+{
+    for (auto& enemy : m_pulledEnemies)
+    {
+        if (enemy && !enemy->isDying())
+        {
+            if (m_collider.collideCheck(enemy->getCollider()))
+            {
+                enemy->removeHP(10 * m_damage);
+                enemy->addVel(50.0, 0);
+                enemy->setDirection(MTRandom::getRandomDouble(0.0, 360.0));
             }
         }
     }
