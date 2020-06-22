@@ -14,13 +14,13 @@ public:
     };
 
 private:
-    MenuButton m_menu{ "Assets/MenuButtons/resume.png", "Assets/MenuButtons/resumeS.png", 60, 14 };
-    MenuButton m_desktop{ "Assets/MenuButtons/settings.png", "Assets/MenuButtons/settingsS.png", 60, 14 };
+    MenuButton m_menu{ "Assets/MenuButtons/menu.png", "Assets/MenuButtons/menuS.png", 60, 14 };
+    MenuButton m_desktop{ "Assets/MenuButtons/desktop.png", "Assets/MenuButtons/desktopS.png", 60, 14 };
     MenuButton m_back{ "Assets/MenuButtons/back.png", "Assets/MenuButtons/backS.png", 60, 14 };
 
     QuitSelection m_currentSelection{ NONE };
 
-    TextureObject m_quitTexture{ "Assets/MiscTextures/paused.png" };
+    TextureObject m_quitTexture{ "Assets/MiscTextures/quit.png" };
 
     int m_buttonWidth;
     int m_buttonHeight;

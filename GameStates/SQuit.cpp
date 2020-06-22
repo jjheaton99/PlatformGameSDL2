@@ -12,8 +12,8 @@ SQuit::SQuit()
     m_back.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100,
         m_buttonWidth, m_buttonHeight);
 
-    m_quitTexture.setSrcRect(0, 0, 40, 8);
-    m_quitTexture.setDstRect((g_screenWidth / 2) - 300, ((g_screenHeight * 3) / 4) - 300, 600, 120);
+    m_quitTexture.setSrcRect(0, 0, 26, 8);
+    m_quitTexture.setDstRect((g_screenWidth / 2) - 195, ((g_screenHeight * 3) / 4) - 300, 390, 120);
 }
 
 SQuit::~SQuit()
@@ -200,7 +200,7 @@ GameState::State SQuit::handleEvents(SDL_GameController* controller)
 
 GameState::State SQuit::update()
 {
-    m_quitTexture.setDstRect((g_screenWidth / 2) - 300, ((g_screenHeight * 3) / 4) - 300, 600, 120);
+    m_quitTexture.setDstRect((g_screenWidth / 2) - 195, ((g_screenHeight * 3) / 4) - 300, 390, 120);
     m_menu.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100);
     m_desktop.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4));
     m_back.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100);

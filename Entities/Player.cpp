@@ -31,7 +31,7 @@ void Player::update(const std::vector<std::vector<Tile>>& map, Camera& camera, s
         //std::cout << m_hitPoints << '\n';
         if (m_hitPoints <= 0)
         {
-            //m_killed = true;
+            m_killed = true;
         }
 
         //edge check goes before map collision check to prevent vector subcript error when going off the edge
