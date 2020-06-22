@@ -324,6 +324,7 @@ GameState::State SSettings::handleEvents(SDL_GameController* controller)
             return STATE_NULL;
 
         case SSettings::BACK:
+            saveSettingsToFile();
             return PREVIOUS;
 
         case SSettings::NONE:
@@ -465,4 +466,63 @@ void SSettings::deselectAll()
     m_musicUp.deselect();
     m_musicDown.deselect();
     m_back.deselect();
+}
+
+void SSettings::loadSettingsFromFile()
+{
+    std::array<int, 5> settings;
+
+    std::ifstream file("SaveFiles/settings.txt");
+
+    if (!file.is_open())
+    {
+        //default settings if first time game is launched
+        Settings::fullscreen = false;
+        Settings::vSync = false;
+        Settings::masterVol = 100;
+        Settings::sfxVol = 100;
+        Settings::musicVol = 100;
+        saveSettingsToFile();
+    }
+    else
+    {
+        std::string line;
+        int index{ 0 };
+        while (!file.eof() && index < static_cast<int>(settings.size()))
+        {
+            std::getline(file, line);
+            settings.at(index++) = std::stoi(line);
+        }
+
+        file.close();
+
+        Settings::fullscreen = settings.at(0);
+        Settings::vSync = settings.at(1);
+        Settings::masterVol = settings.at(2);
+        Settings::sfxVol = settings.at(3);
+        Settings::musicVol = settings.at(4);
+    }
+}
+
+void SSettings::saveSettingsToFile()
+{
+    std::array<int, 5> settings{
+        static_cast<int>(Settings::fullscreen),
+        static_cast<int>(Settings::vSync),
+        Settings::masterVol,
+        Settings::sfxVol,
+        Settings::musicVol
+    };
+
+    std::ofstream file("SaveFiles/settings.txt", std::ofstream::out);
+
+    if (file.is_open())
+    {
+        for (const auto& setting : settings)
+        {
+            file << std::to_string(setting) << '\n';
+        }
+
+        file.close();
+    }
 }

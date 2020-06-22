@@ -14,6 +14,8 @@ SMainMenu::SMainMenu()
         m_buttonWidth, m_buttonHeight);
     m_quit.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100,
         m_buttonWidth, m_buttonHeight);
+
+    g_window.fullscreenOnOff();
 }
 
 SMainMenu::~SMainMenu()

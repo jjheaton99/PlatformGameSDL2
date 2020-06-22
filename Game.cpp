@@ -62,6 +62,8 @@ bool Game::init()
 
             else
             {
+                SSettings::loadSettingsFromFile();
+
                 SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 0);
                 m_stateMachine.reset(new StateMachine{});
 

@@ -3,6 +3,9 @@
 #include "GameState.h"
 #include "MenuButton.h"
 #include "SDL_mixer.h"
+#include <fstream>
+#include <string>
+#include <array>
 
 //state for game settings
 class SSettings : public GameState
@@ -76,4 +79,7 @@ public:
     State handleEvents(SDL_GameController* controller);
     State update();
     void render();
+
+    static void loadSettingsFromFile();
+    static void saveSettingsToFile();
 };
