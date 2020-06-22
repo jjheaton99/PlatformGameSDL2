@@ -1,52 +1,49 @@
-#include "SPaused.h"
+#include "SQuit.h"
 
-SPaused::SPaused()
-    : m_resume{ "Assets/MenuButtons/resume.png", "Assets/MenuButtons/resumeS.png", 60, 14 },
-    m_settings{ "Assets/MenuButtons/settings.png", "Assets/MenuButtons/settingsS.png", 60, 14 },
-    m_quit{ "Assets/MenuButtons/quit.png", "Assets/MenuButtons/quitS.png", 60, 14 }
+SQuit::SQuit()
 {
     m_buttonWidth = 240;
     m_buttonHeight = 56;
 
-    m_resume.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100,
+    m_menu.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100,
         m_buttonWidth, m_buttonHeight);
-    m_settings.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4),
+    m_desktop.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4),
         m_buttonWidth, m_buttonHeight);
-    m_quit.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100,
+    m_back.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100,
         m_buttonWidth, m_buttonHeight);
 
-    m_pausedTexture.setSrcRect(0, 0, 40, 8);
-    m_pausedTexture.setDstRect((g_screenWidth / 2) - 300, ((g_screenHeight * 3) / 4) - 300, 600, 120);
+    m_quitTexture.setSrcRect(0, 0, 40, 8);
+    m_quitTexture.setDstRect((g_screenWidth / 2) - 300, ((g_screenHeight * 3) / 4) - 300, 600, 120);
 }
 
-SPaused::~SPaused()
+SQuit::~SQuit()
 {}
 
-void SPaused::cycleUp()
+void SQuit::cycleUp()
 {
-    if (m_currentSelection != RESUME)
+    if (m_currentSelection != MENU)
     {
-        m_currentSelection = static_cast<PausedSelection>(static_cast<int>(m_currentSelection) - 1);
+        m_currentSelection = static_cast<QuitSelection>(static_cast<int>(m_currentSelection) - 1);
     }
     else
     {
-        m_currentSelection = QUIT;
+        m_currentSelection = BACK;
     }
 }
 
-void SPaused::cycleDown()
+void SQuit::cycleDown()
 {
-    if (m_currentSelection != QUIT)
+    if (m_currentSelection != BACK)
     {
-        m_currentSelection = static_cast<PausedSelection>(static_cast<int>(m_currentSelection) + 1);
+        m_currentSelection = static_cast<QuitSelection>(static_cast<int>(m_currentSelection) + 1);
     }
     else
     {
-        m_currentSelection = RESUME;
+        m_currentSelection = MENU;
     }
 }
 
-bool SPaused::pausedControls(SDL_Event& event)
+bool SQuit::quitControls(SDL_Event& event)
 {
     if (event.type == SDL_KEYDOWN)
     {
@@ -54,7 +51,7 @@ bool SPaused::pausedControls(SDL_Event& event)
             || event.key.keysym.sym == SDLK_s || event.key.keysym.sym == SDLK_UP
             || event.key.keysym.sym == SDLK_DOWN))
         {
-            m_currentSelection = RESUME;
+            m_currentSelection = MENU;
         }
 
         else
@@ -83,26 +80,26 @@ bool SPaused::pausedControls(SDL_Event& event)
 
     else if (event.type == SDL_MOUSEMOTION)
     {
-        if (m_resume.mouseIsOnButton())
+        if (m_menu.mouseIsOnButton())
         {
-            m_currentSelection = RESUME;
+            m_currentSelection = MENU;
         }
 
-        else if (m_settings.mouseIsOnButton())
+        else if (m_desktop.mouseIsOnButton())
         {
-            m_currentSelection = SETTINGS;
+            m_currentSelection = DESKTOP;
         }
 
-        else if (m_quit.mouseIsOnButton())
+        else if (m_back.mouseIsOnButton())
         {
-            m_currentSelection = QUIT;
+            m_currentSelection = BACK;
         }
 
         return false;
     }
 
     else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT
-        && (m_resume.mouseIsOnButton() || m_settings.mouseIsOnButton() || m_quit.mouseIsOnButton()))
+        && (m_menu.mouseIsOnButton() || m_desktop.mouseIsOnButton() || m_back.mouseIsOnButton()))
     {
         return true;
     }
@@ -112,7 +109,7 @@ bool SPaused::pausedControls(SDL_Event& event)
         if (m_currentSelection == NONE && (event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY || event.caxis.axis == SDL_CONTROLLER_AXIS_RIGHTY)
             && (std::abs(event.caxis.value) > m_joystickDeadZone))
         {
-            m_currentSelection = RESUME;
+            m_currentSelection = MENU;
         }
 
         else
@@ -142,7 +139,7 @@ bool SPaused::pausedControls(SDL_Event& event)
         if (m_currentSelection == NONE && (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP
             || event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN))
         {
-            m_currentSelection = RESUME;
+            m_currentSelection = MENU;
         }
 
         else
@@ -172,26 +169,26 @@ bool SPaused::pausedControls(SDL_Event& event)
     return false;
 }
 
-GameState::State SPaused::handleEvents(SDL_GameController* controller)
+GameState::State SQuit::handleEvents(SDL_GameController* controller)
 {
     for (SDL_Event& element : m_events)
     {
         if ((element.type == SDL_KEYDOWN && element.key.keysym.sym == SDLK_ESCAPE)
             || (element.type == SDL_CONTROLLERBUTTONDOWN && element.cbutton.button == SDL_CONTROLLER_BUTTON_B))
         {
-            return PLAY_GAME;
+            return PREVIOUS;
         }
 
-        if (pausedControls(element))
+        if (quitControls(element))
         {
             switch (m_currentSelection)
             {
-            case SPaused::RESUME:
-                return PLAY_GAME;
-            case SPaused::SETTINGS:
-                return GameState::SETTINGS;
-            case SPaused::QUIT:
-                return GameState::QUIT;
+            case SQuit::MENU:
+                return GameState::MAIN_MENU;
+            case SQuit::DESKTOP:
+                return GameState::EXIT;
+            case SQuit::BACK:
+                return GameState::PREVIOUS;
             default:
                 break;
             }
@@ -201,29 +198,29 @@ GameState::State SPaused::handleEvents(SDL_GameController* controller)
     return STATE_NULL;
 }
 
-GameState::State SPaused::update()
+GameState::State SQuit::update()
 {
-    m_pausedTexture.setDstRect((g_screenWidth / 2) - 300, ((g_screenHeight * 3) / 4) - 300, 600, 120);
-    m_resume.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100);
-    m_settings.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4));
-    m_quit.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100);
+    m_quitTexture.setDstRect((g_screenWidth / 2) - 300, ((g_screenHeight * 3) / 4) - 300, 600, 120);
+    m_menu.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100);
+    m_desktop.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4));
+    m_back.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100);
 
     switch (m_currentSelection)
     {
-    case SPaused::RESUME:
-        m_resume.select();
-        m_settings.deselect();
-        m_quit.deselect();
+    case SQuit::MENU:
+        m_menu.select();
+        m_desktop.deselect();
+        m_back.deselect();
         break;
-    case SPaused::SETTINGS:
-        m_resume.deselect();
-        m_settings.select();
-        m_quit.deselect();
+    case SQuit::DESKTOP:
+        m_menu.deselect();
+        m_desktop.select();
+        m_back.deselect();
         break;
-    case SPaused::QUIT:
-        m_resume.deselect();
-        m_settings.deselect();
-        m_quit.select();
+    case SQuit::BACK:
+        m_menu.deselect();
+        m_desktop.deselect();
+        m_back.select();
         break;
     case NONE:
     default:
@@ -233,10 +230,10 @@ GameState::State SPaused::update()
     return STATE_NULL;
 }
 
-void SPaused::render()
+void SQuit::render()
 {
-    m_pausedTexture.draw();
-    m_resume.draw();
-    m_settings.draw();
-    m_quit.draw();
+    m_quitTexture.draw();
+    m_menu.draw();
+    m_desktop.draw();
+    m_back.draw();
 }

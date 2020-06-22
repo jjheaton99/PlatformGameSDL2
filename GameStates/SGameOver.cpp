@@ -183,7 +183,7 @@ GameState::State SGameOver::handleEvents(SDL_GameController* controller)
             case SGameOver::PLAY_AGAIN:
                 return PLAY_GAME;
             case SGameOver::QUIT:
-                return MAIN_MENU;
+                return GameState::QUIT;
             default:
                 break;
             }

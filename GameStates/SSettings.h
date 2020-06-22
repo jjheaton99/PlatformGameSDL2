@@ -1,8 +1,6 @@
 #pragma once
 
 #include "GameState.h"
-#include "MenuButton.h"
-#include "SDL_mixer.h"
 #include <fstream>
 #include <string>
 #include <array>
@@ -68,7 +66,6 @@ private:
 
     void cycleUp();
     void cycleDown();
-    bool m_joyStickCentered{ true };
 
     void deselectAll();
 

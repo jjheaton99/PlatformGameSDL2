@@ -6,6 +6,7 @@
 #include "SPaused.h"
 #include "SSettings.h"
 #include "SGameOver.h"
+#include "SQuit.h"
 #include "WWindow.h"
 #include <memory>
 

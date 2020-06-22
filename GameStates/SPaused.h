@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GameState.h"
-#include "MenuButton.h"
 
 //separate state for pausing game
 class SPaused : public GameState
@@ -31,7 +30,6 @@ private:
 
     void cycleUp();
     void cycleDown();
-    bool m_joyStickCentered{ true };
 
 public:
     SPaused();

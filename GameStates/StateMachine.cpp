@@ -73,6 +73,11 @@ void StateMachine::changeStateSwitch(GameState::State state)
         SDL_ShowCursor(SDL_ENABLE);
         break;
 
+    case GameState::QUIT:
+        m_currentState.reset(new SQuit{});
+        SDL_ShowCursor(SDL_ENABLE);
+        break;
+
     default:
         break;
     }

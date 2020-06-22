@@ -5,6 +5,7 @@
 #include "GlobalObjects.h"
 #include "TextureObject.h"
 #include "SDL_gamecontroller.h"
+#include "MenuButton.h"
 #include <vector>
 #include <string>
 
@@ -17,6 +18,7 @@ protected:
     std::vector<SDL_Event> m_events;
 
     const int m_joystickDeadZone{ 8000 };
+    bool m_joyStickCentered{ true };
 
 public:
     enum State
@@ -27,6 +29,7 @@ public:
         PAUSED,
         SETTINGS,
         GAME_OVER,
+        QUIT,
         PREVIOUS,
         EXIT
     };

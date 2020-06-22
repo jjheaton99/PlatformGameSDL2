@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GameState.h"
-#include "MenuButton.h"
 
 //main menu state
 class SMainMenu : public GameState
@@ -29,7 +28,6 @@ private:
 
     void cycleUp();
     void cycleDown();
-    bool m_joyStickCentered{ true };
 
 public:
     SMainMenu();
