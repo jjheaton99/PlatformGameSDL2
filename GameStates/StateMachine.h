@@ -4,6 +4,7 @@
 #include "SMainMenu.h"
 #include "SPlayGame.h"
 #include "SPaused.h"
+#include "SControls.h"
 #include "SSettings.h"
 #include "SGameOver.h"
 #include "SQuit.h"

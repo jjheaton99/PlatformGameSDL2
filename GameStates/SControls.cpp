@@ -1,50 +1,44 @@
-#include "SMainMenu.h"
+#include "SControls.h"
 
-SMainMenu::SMainMenu()
+SControls::SControls()
 {
     m_buttonWidth = 240;
     m_buttonHeight = 56;
 
-    m_play.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 200, 
-        m_buttonWidth, m_buttonHeight);
-    m_controls.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100,
-        m_buttonWidth, m_buttonHeight);
-    m_settings.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4),
-        m_buttonWidth, m_buttonHeight);
-    m_quit.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100,
+    m_back.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100,
         m_buttonWidth, m_buttonHeight);
 
-    g_window.fullscreenOnOff();
+    m_controlsTexture.setSrcRect(0, 0, 1459, 1044);
 }
 
-SMainMenu::~SMainMenu()
+SControls::~SControls()
 {}
 
-void SMainMenu::cycleUp()
+void SControls::cycleUp()
 {
-    if (m_currentSelection != PLAY)
+    if (m_currentSelection != BACK)
     {
-        m_currentSelection = static_cast<MenuSelection>(static_cast<int>(m_currentSelection) - 1);
+        m_currentSelection = static_cast<ControlsSelection>(static_cast<int>(m_currentSelection) - 1);
     }
     else
     {
-        m_currentSelection = QUIT;
+        m_currentSelection = BACK;
     }
 }
 
-void SMainMenu::cycleDown()
+void SControls::cycleDown()
 {
-    if (m_currentSelection != QUIT)
+    if (m_currentSelection != BACK)
     {
-        m_currentSelection = static_cast<MenuSelection>(static_cast<int>(m_currentSelection) + 1);
+        m_currentSelection = static_cast<ControlsSelection>(static_cast<int>(m_currentSelection) + 1);
     }
     else
     {
-        m_currentSelection = PLAY;
+        m_currentSelection = BACK;
     }
 }
 
-bool SMainMenu::mainMenuControls(SDL_Event& event, SDL_GameController* controller)
+bool SControls::controlsControls(SDL_Event& event)
 {
     if (event.type == SDL_KEYDOWN)
     {
@@ -52,7 +46,7 @@ bool SMainMenu::mainMenuControls(SDL_Event& event, SDL_GameController* controlle
             || event.key.keysym.sym == SDLK_s || event.key.keysym.sym == SDLK_UP
             || event.key.keysym.sym == SDLK_DOWN))
         {
-            m_currentSelection = PLAY;
+            m_currentSelection = BACK;
         }
 
         else
@@ -81,31 +75,15 @@ bool SMainMenu::mainMenuControls(SDL_Event& event, SDL_GameController* controlle
 
     else if (event.type == SDL_MOUSEMOTION)
     {
-        if (m_play.mouseIsOnButton())
+        if (m_back.mouseIsOnButton())
         {
-            m_currentSelection = PLAY;
-        }
-
-        if (m_controls.mouseIsOnButton())
-        {
-            m_currentSelection = CONTROLS;
-        }
-
-        else if (m_settings.mouseIsOnButton())
-        {
-            m_currentSelection = SETTINGS;
-        }
-
-        else if (m_quit.mouseIsOnButton())
-        {
-            m_currentSelection = QUIT;
+            m_currentSelection = BACK;
         }
 
         return false;
     }
 
-    else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT
-        && (m_play.mouseIsOnButton() || m_controls.mouseIsOnButton() || m_settings.mouseIsOnButton() || m_quit.mouseIsOnButton()))
+    else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT && m_back.mouseIsOnButton())
     {
         return true;
     }
@@ -115,7 +93,7 @@ bool SMainMenu::mainMenuControls(SDL_Event& event, SDL_GameController* controlle
         if (m_currentSelection == NONE && (event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY || event.caxis.axis == SDL_CONTROLLER_AXIS_RIGHTY)
             && (std::abs(event.caxis.value) > m_joystickDeadZone))
         {
-            m_currentSelection = PLAY;
+            m_currentSelection = BACK;
         }
 
         else
@@ -145,7 +123,7 @@ bool SMainMenu::mainMenuControls(SDL_Event& event, SDL_GameController* controlle
         if (m_currentSelection == NONE && (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP
             || event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN))
         {
-            m_currentSelection = PLAY;
+            m_currentSelection = BACK;
         }
 
         else
@@ -175,28 +153,22 @@ bool SMainMenu::mainMenuControls(SDL_Event& event, SDL_GameController* controlle
     return false;
 }
 
-GameState::State SMainMenu::handleEvents(SDL_GameController* controller)
+GameState::State SControls::handleEvents(SDL_GameController* controller)
 {
     for (SDL_Event& element : m_events)
     {
         if ((element.type == SDL_KEYDOWN && element.key.keysym.sym == SDLK_ESCAPE)
             || (element.type == SDL_CONTROLLERBUTTONDOWN && element.cbutton.button == SDL_CONTROLLER_BUTTON_B))
         {
-            return EXIT;
+            return PREVIOUS;
         }
 
-        if (mainMenuControls(element, controller))
+        if (controlsControls(element))
         {
             switch (m_currentSelection)
             {
-            case SMainMenu::PLAY:
-                return PLAY_GAME;
-            case SMainMenu::CONTROLS:
-                return GameState::CONTROLS;
-            case SMainMenu::SETTINGS:
-                return GameState::SETTINGS;
-            case SMainMenu::QUIT:
-                return EXIT;
+            case SControls::BACK:
+                return GameState::PREVIOUS;
             default:
                 break;
             }
@@ -206,38 +178,15 @@ GameState::State SMainMenu::handleEvents(SDL_GameController* controller)
     return STATE_NULL;
 }
 
-GameState::State SMainMenu::update()
+GameState::State SControls::update()
 {
-    m_play.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 200);
-    m_controls.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100);
-    m_settings.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4));
-    m_quit.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100);
-    
+    m_controlsTexture.setDstRect((g_screenWidth / 2) - 437, 100, 875, 626);
+    m_back.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100);
+
     switch (m_currentSelection)
     {
-    case SMainMenu::PLAY:
-        m_play.select();
-        m_controls.deselect();
-        m_settings.deselect();
-        m_quit.deselect();
-        break;
-    case SMainMenu::CONTROLS:
-        m_play.deselect();
-        m_controls.select();
-        m_settings.deselect();
-        m_quit.deselect();
-        break;
-    case SMainMenu::SETTINGS:
-        m_play.deselect();
-        m_controls.deselect();
-        m_settings.select();
-        m_quit.deselect();
-        break;
-    case SMainMenu::QUIT:
-        m_play.deselect();
-        m_controls.deselect();
-        m_settings.deselect();
-        m_quit.select();
+    case SControls::BACK:
+        m_back.select();
         break;
     case NONE:
     default:
@@ -247,10 +196,8 @@ GameState::State SMainMenu::update()
     return STATE_NULL;
 }
 
-void SMainMenu::render()
+void SControls::render()
 {
-    m_play.draw();
-    m_controls.draw();
-    m_settings.draw();
-    m_quit.draw();
+    m_controlsTexture.draw();
+    m_back.draw();
 }

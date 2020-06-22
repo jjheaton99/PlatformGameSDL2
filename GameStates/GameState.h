@@ -27,6 +27,7 @@ public:
         MAIN_MENU,
         PLAY_GAME,
         PAUSED,
+        CONTROLS,
         SETTINGS,
         GAME_OVER,
         QUIT,

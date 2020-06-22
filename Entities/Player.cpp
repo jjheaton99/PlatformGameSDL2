@@ -228,11 +228,6 @@ void Player::motion()
         fallAccel = Constants::g;
     }
 
-    if (m_movement != WALLSLIDE)
-    {
-        m_wallSlideSoundCount = 0;
-    }
-
     switch (m_movement)
     {
     case GroundedCharacter::AIRBORNE:
@@ -343,20 +338,10 @@ void Player::motion()
         else if (m_floatingLeft)
         {
             setVel(-1.0, m_wallslideSpeed);
-            if (++m_wallSlideSoundCount > 17)
-            {
-                m_wallslideSound.play();
-                m_wallSlideSoundCount = 0;
-            }
         }
         else if (m_floatingRight)
         {
             setVel(1.0, m_wallslideSpeed);
-            if (++m_wallSlideSoundCount > 17)
-            {
-                m_wallslideSound.play();
-                m_wallSlideSoundCount = 0;
-            }
         }
         break;
 
@@ -882,7 +867,6 @@ bool Player::sweepMapCollideCheck(const std::vector<std::vector<Tile>>& map)
                     if (m_movement == AIRBORNE && m_velocity.gety() > -15.0 && !isDodging())
                     {
                         m_movement = WALLSLIDE;
-                        m_wallslideSound.play();
                     }
                 }
                 break;

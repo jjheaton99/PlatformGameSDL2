@@ -58,6 +58,11 @@ void StateMachine::changeStateSwitch(GameState::State state)
         SDL_ShowCursor(SDL_ENABLE);
         break;
 
+    case GameState::CONTROLS:
+        m_currentState.reset(new SControls{});
+        SDL_ShowCursor(SDL_ENABLE);
+        break;
+
     case GameState::SETTINGS:
         m_currentState.reset(new SSettings{});
         SDL_ShowCursor(SDL_ENABLE);

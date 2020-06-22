@@ -47,6 +47,7 @@
     <ClCompile Include="Entities\TextureObject.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameStates\GameState.cpp" />
+    <ClCompile Include="GameStates\SControls.cpp" />
     <ClCompile Include="GameStates\SGameOver.cpp" />
     <ClCompile Include="GameStates\SMainMenu.cpp" />
     <ClCompile Include="GameStates\SPaused.cpp" />
@@ -100,6 +101,7 @@
     <ClInclude Include="Entities\TextureObject.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameStates\GameState.h" />
+    <ClInclude Include="GameStates\SControls.h" />
     <ClInclude Include="GameStates\SGameOver.h" />
     <ClInclude Include="GameStates\SMainMenu.h" />
     <ClInclude Include="GameStates\SPaused.h" />

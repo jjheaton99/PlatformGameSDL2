@@ -26,10 +26,10 @@ public:
 private:
     TextureObject m_settingsTexture{ "Assets/MiscTextures/settings.png" };
 
-    MenuButton m_fullscreenOff{ "Assets/MenuButtons/off.png", "Assets/MenuButtons/offS.png", 96, 14 };
-    MenuButton m_fullscreenOn{ "Assets/MenuButtons/on.png", "Assets/MenuButtons/onS.png", 96, 14 };
-    MenuButton m_vSyncOff{ "Assets/MenuButtons/off.png", "Assets/MenuButtons/offS.png", 96, 14 };
-    MenuButton m_vSyncOn{ "Assets/MenuButtons/on.png", "Assets/MenuButtons/onS.png", 96, 14 };
+    MenuButton m_fullscreenOff{ "Assets/MenuButtons/off.png", "Assets/MenuButtons/offS.png", 25, 14 };
+    MenuButton m_fullscreenOn{ "Assets/MenuButtons/on.png", "Assets/MenuButtons/onS.png", 25, 14 };
+    MenuButton m_vSyncOff{ "Assets/MenuButtons/off.png", "Assets/MenuButtons/offS.png", 25, 14 };
+    MenuButton m_vSyncOn{ "Assets/MenuButtons/on.png", "Assets/MenuButtons/onS.png", 25, 14 };
     MenuButton m_masterUp{ "Assets/MenuButtons/rightArrow.png", "Assets/MenuButtons/rightArrowS.png", 14, 14 };
     MenuButton m_masterDown{ "Assets/MenuButtons/leftArrow.png", "Assets/MenuButtons/leftArrowS.png", 14, 14 };
     MenuButton m_sfxUp{ "Assets/MenuButtons/rightArrow.png", "Assets/MenuButtons/rightArrowS.png", 14, 14 };
