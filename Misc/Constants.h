@@ -15,8 +15,18 @@ namespace Constants
     const int chunkHeight{ 35 };
 }
 
+//global namespace for settings variables
+namespace Settings
+{
+    extern bool vSync;
+    extern int masterVol;
+    extern int sfxVol;
+    extern int musicVol;
+}
+
 extern int g_screenWidth;
 extern int g_screenHeight;
 //convenient to have a global renderer that any object can use
 extern SDL_Renderer* g_renderer;
 extern TTF_Font* g_font;
+

@@ -19,7 +19,6 @@ Spider::Spider(double xStartPos, double yStartPos, double xVel, double yVel, std
     m_dstRect.h = 50;
 
     m_deathSound.load("Assets/Sounds/EnemySounds/spiderDeath.wav");
-    m_spiderShotSound.setPercentVolume(40);
 
     m_type = EnemyType::SPIDER;
 }

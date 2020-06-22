@@ -1,22 +1,30 @@
 #include "SSettings.h"
 
 SSettings::SSettings()
-    : m_fullscreenOff{ "Assets/MenuButtons/fullscreenOff.png", "Assets/MenuButtons/fullscreenOffS.png", 96, 14 },
-    m_fullscreenOn{ "Assets/MenuButtons/fullscreenOn.png", "Assets/MenuButtons/fullscreenOnS.png", 96, 14 },
-    m_back{ "Assets/MenuButtons/back.png", "Assets/MenuButtons/backS.png", 60, 14 }
 {
     m_buttonWidth = 240;
     m_buttonHeight = 56;
 
-    m_bigButtonWidth = 384;
-    m_bigButtonHeight = 56;
+    m_smallButtonWidth = 100;
+    m_smallButtonHeight = 56;
 
-    m_fullscreenOff.setDstRect((g_screenWidth / 2) - (m_bigButtonWidth / 2), ((g_screenHeight * 3) / 4) - 100,
-        m_bigButtonWidth, m_bigButtonHeight);
-    m_fullscreenOn.setDstRect((g_screenWidth / 2) - (m_bigButtonWidth / 2), ((g_screenHeight * 3) / 4) - 100,
-        m_bigButtonWidth, m_bigButtonHeight);
-    m_back.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4),
-        m_buttonWidth, m_buttonHeight);
+    m_arrowButtonWidth = 56;
+    m_arrowButtonHeight = 56;
+
+    m_settingsTexture.setSrcRect(0, 0, 54, 8);
+    m_settingsTexture.setDstRect((g_screenWidth / 2) - 405, 80, 810, 120);
+
+    m_fullscreenOff.setDstRect((g_screenWidth / 2) - 50, 300, m_smallButtonWidth, m_smallButtonHeight);
+    m_fullscreenOn.setDstRect((g_screenWidth / 2) - 50, 300, m_smallButtonWidth, m_smallButtonHeight);
+    m_vSyncOff.setDstRect((g_screenWidth / 2) - 50, 400, m_smallButtonWidth, m_smallButtonHeight);
+    m_vSyncOn.setDstRect((g_screenWidth / 2) - 50, 400, m_smallButtonWidth, m_smallButtonHeight);
+    m_masterUp.setDstRect((g_screenWidth / 2) + 50, 500, m_arrowButtonWidth, m_arrowButtonHeight);
+    m_masterDown.setDstRect((g_screenWidth / 2) - 106, 500, m_arrowButtonWidth, m_arrowButtonHeight);
+    m_sfxUp.setDstRect((g_screenWidth / 2) + 50, 600, m_arrowButtonWidth, m_arrowButtonHeight);
+    m_sfxDown.setDstRect((g_screenWidth / 2) - 106, 600, m_arrowButtonWidth, m_arrowButtonHeight);
+    m_musicUp.setDstRect((g_screenWidth / 2) + 50, 700, m_arrowButtonWidth, m_arrowButtonHeight);
+    m_musicDown.setDstRect((g_screenWidth / 2) - 106, 700, m_arrowButtonWidth, m_arrowButtonHeight);
+    m_back.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), 800, m_buttonWidth, m_buttonHeight);
 }
 
 SSettings::~SSettings()
@@ -87,7 +95,34 @@ bool SSettings::settingsControls(SDL_Event& event)
         {
             m_currentSelection = FULLSCREEN;
         }
-
+        else if (m_vSyncOn.mouseIsOnButton())
+        {
+            m_currentSelection = VSYNC;
+        }
+        else if (m_masterUp.mouseIsOnButton())
+        {
+            m_currentSelection = MASTER_UP;
+        }
+        else if (m_masterDown.mouseIsOnButton())
+        {
+            m_currentSelection = MASTER_DOWN;
+        }
+        else if (m_sfxUp.mouseIsOnButton())
+        {
+            m_currentSelection = SFX_UP;
+        }
+        else if (m_sfxDown.mouseIsOnButton())
+        {
+            m_currentSelection = SFX_DOWN;
+        }
+        else if (m_musicUp.mouseIsOnButton())
+        {
+            m_currentSelection = MUSIC_UP;
+        }
+        else if (m_musicDown.mouseIsOnButton())
+        {
+            m_currentSelection = MUSIC_DOWN;
+        }
         else if (m_back.mouseIsOnButton())
         {
             m_currentSelection = BACK;
@@ -96,8 +131,10 @@ bool SSettings::settingsControls(SDL_Event& event)
         return false;
     }
 
-    else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT
-        && (m_fullscreenOff.mouseIsOnButton() || m_back.mouseIsOnButton()))
+    else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT 
+        && (m_fullscreenOff.mouseIsOnButton() || m_vSyncOn.mouseIsOnButton() || m_masterUp.mouseIsOnButton()
+        || m_masterDown.mouseIsOnButton() || m_sfxUp.mouseIsOnButton() || m_sfxDown.mouseIsOnButton()
+        || m_musicUp.mouseIsOnButton() || m_musicDown.mouseIsOnButton() || m_back.mouseIsOnButton()))
     {
         return true;
     }
@@ -169,8 +206,35 @@ bool SSettings::settingsControls(SDL_Event& event)
 
 GameState::State SSettings::handleEvents(SDL_GameController* controller)
 {
+    const Uint8* currentKeyState{ SDL_GetKeyboardState(nullptr) };
+
+    bool heldCycle{ false };
+    if (++m_heldCount >= 10)
+    {
+        heldCycle = true;
+        m_heldCount = 0;
+    }
+
+    bool buttonHeld{ m_lmbHeld || currentKeyState[SDL_SCANCODE_SPACE] 
+        || currentKeyState[SDL_SCANCODE_RETURN] || SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_A) };
+
+    bool heldEvent{ buttonHeld && heldCycle && (m_masterUp.mouseIsOnButton()
+        || m_masterDown.mouseIsOnButton() || m_sfxUp.mouseIsOnButton() || m_sfxDown.mouseIsOnButton()
+        || m_musicUp.mouseIsOnButton() || m_musicDown.mouseIsOnButton()) };
+
+    bool pressEvent{ false };
+
     for (SDL_Event& element : m_events)
     {
+        if (element.type == SDL_MOUSEBUTTONDOWN && element.button.button == SDL_BUTTON_LEFT && !m_lmbHeld)
+        {
+            m_lmbHeld = true;
+        }
+        else if (element.type == SDL_MOUSEBUTTONUP && element.button.button == SDL_BUTTON_LEFT && m_lmbHeld)
+        {
+            m_lmbHeld = false;
+        }
+
         if ((element.type == SDL_KEYDOWN && element.key.keysym.sym == SDLK_ESCAPE)
             || (element.type == SDL_CONTROLLERBUTTONDOWN && element.cbutton.button == SDL_CONTROLLER_BUTTON_B))
         {
@@ -179,26 +243,94 @@ GameState::State SSettings::handleEvents(SDL_GameController* controller)
 
         if (settingsControls(element))
         {
-            switch (m_currentSelection)
-            {
-            case SSettings::FULLSCREEN:
-                g_window.fullscreenOnOff();
+            pressEvent = true;
+        }
+    }
 
-                switch (m_fullscreen)
-                {
-                case true:
-                    m_fullscreen = false;
-                    break;
-                case false:
-                    m_fullscreen = true;
-                    break;
-                }
-                return STATE_NULL;
-            case SSettings::BACK:
-                return PREVIOUS;
-            default:
+    if (heldEvent || pressEvent)
+    {
+        switch (m_currentSelection)
+        {
+        case SSettings::FULLSCREEN:
+            g_window.fullscreenOnOff();
+
+            switch (m_fullscreen)
+            {
+            case true:
+                m_fullscreen = false;
+                break;
+            case false:
+                m_fullscreen = true;
                 break;
             }
+            return STATE_NULL;
+
+        case SSettings::VSYNC:
+            switch (Settings::vSync)
+            {
+            case true:
+                Settings::vSync = false;
+                break;
+            case false:
+                Settings::vSync = true;
+                break;
+            }
+            return STATE_NULL;
+
+        case SSettings::MASTER_UP:
+            if (Settings::masterVol < 100)
+            {
+                ++Settings::masterVol;
+                m_masterVolNumber.loadText(std::to_string(Settings::masterVol), { 86, 233, 255 });
+            }
+            return STATE_NULL;
+
+        case SSettings::MASTER_DOWN:
+            if (Settings::masterVol > 0)
+            {
+                --Settings::masterVol;
+                m_masterVolNumber.loadText(std::to_string(Settings::masterVol), { 86, 233, 255 });
+            }
+            return STATE_NULL;
+
+        case SSettings::SFX_UP:
+            if (Settings::sfxVol < 100)
+            {
+                ++Settings::sfxVol;
+                m_sfxVolNumber.loadText(std::to_string(Settings::sfxVol), { 86, 233, 255 });
+            }
+            return STATE_NULL;
+
+        case SSettings::SFX_DOWN:
+            if (Settings::sfxVol > 0)
+            {
+                --Settings::sfxVol;
+                m_sfxVolNumber.loadText(std::to_string(Settings::sfxVol), { 86, 233, 255 });
+            }
+            return STATE_NULL;
+
+        case SSettings::MUSIC_UP:
+            if (Settings::musicVol < 100)
+            {
+                ++Settings::musicVol;
+                m_musicVolNumber.loadText(std::to_string(Settings::musicVol), { 86, 233, 255 });
+            }
+            return STATE_NULL;
+
+        case SSettings::MUSIC_DOWN:
+            if (Settings::musicVol > 0)
+            {
+                --Settings::musicVol;
+                m_musicVolNumber.loadText(std::to_string(Settings::musicVol), { 86, 233, 255 });
+            }
+            return STATE_NULL;
+
+        case SSettings::BACK:
+            return PREVIOUS;
+
+        case SSettings::NONE:
+        default:
+            break;
         }
     }
 
@@ -207,23 +339,72 @@ GameState::State SSettings::handleEvents(SDL_GameController* controller)
 
 GameState::State SSettings::update()
 {
-    m_fullscreenOff.setPos((g_screenWidth / 2) - (m_bigButtonWidth / 2), ((g_screenHeight * 3) / 4) - 100);
-    m_fullscreenOn.setPos((g_screenWidth / 2) - (m_bigButtonWidth / 2), ((g_screenHeight * 3) / 4) - 100);
-    m_back.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4));
+    m_settingsTexture.setDstRect((g_screenWidth / 2) - 405, 80, 810, 120);
 
+    m_fullscreenOff.setPos((g_screenWidth / 2) - 50, 300);
+    m_fullscreenOn.setPos((g_screenWidth / 2) - 50, 300);
+    m_vSyncOff.setPos((g_screenWidth / 2) - 50, 400);
+    m_vSyncOn.setPos((g_screenWidth / 2) - 50, 400);
+    m_masterUp.setPos((g_screenWidth / 2) + 50, 500);
+    m_masterDown.setPos((g_screenWidth / 2) - 106, 500);
+    m_sfxUp.setPos((g_screenWidth / 2) + 50, 600);
+    m_sfxDown.setPos((g_screenWidth / 2) - 106, 600);
+    m_musicUp.setPos((g_screenWidth / 2) + 50, 700);
+    m_musicDown.setPos((g_screenWidth / 2) - 106, 700);
+    m_back.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), 800);
+
+
+    m_fullscreenText.setDstRect((g_screenWidth / 2) - (4 * m_fullscreenText.getTextDimensions().x) - 60, 
+        310, 4 * m_fullscreenText.getTextDimensions().x, 4 * m_fullscreenText.getTextDimensions().y);
+    m_vSyncText.setDstRect((g_screenWidth / 2) - (4 * m_vSyncText.getTextDimensions().x) - 60,
+        410, 4 * m_vSyncText.getTextDimensions().x, 4 * m_vSyncText.getTextDimensions().y);
+    m_masterVolText.setDstRect((g_screenWidth / 2) - (4 * m_masterVolText.getTextDimensions().x) - 116,
+        510, 4 * m_masterVolText.getTextDimensions().x, 4 * m_masterVolText.getTextDimensions().y);
+    m_sfxVolText.setDstRect((g_screenWidth / 2) - (4 * m_sfxVolText.getTextDimensions().x) - 116,
+        610, 4 * m_sfxVolText.getTextDimensions().x, 4 * m_sfxVolText.getTextDimensions().y);
+    m_musicVolText.setDstRect((g_screenWidth / 2) - (4 * m_musicVolText.getTextDimensions().x) - 116,
+        710, 4 * m_musicVolText.getTextDimensions().x, 4 * m_musicVolText.getTextDimensions().y);
+
+    m_masterVolNumber.setDstRect((g_screenWidth / 2) - (2 * m_masterVolNumber.getTextDimensions().x), 
+        510, 4 * m_masterVolNumber.getTextDimensions().x, 4 * m_masterVolNumber.getTextDimensions().y);
+    m_sfxVolNumber.setDstRect((g_screenWidth / 2) - (2 * m_sfxVolNumber.getTextDimensions().x), 
+        610, 4 * m_sfxVolNumber.getTextDimensions().x, 4 * m_sfxVolNumber.getTextDimensions().y);
+    m_musicVolNumber.setDstRect((g_screenWidth / 2) - (2 * m_musicVolNumber.getTextDimensions().x), 
+        710, 4 * m_musicVolNumber.getTextDimensions().x, 4 * m_musicVolNumber.getTextDimensions().y);
+
+    deselectAll();
     switch (m_currentSelection)
     {
     case SSettings::FULLSCREEN:
-        m_fullscreenOff.select();
         m_fullscreenOn.select();
-        m_back.deselect();
+        m_fullscreenOff.select();
+        break;
+    case SSettings::VSYNC:
+        m_vSyncOn.select();
+        m_vSyncOff.select();
+        break;
+    case SSettings::MASTER_UP:
+        m_masterUp.select();
+        break;
+    case SSettings::MASTER_DOWN:
+        m_masterDown.select();
+        break;
+    case SSettings::SFX_UP:
+        m_sfxUp.select();
+        break;
+    case SSettings::SFX_DOWN:
+        m_sfxDown.select();
+        break;
+    case SSettings::MUSIC_UP:
+        m_musicUp.select();
+        break;
+    case SSettings::MUSIC_DOWN:
+        m_musicDown.select();
         break;
     case SSettings::BACK:
-        m_fullscreenOff.deselect();
-        m_fullscreenOn.deselect();
         m_back.select();
         break;
-    case NONE:
+    case SSettings::NONE:
     default:
         break;
     }
@@ -233,14 +414,57 @@ GameState::State SSettings::update()
 
 void SSettings::render()
 {
+    m_settingsTexture.draw();
+
     if (m_fullscreen)
     {
         m_fullscreenOn.draw();
-        m_back.draw();
     }
     else
     {
         m_fullscreenOff.draw();
-        m_back.draw();
     }
+
+    if (Settings::vSync)
+    {
+        m_vSyncOn.draw();
+    }
+    else
+    {
+        m_vSyncOff.draw();
+    }
+
+    m_masterUp.draw();
+    m_masterDown.draw();
+    m_sfxUp.draw();
+    m_sfxDown.draw();
+    m_musicUp.draw();
+    m_musicDown.draw();
+
+    m_fullscreenText.draw();
+    m_vSyncText.draw();
+    m_masterVolText.draw();
+    m_sfxVolText.draw();
+    m_musicVolText.draw();
+
+    m_masterVolNumber.draw();
+    m_sfxVolNumber.draw();
+    m_musicVolNumber.draw();
+
+    m_back.draw();
+}
+
+void SSettings::deselectAll()
+{
+    m_fullscreenOn.deselect();
+    m_fullscreenOff.deselect();
+    m_vSyncOn.deselect();
+    m_vSyncOff.deselect();
+    m_masterUp.deselect();
+    m_masterDown.deselect();
+    m_sfxUp.deselect();
+    m_sfxDown.deselect();
+    m_musicUp.deselect();
+    m_musicDown.deselect();
+    m_back.deselect();
 }

@@ -64,19 +64,19 @@ private:
     bool m_pickedUpItem{ false };
 
     SoundEffect m_takeDamageSound{ "Assets/Sounds/PlayerSounds/playerDamage.wav" };
-    SoundEffect m_hitGroundSound{ "Assets/Sounds/PlayerSounds/land.wav" };
-    SoundEffect m_wallslideSound{ "Assets/Sounds/PlayerSounds/wallslide.wav" };
+    SoundEffect m_hitGroundSound{ "Assets/Sounds/PlayerSounds/land.wav", 90 };
+    SoundEffect m_wallslideSound{ "Assets/Sounds/PlayerSounds/wallslide.wav", 12 };
     int m_wallSlideSoundCount{ 0 };
     SoundEffect m_dodgeSound{ "Assets/Sounds/PlayerSounds/dodge.wav" };
     SoundEffect m_drinkPotionSound{ "Assets/Sounds/PlayerSounds/potion.wav" };
     SoundEffect m_bruhSound{ "Assets/Sounds/PlayerSounds/bruh.wav" };
-    SoundEffect m_fatalitySound{ "Assets/Sounds/PlayerSounds/fatality.wav" };
+    SoundEffect m_fatalitySound{ "Assets/Sounds/PlayerSounds/fatality.wav", 64 };
     SoundEffect m_explosionSound{ "Assets/Sounds/PlayerSounds/explosion.wav" };
     SoundEffect m_collectMoneySound1{ "Assets/Sounds/MiscSounds/coin1.wav" };
     SoundEffect m_collectMoneySound2{ "Assets/Sounds/MiscSounds/coin2.wav" };
     SoundEffect m_collectMoneySound3{ "Assets/Sounds/MiscSounds/coin3.wav" };
     SoundEffect m_buyItemSound{ "Assets/Sounds/MiscSounds/buyItem.wav" };
-    SoundEffect m_pickUpItemSound{ "Assets/Sounds/MiscSounds/pickUpItem.wav" };
+    SoundEffect m_pickUpItemSound{ "Assets/Sounds/MiscSounds/pickUpItem.wav", 64 };
 
     void cycleWalkAnimation();
     void cycleIdleAnimation();

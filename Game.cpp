@@ -94,6 +94,7 @@ void Game::playGame()
         while (m_stateMachine->getCurrentStateID() != GameState::EXIT)
         {
             m_stateMachine->gameLoop();
+            Mix_VolumeMusic(static_cast<Uint8>((Settings::musicVol / 100.0) * (Settings::masterVol / 100.0) * MIX_MAX_VOLUME));
         }
     }
 

@@ -6,6 +6,7 @@
 #include "TextureObject.h"
 #include "SDL_gamecontroller.h"
 #include <vector>
+#include <string>
 
 //base class for any state of the game
 class GameState

@@ -34,7 +34,6 @@ SPlayGame::SPlayGame(std::string mapFile)
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());
 
     Mix_PlayMusic(m_music, -1);
-    Mix_VolumeMusic(0);
     //m_objectManager->newEnemy(GameObject::EnemyType::SPIDER, playerxSpawn + 500.0, playerySpawn + 500.0);
 }
 
@@ -601,7 +600,7 @@ GameState::State SPlayGame::update()
             else
             {
                 m_player->update(m_map->getMap(), m_camera, m_objectManager->getEnemies());
-                Mix_PauseMusic();
+                Mix_HaltMusic();
             }
 
             //add extra time in case logic update took too long to prevent slowing

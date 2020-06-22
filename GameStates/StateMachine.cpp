@@ -88,6 +88,12 @@ void StateMachine::changeState()
         }
 
         drawLoadingScreen();
+        if (m_vSync != Settings::vSync)
+        {
+            SDL_DestroyRenderer(g_renderer);
+            g_renderer = g_window.createRenderer();
+            m_vSync = Settings::vSync;
+        }
         changeStateSwitch(m_nextState);
 
         m_prevStateID = m_currentStateID;

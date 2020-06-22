@@ -18,10 +18,7 @@ Player::Player(double xStartPos, double yStartPos, double xVel, double yVel, std
     m_dstRect.w = 100;
     m_dstRect.h = 100;
 
-    m_hitGroundSound.setPercentVolume(70);
-    m_wallslideSound.setPercentVolume(10);
-    m_fatalitySound.setPercentVolume(50);
-    m_pickUpItemSound.setPercentVolume(50);
+    m_dodgeSound.setVolume(0);
 }
 
 Player::~Player()

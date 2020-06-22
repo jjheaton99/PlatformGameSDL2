@@ -17,7 +17,14 @@ bool WWindow::init()
 
 SDL_Renderer* WWindow::createRenderer()
 {
-    return SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED /*| SDL_RENDERER_PRESENTVSYNC*/);
+    if (Settings::vSync)
+    {
+        return SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    }
+    else
+    {
+        return SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+    }
 }
 
 void WWindow::handleEvent(SDL_Event& event)

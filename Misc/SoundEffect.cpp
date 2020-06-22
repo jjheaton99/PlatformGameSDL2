@@ -1,11 +1,13 @@
 #include "SoundEffect.h"
 
-SoundEffect::SoundEffect(std::string soundFile)
+SoundEffect::SoundEffect(std::string soundFile, Uint8 volume)
+    : m_baseVolume{volume}
 {
-    load(soundFile);
+    load(soundFile, volume);
 }
 
 SoundEffect::SoundEffect()
+    : m_baseVolume{MIX_MAX_VOLUME}
 {}
 
 SoundEffect::~SoundEffect()
@@ -13,8 +15,10 @@ SoundEffect::~SoundEffect()
     Mix_FreeChunk(m_soundEffect);
 }
 
-void SoundEffect::load(std::string soundFile)
+void SoundEffect::load(std::string soundFile, Uint8 volume)
 {
+    m_baseVolume = volume;
+
     if (m_soundEffect)
     {
         Mix_FreeChunk(m_soundEffect);
@@ -27,27 +31,17 @@ void SoundEffect::load(std::string soundFile)
     }
     else
     {
-        Mix_VolumeChunk(m_soundEffect, 128);
+        setVolume(volume);
     }
 }
 
-void SoundEffect::play() const
+void SoundEffect::play()
 {
+    Mix_VolumeChunk(m_soundEffect, static_cast<Uint8>((Settings::sfxVol / 100.0) * (Settings::masterVol / 100.0) * m_baseVolume));
     Mix_PlayChannel(-1, m_soundEffect, 0);
 }
 
-void SoundEffect::setPercentVolume(double percent)
+void SoundEffect::setVolume(Uint8 volume)
 {
-    if (percent <= 0.0)
-    {
-        Mix_VolumeChunk(m_soundEffect, 0);
-    }
-    else if (percent >= 100.0)
-    {
-        Mix_VolumeChunk(m_soundEffect, MIX_MAX_VOLUME);
-    }
-    else
-    {
-        Mix_VolumeChunk(m_soundEffect, static_cast<int>((percent / 100.0) * static_cast<double>(MIX_MAX_VOLUME)));
-    }
+    Mix_VolumeChunk(m_soundEffect, volume);
 }
