@@ -62,7 +62,6 @@ private:
     int m_arrowButtonHeight;
 
     bool settingsControls(SDL_Event& event);
-    bool m_fullscreen{ false };
 
     void cycleUp();
     void cycleDown();

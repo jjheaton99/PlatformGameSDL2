@@ -40,6 +40,12 @@ void StateMachine::changeStateSwitch(GameState::State state)
         //creates new game if one doesnt exist
         if (!m_playGame)
         {
+            if (m_vSync != Settings::vSync)
+            {
+                SDL_DestroyRenderer(g_renderer);
+                g_renderer = g_window.createRenderer();
+                m_vSync = Settings::vSync;
+            }
             m_playGame.reset(new SPlayGame{});
         }
         m_currentState = m_playGame;
@@ -88,12 +94,6 @@ void StateMachine::changeState()
         }
 
         drawLoadingScreen();
-        if (m_vSync != Settings::vSync)
-        {
-            SDL_DestroyRenderer(g_renderer);
-            g_renderer = g_window.createRenderer();
-            m_vSync = Settings::vSync;
-        }
         changeStateSwitch(m_nextState);
 
         m_prevStateID = m_currentStateID;

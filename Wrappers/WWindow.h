@@ -9,7 +9,6 @@ class WWindow
 private:
     SDL_Window* m_window{ nullptr };
 
-    bool m_fullscreen{ false };
     bool m_minimised{ false };
 
 public:
@@ -21,7 +20,6 @@ public:
     void handleEvent(SDL_Event& event);
     void destroy();
 
-    bool isFullscreen() const { return m_fullscreen; }
     bool isMinimised() const { return m_minimised; }
 
     void fullscreenOnOff();

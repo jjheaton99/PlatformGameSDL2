@@ -18,6 +18,7 @@ namespace Constants
 //global namespace for settings variables
 namespace Settings
 {
+    extern bool fullscreen;
     extern bool vSync;
     extern int masterVol;
     extern int sfxVol;

@@ -625,11 +625,11 @@ GameState::State SPlayGame::update()
 
         m_camera.resize();
 
-        /*double frameRate{ averageFPS(timeStep) };
+        double frameRate{ averageFPS(timeStep) };
         if (frameRate > 0)
         {
             std::cout << frameRate << '\n';
-        }*/
+        }
 
         return STATE_NULL;
     }

@@ -252,28 +252,26 @@ GameState::State SSettings::handleEvents(SDL_GameController* controller)
         switch (m_currentSelection)
         {
         case SSettings::FULLSCREEN:
+            if (Settings::fullscreen)
+            {
+                Settings::fullscreen = false;
+            }
+            else
+            {
+                Settings::fullscreen = true;
+            }
             g_window.fullscreenOnOff();
 
-            switch (m_fullscreen)
-            {
-            case true:
-                m_fullscreen = false;
-                break;
-            case false:
-                m_fullscreen = true;
-                break;
-            }
             return STATE_NULL;
 
         case SSettings::VSYNC:
-            switch (Settings::vSync)
+            if (Settings::vSync)
             {
-            case true:
                 Settings::vSync = false;
-                break;
-            case false:
+            }
+            else
+            {
                 Settings::vSync = true;
-                break;
             }
             return STATE_NULL;
 
@@ -416,7 +414,7 @@ void SSettings::render()
 {
     m_settingsTexture.draw();
 
-    if (m_fullscreen)
+    if (Settings::fullscreen)
     {
         m_fullscreenOn.draw();
     }

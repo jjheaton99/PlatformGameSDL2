@@ -58,18 +58,15 @@ void WWindow::handleEvent(SDL_Event& event)
 
 void WWindow::fullscreenOnOff()
 {
-    switch (m_fullscreen)
+    if (Settings::fullscreen)
     {
-    case true:
-        m_fullscreen = false;
-        SDL_SetWindowFullscreen(m_window, 0);
-        break;
-    case false:
-        m_fullscreen = true;
         SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
         g_screenWidth = 1920;
         g_screenHeight = 1080;
-        break;
+    }
+    else
+    {
+        SDL_SetWindowFullscreen(m_window, 0);
     }
 }
 
