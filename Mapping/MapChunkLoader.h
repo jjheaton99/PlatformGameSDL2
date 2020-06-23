@@ -30,6 +30,7 @@ public:
         TLR,
         BLR,
         TBLR,
+        SHOP,
         SOLID
     };
 
@@ -180,6 +181,14 @@ private:
         }}
     };
 
+    chunkInfo m_SHOPfiles{
+        {"Assets/Maps/MapChunks/shop35.csv", {
+            Vector2D<double>{133, 585},
+            Vector2D<double>{357, 585},
+            Vector2D<double>{741, 585},
+            Vector2D<double>{965, 585}
+        }}
+    };
     /*std::vector<std::string> m_Tfiles{ 
         "Assets/Maps/MapChunks/T/a35.csv" 
     };

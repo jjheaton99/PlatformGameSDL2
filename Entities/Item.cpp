@@ -10,7 +10,7 @@ Item::Item(ItemType type, bool shopItem, double xPos, double yPos)
         m_srcRect = { 0, 0, 16, 19 };
         m_dstRect.w = 50;
         m_dstRect.h = 59;
-        m_price = 100;
+        m_price = 200;
         break;
 
     case GameObject::ItemType::SWORD:
@@ -18,7 +18,7 @@ Item::Item(ItemType type, bool shopItem, double xPos, double yPos)
         m_srcRect = { 0, 0, 12, 44 };
         m_dstRect.w = 37;
         m_dstRect.h = 137;
-        m_price = 1000;
+        m_price = 500;
         break;
 
     case GameObject::ItemType::AXE:
@@ -26,7 +26,7 @@ Item::Item(ItemType type, bool shopItem, double xPos, double yPos)
         m_srcRect = { 0, 0, 26, 57 };
         m_dstRect.w = 81;
         m_dstRect.h = 178;
-        m_price = 5000;
+        m_price = 2500;
         break;
 
     case GameObject::ItemType::BOOMERANG:
@@ -34,7 +34,7 @@ Item::Item(ItemType type, bool shopItem, double xPos, double yPos)
         m_srcRect = { 0, 0, 34, 34 };
         m_dstRect.w = 64;
         m_dstRect.h = 64;
-        m_price = 4000;
+        m_price = 2000;
         break;
 
     case GameObject::ItemType::DOWN_AXE:
@@ -42,7 +42,7 @@ Item::Item(ItemType type, bool shopItem, double xPos, double yPos)
         m_srcRect = { 0, 0, 22, 23 };
         m_dstRect.w = 69;
         m_dstRect.h = 72;
-        m_price = 3000;
+        m_price = 1500;
         break;
 
     case GameObject::ItemType::BLACK_HOLE:
@@ -50,7 +50,7 @@ Item::Item(ItemType type, bool shopItem, double xPos, double yPos)
         m_srcRect = { 0, 0, 34, 34 };
         m_dstRect.w = 106;
         m_dstRect.h = 106;
-        m_price = 8000;
+        m_price = 4000;
         break;
 
     case GameObject::ItemType::NONE:

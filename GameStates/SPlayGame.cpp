@@ -2,33 +2,27 @@
 
 SPlayGame::SPlayGame(std::string mapFile)
 {
-    int pathLength{ 50 };
+    int pathLength{ 30 };
     m_map->loadMap(pathLength);
 
     double playerxSpawn{ ((1.0 * m_map->getPlayerSpawnChunk().getx()) * Constants::chunkWidth * Constants::tileSize) + 700.0 };
     double playerySpawn{ ((1.0 * m_map->getPlayerSpawnChunk().gety()) * Constants::chunkHeight * Constants::tileSize) + 700.0 };
     m_player->setPos(playerxSpawn, playerySpawn);
 
+    //generate shop items
+    m_objectManager->newItem(GameObject::ItemType::AXE, true, m_map->getItemSpawnPoints()[0].getx(), m_map->getItemSpawnPoints()[0].gety());
+    m_objectManager->newItem(GameObject::ItemType::DOWN_AXE, true, m_map->getItemSpawnPoints()[1].getx(), m_map->getItemSpawnPoints()[1].gety());
+    m_objectManager->newItem(GameObject::ItemType::BLACK_HOLE, true, m_map->getItemSpawnPoints()[2].getx(), m_map->getItemSpawnPoints()[2].gety());
+    for (int i{ 0 }; i < 5; ++i)
+    {
+        m_objectManager->newItem(GameObject::ItemType::POTION, true, m_map->getItemSpawnPoints()[3].getx(), m_map->getItemSpawnPoints()[3].gety());
+    }
+
     //generate random enemy at each spawn point
     for (const auto& spawnPoint : m_map->getEnemySpawnPoints())
     {
         m_objectManager->newRandomEnemy(spawnPoint.getx(), spawnPoint.gety());
     }
-
-    m_objectManager->newItem(GameObject::ItemType::AXE, false, playerxSpawn, playerySpawn);
-    m_objectManager->newItem(GameObject::ItemType::BOOMERANG, false, playerxSpawn + 300, playerySpawn);
-    m_objectManager->newItem(GameObject::ItemType::BLACK_HOLE, false, playerxSpawn + 800, playerySpawn);
-
-    for (int i{ 0 }; i < 5; ++i)
-    {
-        m_objectManager->newItem(GameObject::ItemType::POTION, true,
-            playerxSpawn - 620, playerySpawn + 1250);
-    }
-
-    /*for (int i{ 0 }; i < 100; ++i)
-    {
-        m_objectManager->newRandomEnemy(playerxSpawn, playerySpawn);
-    }*/
 
     m_camera.setPos(0, 0);
     m_camera.setBoundary(m_map->getLevelWidth(), m_map->getLevelHeight());

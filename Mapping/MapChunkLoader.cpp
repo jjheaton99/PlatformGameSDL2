@@ -127,6 +127,10 @@ const MapChunkLoader::MapChunkData& MapChunkLoader::loadAndGetChunk(ChunkEntranc
         index = MTRandom::getRandomInt(0, static_cast<int>(m_TBLRfiles.size()) - 1);
         readFileToChunkVector(m_TBLRfiles[index]);
         break;*/
+    case MapChunkLoader::SHOP:
+        readFileToChunkVector(m_SHOPfiles[0].first);
+        m_chunkData.spawnPoints = m_SHOPfiles[0].second;
+        break;
     case MapChunkLoader::SOLID:
         readFileToChunkVector("Assets/Maps/MapChunks/solid.csv");
         m_chunkData.spawnPoints.clear();

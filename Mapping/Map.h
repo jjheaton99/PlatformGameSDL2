@@ -24,6 +24,7 @@ private:
     std::vector<std::vector<MapChunkLoader::ChunkEntrances>> m_generatedChunks;
     double m_spawnPointFactor;
     std::vector<Vector2D<double>> m_enemySpawnPoints;
+    std::vector<Vector2D<double>> m_itemSpawnPoints;
 
     std::shared_ptr<WTexture> m_tileset{ std::make_shared<WTexture>() };
 
@@ -54,6 +55,7 @@ public:
     int getLevelHeight() const { return m_levelHeight; }
     const Vector2D<int>& getPlayerSpawnChunk() const { return m_playerSpawnChunk; }
     const std::vector<Vector2D<double>>& getEnemySpawnPoints() const { return m_enemySpawnPoints; }
+    const std::vector<Vector2D<double>>& getItemSpawnPoints() const { return m_itemSpawnPoints; }
 
     //for testing
     void printMap() const;

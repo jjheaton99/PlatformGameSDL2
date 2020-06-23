@@ -27,6 +27,7 @@ void Map::update()
 //generates a path out of map chunks
 void Map::generateChunks(int totalChunks)
 {
+    //create grid of chunks that extends the maximum chunk length in each direction
     int generatedChunksSize{ (2 * totalChunks) + 1 };
     m_generatedChunks.resize(generatedChunksSize);
     for (auto& row : m_generatedChunks)
@@ -35,6 +36,7 @@ void Map::generateChunks(int totalChunks)
     }
 
     int randomChunkNum{ MTRandom::getRandomInt(1, 4) };
+    //set current chunk position to centre of grid
     int currentChunkRow{ totalChunks + 1 };
     int currentChunkColumn{ totalChunks + 1 };
     MapChunkLoader::ChunkEntrances prevChunkExit{MapChunkLoader::T};
@@ -101,6 +103,13 @@ void Map::generateChunks(int totalChunks)
 
     for (int i{ 1 }; i < totalChunks - 1; ++i)
     {
+        bool shop{ false };
+        if (i == totalChunks / 2)
+        {
+            m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::SHOP;
+            shop = true;
+        }
+
         dirChangeOrNot = MTRandom::getRandomInt(1, 2);
         switch (prevChunkExit)
         {
@@ -111,7 +120,8 @@ void Map::generateChunks(int totalChunks)
                 switch (dirChange)
                 {
                 case 'l':
-                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BL;
+                    if (!shop)
+                        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BL;
                     --currentChunkColumn;
                     if (currentChunkColumn <= minColumn)
                     {
@@ -121,7 +131,8 @@ void Map::generateChunks(int totalChunks)
                     break;
 
                 case 'r':
-                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BR;
+                    if (!shop)
+                        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BR;
                     ++currentChunkColumn;
                     if (currentChunkColumn >= maxColumn)
                     {
@@ -134,7 +145,8 @@ void Map::generateChunks(int totalChunks)
                 break;
 
             case 2:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TB;
+                if (!shop)
+                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TB;
                 --currentChunkRow;
                 if (currentChunkRow <= minRow)
                 {
@@ -152,7 +164,8 @@ void Map::generateChunks(int totalChunks)
                 switch (dirChange)
                 {
                 case 'l':
-                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TR;
+                    if (!shop)
+                        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TR;
                     ++currentChunkColumn;
                     if (currentChunkColumn >= maxColumn)
                     {
@@ -162,7 +175,8 @@ void Map::generateChunks(int totalChunks)
                     break;
 
                 case 'r':
-                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TL;
+                    if (!shop)
+                        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TL;
                     --currentChunkColumn;
                     if (currentChunkColumn <= minColumn)
                     {
@@ -175,7 +189,8 @@ void Map::generateChunks(int totalChunks)
                 break;
 
             case 2:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TB;
+                if (!shop)
+                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TB;
                 ++currentChunkRow;
                 if (currentChunkRow >= maxRow)
                 {
@@ -193,7 +208,8 @@ void Map::generateChunks(int totalChunks)
                 switch (dirChange)
                 {
                 case 'l':
-                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BR;
+                    if (!shop)
+                        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BR;
                     ++currentChunkRow;
                     if (currentChunkRow >= maxRow)
                     {
@@ -203,7 +219,8 @@ void Map::generateChunks(int totalChunks)
                     break;
 
                 case 'r':
-                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TR;
+                    if (!shop)
+                        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TR;
                     --currentChunkRow;
                     if (currentChunkRow <= minRow)
                     {
@@ -216,7 +233,8 @@ void Map::generateChunks(int totalChunks)
                 break;
 
             case 2:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::LR;
+                if (!shop)
+                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::LR;
                 --currentChunkColumn;
                 if (currentChunkColumn <= minColumn)
                 {
@@ -234,7 +252,8 @@ void Map::generateChunks(int totalChunks)
                 switch (dirChange)
                 {
                 case 'l':
-                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TL;
+                    if (!shop)
+                        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::TL;
                     --currentChunkRow;
                     if (currentChunkRow <= minRow)
                     {
@@ -244,7 +263,8 @@ void Map::generateChunks(int totalChunks)
                     break;
 
                 case 'r':
-                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BL;
+                    if (!shop)
+                        m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::BL;
                     ++currentChunkRow;
                     if (currentChunkRow >= maxRow)
                     {
@@ -257,7 +277,8 @@ void Map::generateChunks(int totalChunks)
                 break;
 
             case 2:
-                m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::LR;
+                if (!shop)
+                    m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::LR;
                 ++currentChunkColumn;
                 if (currentChunkColumn >= maxColumn)
                 {
@@ -422,18 +443,36 @@ void Map::loadMap(int totalChunks)
         for (int generatedChunksColumn{ 0 }; generatedChunksColumn < static_cast<int>(m_generatedChunks[0].size()); ++generatedChunksColumn)
         {
             MapChunkLoader::MapChunkData chunkData{ m_chunkLoader.loadAndGetChunk(m_generatedChunks[generatedChunksRow][generatedChunksColumn]) };
-            for (auto& spawnPoint : chunkData.spawnPoints)
+            if (m_generatedChunks[generatedChunksRow][generatedChunksColumn] == MapChunkLoader::SHOP)
             {
-                spawnPoint.scale(m_spawnPointFactor);
-                spawnPoint.add(1.0 * generatedChunksColumn * Constants::chunkWidth * Constants::tileSize,
-                    1.0 * generatedChunksRow * Constants::chunkHeight * Constants::tileSize);
-            }
+                for (auto& itemPoint : chunkData.spawnPoints)
+                {
+                    itemPoint.scale(m_spawnPointFactor);
+                    itemPoint.add(1.0 * generatedChunksColumn * Constants::chunkWidth * Constants::tileSize,
+                        1.0 * generatedChunksRow * Constants::chunkHeight * Constants::tileSize);
+                }
 
-            m_enemySpawnPoints.insert(
-                m_enemySpawnPoints.end(),
-                std::make_move_iterator(chunkData.spawnPoints.begin()),
-                std::make_move_iterator(chunkData.spawnPoints.end())
-            );
+                m_itemSpawnPoints.insert(
+                    m_itemSpawnPoints.end(),
+                    std::make_move_iterator(chunkData.spawnPoints.begin()),
+                    std::make_move_iterator(chunkData.spawnPoints.end())
+                );
+            }
+            else
+            {
+                for (auto& spawnPoint : chunkData.spawnPoints)
+                {
+                    spawnPoint.scale(m_spawnPointFactor);
+                    spawnPoint.add(1.0 * generatedChunksColumn * Constants::chunkWidth * Constants::tileSize,
+                        1.0 * generatedChunksRow * Constants::chunkHeight * Constants::tileSize);
+                }
+
+                m_enemySpawnPoints.insert(
+                    m_enemySpawnPoints.end(),
+                    std::make_move_iterator(chunkData.spawnPoints.begin()),
+                    std::make_move_iterator(chunkData.spawnPoints.end())
+                );
+            }
 
             MapChunkLoader::intMap_type tileNumbers{ chunkData.tiles };
             for (int chunkRow{ 0 }; chunkRow < Constants::chunkHeight; ++chunkRow)
