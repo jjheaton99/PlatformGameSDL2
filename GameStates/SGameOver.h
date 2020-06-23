@@ -13,8 +13,8 @@ public:
     };
 
 private:
-    MenuButton m_playAgain;
-    MenuButton m_quit;
+    MenuButton m_playAgain{ "Assets/MenuButtons/playAgain.png", "Assets/MenuButtons/playAgainS.png", 96, 14 };
+    MenuButton m_quit{ "Assets/MenuButtons/quit.png", "Assets/MenuButtons/quitS.png", 60, 14 };
 
     GameOverSelection m_currentSelection{ PLAY_AGAIN };
 

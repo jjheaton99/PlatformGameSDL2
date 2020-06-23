@@ -1,14 +1,13 @@
 #include "SPaused.h"
 
 SPaused::SPaused()
-    : m_resume{ "Assets/MenuButtons/resume.png", "Assets/MenuButtons/resumeS.png", 60, 14 },
-    m_settings{ "Assets/MenuButtons/settings.png", "Assets/MenuButtons/settingsS.png", 60, 14 },
-    m_quit{ "Assets/MenuButtons/quit.png", "Assets/MenuButtons/quitS.png", 60, 14 }
 {
     m_buttonWidth = 240;
     m_buttonHeight = 56;
 
-    m_resume.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100,
+    m_resume.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 200,
+        m_buttonWidth, m_buttonHeight);
+    m_controls.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100,
         m_buttonWidth, m_buttonHeight);
     m_settings.setDstRect((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4),
         m_buttonWidth, m_buttonHeight);
@@ -16,7 +15,6 @@ SPaused::SPaused()
         m_buttonWidth, m_buttonHeight);
 
     m_pausedTexture.setSrcRect(0, 0, 40, 8);
-    m_pausedTexture.setDstRect((g_screenWidth / 2) - 300, ((g_screenHeight * 3) / 4) - 300, 600, 120);
 }
 
 SPaused::~SPaused()
@@ -88,6 +86,11 @@ bool SPaused::pausedControls(SDL_Event& event)
             m_currentSelection = RESUME;
         }
 
+        if (m_controls.mouseIsOnButton())
+        {
+            m_currentSelection = CONTROLS;
+        }
+
         else if (m_settings.mouseIsOnButton())
         {
             m_currentSelection = SETTINGS;
@@ -102,7 +105,7 @@ bool SPaused::pausedControls(SDL_Event& event)
     }
 
     else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT
-        && (m_resume.mouseIsOnButton() || m_settings.mouseIsOnButton() || m_quit.mouseIsOnButton()))
+        && (m_resume.mouseIsOnButton() || m_controls.mouseIsOnButton() || m_settings.mouseIsOnButton() || m_quit.mouseIsOnButton()))
     {
         return true;
     }
@@ -187,7 +190,9 @@ GameState::State SPaused::handleEvents(SDL_GameController* controller)
             switch (m_currentSelection)
             {
             case SPaused::RESUME:
-                return PLAY_GAME;
+                return GameState::PLAY_GAME;
+            case SPaused::CONTROLS:
+                return GameState::CONTROLS;
             case SPaused::SETTINGS:
                 return GameState::SETTINGS;
             case SPaused::QUIT:
@@ -203,8 +208,10 @@ GameState::State SPaused::handleEvents(SDL_GameController* controller)
 
 GameState::State SPaused::update()
 {
-    m_pausedTexture.setDstRect((g_screenWidth / 2) - 300, ((g_screenHeight * 3) / 4) - 300, 600, 120);
-    m_resume.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100);
+    m_pausedTexture.setDstRect((g_screenWidth / 2) - 300, ((g_screenHeight * 3) / 4) - 400, 600, 120);
+
+    m_resume.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 200);
+    m_controls.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) - 100);
     m_settings.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4));
     m_quit.setPos((g_screenWidth / 2) - (m_buttonWidth / 2), ((g_screenHeight * 3) / 4) + 100);
 
@@ -212,16 +219,25 @@ GameState::State SPaused::update()
     {
     case SPaused::RESUME:
         m_resume.select();
+        m_controls.deselect();
+        m_settings.deselect();
+        m_quit.deselect();
+        break;
+    case SPaused::CONTROLS:
+        m_resume.deselect();
+        m_controls.select();
         m_settings.deselect();
         m_quit.deselect();
         break;
     case SPaused::SETTINGS:
         m_resume.deselect();
+        m_controls.deselect();
         m_settings.select();
         m_quit.deselect();
         break;
     case SPaused::QUIT:
         m_resume.deselect();
+        m_controls.deselect();
         m_settings.deselect();
         m_quit.select();
         break;
@@ -237,6 +253,7 @@ void SPaused::render()
 {
     m_pausedTexture.draw();
     m_resume.draw();
+    m_controls.draw();
     m_settings.draw();
     m_quit.draw();
 }

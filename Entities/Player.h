@@ -56,7 +56,7 @@ private:
     bool m_slowDebuff{ false };
     int m_slowDebuffCount{ 0 };
 
-    int m_healthPotions{ 20 };
+    int m_healthPotions{ 10 };
     int m_money{ 0 };
 
     bool m_interact{ false };

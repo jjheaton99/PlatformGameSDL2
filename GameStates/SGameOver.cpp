@@ -1,8 +1,6 @@
 #include "SGameOver.h"
 
 SGameOver::SGameOver()
-    : m_playAgain{ "Assets/MenuButtons/playAgain.png", "Assets/MenuButtons/playAgainS.png", 96, 14 },
-    m_quit{ "Assets/MenuButtons/quit.png", "Assets/MenuButtons/quitS.png", 60, 14 }
 {
     m_buttonWidth = 240;
     m_buttonHeight = 56;
