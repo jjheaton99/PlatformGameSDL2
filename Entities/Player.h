@@ -7,6 +7,7 @@
 #include "Axe.h"
 #include "Sword.h"
 #include "DownAxe.h"
+#include "DownSword.h"
 #include "Boomerang.h"
 #include "BlackHole.h"
 #include "Item.h"
@@ -21,7 +22,7 @@ class Player : public std::enable_shared_from_this<Character>, public GroundedCh
 {
 private:
     std::unique_ptr<PlayerMeleeAttack> m_meleeAttack{ std::make_unique<Sword>() };
-    std::unique_ptr<PlayerMeleeAttack> m_downAttack{ std::make_unique<DownAxe>() };
+    std::unique_ptr<PlayerMeleeAttack> m_downAttack{ std::make_unique<DownSword>() };
     std::unique_ptr<PlayerRangedAttack> m_rangedAttack{ std::make_unique<Boomerang>() };
 
     //member variables for controlling dodge timing and animation

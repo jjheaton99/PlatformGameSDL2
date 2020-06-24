@@ -104,7 +104,7 @@ void Map::generateChunks(int totalChunks)
     for (int i{ 1 }; i < totalChunks - 1; ++i)
     {
         bool shop{ false };
-        if (i == totalChunks / 2)
+        if (i == 10)
         {
             m_generatedChunks[currentChunkRow][currentChunkColumn] = MapChunkLoader::SHOP;
             shop = true;

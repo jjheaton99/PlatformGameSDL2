@@ -2,7 +2,7 @@
 
 SPlayGame::SPlayGame(std::string mapFile)
 {
-    int pathLength{ 30 };
+    int pathLength{ 50 };
     m_map->loadMap(pathLength);
 
     double playerxSpawn{ ((1.0 * m_map->getPlayerSpawnChunk().getx()) * Constants::chunkWidth * Constants::tileSize) + 700.0 };
@@ -13,7 +13,7 @@ SPlayGame::SPlayGame(std::string mapFile)
     m_objectManager->newItem(GameObject::ItemType::AXE, true, m_map->getItemSpawnPoints()[0].getx(), m_map->getItemSpawnPoints()[0].gety());
     m_objectManager->newItem(GameObject::ItemType::DOWN_AXE, true, m_map->getItemSpawnPoints()[1].getx(), m_map->getItemSpawnPoints()[1].gety());
     m_objectManager->newItem(GameObject::ItemType::BLACK_HOLE, true, m_map->getItemSpawnPoints()[2].getx(), m_map->getItemSpawnPoints()[2].gety());
-    for (int i{ 0 }; i < 5; ++i)
+    for (int i{ 0 }; i < 10; ++i)
     {
         m_objectManager->newItem(GameObject::ItemType::POTION, true, m_map->getItemSpawnPoints()[3].getx(), m_map->getItemSpawnPoints()[3].gety());
     }

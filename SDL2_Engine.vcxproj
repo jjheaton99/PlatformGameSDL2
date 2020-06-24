@@ -22,6 +22,7 @@
     <ClCompile Include="Entities\Bat.cpp" />
     <ClCompile Include="Entities\BlackHole.cpp" />
     <ClCompile Include="Entities\Character.cpp" />
+    <ClCompile Include="Entities\DownSword.cpp" />
     <ClCompile Include="Entities\EnemyProjectile.cpp" />
     <ClCompile Include="Entities\FloatingSkull.cpp" />
     <ClCompile Include="Entities\FloatingSkullShot.cpp" />
@@ -76,6 +77,7 @@
     <ClInclude Include="Entities\Bat.h" />
     <ClInclude Include="Entities\BlackHole.h" />
     <ClInclude Include="Entities\Character.h" />
+    <ClInclude Include="Entities\DownSword.h" />
     <ClInclude Include="Entities\EnemyProjectile.h" />
     <ClInclude Include="Entities\FloatingSkull.h" />
     <ClInclude Include="Entities\FloatingSkullShot.h" />
@@ -205,7 +207,7 @@
       <DisableSpecificWarnings>26812;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -234,7 +236,7 @@
       <DisableSpecificWarnings>26812;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>

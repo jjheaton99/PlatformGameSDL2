@@ -7,7 +7,7 @@ class DownAxe : public PlayerMeleeAttack
 private:
     double m_yoffsetUpdate;
 
-    SoundEffect m_attackSound{ "Assets/Sounds/PlayerSounds/AttackSounds/light.wav" };
+    SoundEffect m_attackSound{ "Assets/Sounds/PlayerSounds/AttackSounds/axe.wav" };
 
 public:
     DownAxe();
