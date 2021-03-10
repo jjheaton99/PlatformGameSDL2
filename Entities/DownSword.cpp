@@ -3,7 +3,7 @@
 DownSword::DownSword()
     : PlayerMeleeAttack("Assets/Attacks/downSword.png", 200, 0.0, 0.0, 25.0, 63.0, 0.15)
 {
-    m_itemType = ItemType::DOWN_AXE;
+    m_itemType = ItemType::DOWN_SWORD;
 
     m_srcRect = { 0, 0, 8, 20 };
 
