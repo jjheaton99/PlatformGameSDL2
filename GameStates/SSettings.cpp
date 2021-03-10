@@ -514,6 +514,7 @@ void SSettings::saveSettingsToFile()
         Settings::musicVol
     };
 
+    std::filesystem::create_directory("SaveFiles");
     std::ofstream file("SaveFiles/settings.txt", std::ofstream::out);
 
     if (file.is_open())
