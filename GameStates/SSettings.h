@@ -4,7 +4,6 @@
 #include <fstream>
 #include <string>
 #include <array>
-#include <filesystem>
 
 //state for game settings
 class SSettings : public GameState

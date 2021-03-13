@@ -472,7 +472,7 @@ void SSettings::loadSettingsFromFile()
 {
     std::array<int, 5> settings;
 
-    std::ifstream file("SaveFiles/settings.txt");
+    std::ifstream file("settings.txt");
 
     if (!file.is_open())
     {
@@ -514,8 +514,7 @@ void SSettings::saveSettingsToFile()
         Settings::musicVol
     };
 
-    std::filesystem::create_directory("SaveFiles");
-    std::ofstream file("SaveFiles/settings.txt", std::ofstream::out);
+    std::ofstream file("settings.txt", std::ofstream::out);
 
     if (file.is_open())
     {
