@@ -28,7 +28,7 @@ Some wall jumping
 
 Shopping
 
-![shopping](https://media.giphy.com/media/ZnoAp04jKAdryDKrP8/giphy.gif) 
+![shopping](https://media.giphy.com/media/2rZYaMtb7emnifNTpu/giphy.gif) 
 
 
 Black hole attack
